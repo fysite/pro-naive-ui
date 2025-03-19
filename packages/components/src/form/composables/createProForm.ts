@@ -1,12 +1,11 @@
 import type { FormInst } from 'naive-ui'
 import type { BaseForm, FormOptions, InternalPath } from 'pro-composables'
-import type { Merge, Paths, Simplify, SimplifyDeep } from 'type-fest'
-import type { DeepReadonly, Ref, UnwrapNestedRefs } from 'vue'
+import type { Merge, Paths, Simplify } from 'type-fest'
 import type { FieldExtraInfo } from '../components/field/field-extra-info'
 import type { FormItemInternalValidationResult } from './useValidationResult'
 import { isString } from 'lodash-es'
 import { createForm, stringifyPath } from 'pro-composables'
-import { inject, nextTick, provide, readonly, ref } from 'vue'
+import { inject, provide, ref } from 'vue'
 import { createInjectionKey } from '../../composables/createInjectionKey'
 import { fieldExtraKey } from '../components/field/field-extra-info'
 import { useValidationResults } from './useValidationResult'
@@ -21,20 +20,14 @@ export const proFormInternalKey = '__proFormInternalKey__'
 
 type StringKeyof<Values = any> = Exclude<Paths<Values>, symbol | number>
 
-export type CreateProFormReturn<Values = any> = Simplify<Pick<
-  BaseForm<Values>,
-  | 'matchPath'
-  | 'getFieldValue'
-  | 'getFieldsValue'
-  | 'setFieldValue'
-  | 'setFieldsValue'
+export type CreateProFormReturn<Values = any, FieldsValue = Values> = Simplify<Pick<
+  BaseForm<Values, FieldsValue>,
+  | 'values'
+  | 'fieldsValue'
   | 'resetFieldValue'
   | 'resetFieldsValue'
   | 'setInitialValue'
   | 'setInitialValues'
-  | 'pauseDependenciesTrigger'
-  | 'resumeDependenciesTrigger'
-  | 'getFieldsTransformedValue'
 > & {
   /**
    * 提交表单
@@ -62,26 +55,16 @@ export type CreateProFormReturn<Values = any> = Simplify<Pick<
    */
   getFieldValidationResult: (path: InternalPath) => FormItemInternalValidationResult | null
   /**
-   * 同步 submiting 状态, 如果使用 `attr-type` 控制表单提交, 即使按钮是 loading 状态，多次点击也会触发多次 submit
-   */
-  syncSubmiting: (loading: boolean) => void
-  /**
-   * 所有的值（包含用户设置的和可能被隐藏的字段）
-   * ⚠️注意：它是只读的，表单值修改你应该通过 setFieldValue/setFieldsValue api
-   */
-  values: DeepReadonly<UnwrapNestedRefs<Ref<Values>>>
-  /**
    * 内部使用
    */
   [proFormInternalKey]: {
     internalForm: BaseForm
-    model: Ref<Record<string, any>>
     registerNFormInst: (nForm: FormInst) => void
     validationResults: ReturnType<typeof useValidationResults>
   }
 }>
 
-export interface CreateProFormOptions<Values = any> extends FormOptions<Values> {
+export interface CreateProFormOptions<Values = any, FieldsValue = Values> extends FormOptions<Values> {
   /**
    * 数据重置后的回调事件
    */
@@ -89,19 +72,17 @@ export interface CreateProFormOptions<Values = any> extends FormOptions<Values> 
   /**
    * 数据验证成功后的回调事件
    */
-  onSubmit?: (values: SimplifyDeep<Values>, warnings: ValidateError[][]) => void | Promise<void>
+  onSubmit?: (values: FieldsValue, warnings: ValidateError[][]) => void | Promise<void>
   /**
    * 数据验证失败后回调事件
    */
   onSubmitFailed?: (errors: ValidateError[][]) => void
-  /**
-   * 依赖项的值发生变化后是否进行校验
-   * @default true
-   */
-  validateOnDependenciesValueChange?: boolean
 }
 
-export function createProForm<Values = any>(options: Simplify<CreateProFormOptions<Values>> = {}): CreateProFormReturn<Values> {
+export function createProForm<
+  Values = any,
+  FieldsValue = Values,
+>(options: Simplify<CreateProFormOptions<Values, FieldsValue>> = {}): CreateProFormReturn<Values, FieldsValue> {
   const {
     omitNil,
     onReset,
@@ -109,7 +90,6 @@ export function createProForm<Values = any>(options: Simplify<CreateProFormOptio
     initialValues,
     onValueChange,
     onSubmitFailed,
-    validateOnDependenciesValueChange = true,
   } = options
 
   const submiting = ref(false)
@@ -118,24 +98,16 @@ export function createProForm<Values = any>(options: Simplify<CreateProFormOptio
     omitNil,
     initialValues,
     onValueChange,
-    onDependenciesValueChange,
   })
 
   const {
-    matchPath,
-    fieldStore,
-    valueStore,
-    getFieldValue,
-    setFieldValue,
-    getFieldsValue,
-    setFieldsValue,
+    values,
+    fieldsValue,
     setInitialValue,
     resetFieldValue,
     resetFieldsValue,
     setInitialValues,
-    pauseDependenciesTrigger,
-    resumeDependenciesTrigger,
-    getFieldsTransformedValue,
+    _: { fieldStore },
   } = internalForm
 
   const nFormInst = ref<FormInst>()
@@ -150,32 +122,6 @@ export function createProForm<Values = any>(options: Simplify<CreateProFormOptio
 
   function registerNFormInst(nForm: FormInst) {
     nFormInst.value = nForm
-  }
-
-  function syncSubmiting(loading: boolean) {
-    submiting.value = loading
-  }
-
-  function onDependenciesValueChange(opt: {
-    value: any
-    path: string
-    depPath: string
-  }) {
-    const {
-      path,
-      value,
-      depPath,
-    } = opt
-    if (validateOnDependenciesValueChange) {
-      validate(depPath)
-    }
-    if (options.onDependenciesValueChange) {
-      options.onDependenciesValueChange({
-        path,
-        value,
-        depPath,
-      })
-    }
   }
 
   function validate(paths?: InternalPath) {
@@ -200,8 +146,7 @@ export function createProForm<Values = any>(options: Simplify<CreateProFormOptio
     validate()
       ?.then(({ warnings }) => {
         if (onSubmit) {
-          const values = getFieldsTransformedValue()
-          const response = onSubmit(values, warnings ?? [])
+          const response = onSubmit(fieldsValue.value as any, warnings ?? [])
           return response
         }
       })
@@ -227,21 +172,17 @@ export function createProForm<Values = any>(options: Simplify<CreateProFormOptio
   }
 
   function restoreFieldValue(path: InternalPath) {
-    pauseDependenciesTrigger()
     resetFieldValue(path)
     restoreValidation(path)
     clearValidationResults(path)
     onReset && onReset()
-    nextTick(resumeDependenciesTrigger)
   }
 
   function restoreFieldsValue() {
-    pauseDependenciesTrigger()
     resetFieldsValue()
     restoreValidation()
     clearValidationResults()
     onReset && onReset()
-    nextTick(resumeDependenciesTrigger)
   }
 
   function addValidateResults(
@@ -267,14 +208,10 @@ export function createProForm<Values = any>(options: Simplify<CreateProFormOptio
   }
 
   const returned: CreateProFormReturn = {
+    values,
+    fieldsValue,
     submit,
     validate,
-    matchPath,
-    syncSubmiting,
-    getFieldValue,
-    setFieldValue,
-    getFieldsValue,
-    setFieldsValue,
     resetFieldValue,
     setInitialValue,
     setInitialValues,
@@ -283,16 +220,11 @@ export function createProForm<Values = any>(options: Simplify<CreateProFormOptio
     restoreFieldValue,
     restoreFieldsValue,
     getFieldValidationResult,
-    pauseDependenciesTrigger,
-    getFieldsTransformedValue,
-    resumeDependenciesTrigger,
     [proFormInternalKey]: {
       internalForm,
       registerNFormInst,
       validationResults,
-      model: valueStore.values,
     },
-    values: __DEV__ ? readonly(valueStore.values) : valueStore.values,
   }
   return Object.freeze(returned)
 }
@@ -307,8 +239,8 @@ export function useInjectProForm<Values = any>(): Simplify<CreateProFormReturn<V
   return inject(proFormContextKey, null)
 }
 
-export type ExtendProForm<V = any, PM extends object = object, PO extends object = object> = Merge<
-  Merge<Omit<CreateProFormReturn<V>, typeof proFormInternalKey>, PM>,
+export type ExtendProForm<V = any, FV = V, PM extends object = object, PO extends object = object> = Merge<
+  Merge<Omit<CreateProFormReturn<V, FV>, typeof proFormInternalKey>, PM>,
   {
     [proFormInternalKey]: Merge<CreateProFormReturn<V>[typeof proFormInternalKey], PO>
   }
@@ -316,13 +248,14 @@ export type ExtendProForm<V = any, PM extends object = object, PO extends object
 
 export function extendProForm<
   Values = any,
+  FieldsValue = Values,
   PublicMethods extends object = object,
   PrivateOptions extends object = object,
 >(
-  options: Simplify<CreateProFormOptions<Values>>,
+  options: Simplify<CreateProFormOptions<Values, FieldsValue>>,
   publicMethods: PublicMethods,
   privateOptions: PrivateOptions,
-): ExtendProForm<Values, PublicMethods, PrivateOptions> {
+): ExtendProForm<Values, FieldsValue, PublicMethods, PrivateOptions> {
   let returned = createProForm(options) as any
 
   if (publicMethods) {
