@@ -21,10 +21,6 @@ export const proFormExtendProps = {
     required: true,
   },
   /**
-   * 表单是否在 loading 中
-   */
-  loading: Boolean,
-  /**
    * 是否在按下回车后提交
    */
   submitOnPressEnter: Boolean,
