@@ -23,7 +23,6 @@ export function useMergeOptions(props: ProFieldProps, options: UseMergeOptions) 
   } = useInjectProFormConfig()
 
   const {
-    renderFormItem,
     readonly: injectedReadonlyRef,
     showLabel: injectedShowLabelRef,
   } = inject(proFieldConfigInjectionKey, {})
@@ -67,15 +66,10 @@ export function useMergeOptions(props: ProFieldProps, options: UseMergeOptions) 
     }
   })
 
-  const mergedRenderFormItem = computed(() => {
-    return field.isList ? undefined : renderFormItem
-  })
-
   return {
     mergedTitle,
     mergedReadonly,
     mergedShowLabel,
     mergedPlaceholder,
-    mergedRenderFormItem,
   }
 }

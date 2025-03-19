@@ -27,7 +27,6 @@ export default defineComponent({
       mergedReadonly,
       mergedShowLabel,
       mergedPlaceholder,
-      mergedRenderFormItem,
     } = useMergeOptions(props, { field })
 
     const inputProps = computed(() => {
@@ -84,7 +83,6 @@ export default defineComponent({
       inputProps,
       show: field.show,
       proFormItemProps,
-      mergedRenderFormItem,
     }
   },
   render() {
@@ -97,14 +95,14 @@ export default defineComponent({
       return this.$slots.input(this.inputProps)
     }
 
-    const proFormItemSlots = {
-      label: this.$slots.label,
-      feedback: this.$slots.feedback,
-      default: () => this.$slots.input(this.inputProps),
-    }
-
-    return this.mergedRenderFormItem
-      ? this.mergedRenderFormItem(this.proFormItemProps, proFormItemSlots)
-      : <ProFormItem {...this.proFormItemProps} v-slots={proFormItemSlots}></ProFormItem>
+    return (
+      <ProFormItem {...this.proFormItemProps}>
+        {{
+          label: this.$slots.label,
+          feedback: this.$slots.feedback,
+          default: () => this.$slots.input(this.inputProps),
+        }}
+      </ProFormItem>
+    )
   },
 })
