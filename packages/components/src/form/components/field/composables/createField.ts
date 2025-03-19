@@ -8,24 +8,17 @@ export function createField(props: ProFieldProps) {
     isList,
     preserve,
     onChange,
-    postValue,
-    transform,
     onInputValue,
-    dependencies,
     initialValue,
   } = props
 
   const options: FieldOptions = {
     preserve,
     initialValue,
-    dependencies,
     path: toRef(props, 'path'),
-    value: toRef(props, 'value'),
     hidden: toRef(props, 'hidden'),
     visible: toRef(props, 'visible'),
     onChange,
-    transform,
-    postValue,
     onInputValue,
   }
 

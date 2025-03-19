@@ -26,7 +26,5 @@ export {
 } from './utils/pickProListFieldSharedProps'
 
 export type {
-  Dependencie,
   InternalPath,
-  PathPattern,
 } from 'pro-composables'

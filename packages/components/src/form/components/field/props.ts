@@ -1,4 +1,3 @@
-import type { Dependencie } from 'pro-composables'
 import type { TupleToUnion } from 'type-fest'
 import type { ExtractPublicPropTypes, PropType, Ref } from 'vue'
 import type { InternalFieldValueType } from './enums'
@@ -27,10 +26,6 @@ export const proFieldProps = {
     default: true,
   },
   /**
-   * 表单值，优先级大于 initialValue
-   */
-  value: undefined as any as PropType<any>,
-  /**
    * 是否显示
    */
   visible: {
@@ -45,24 +40,10 @@ export const proFieldProps = {
     default: undefined,
   },
   /**
-   * 字段的依赖项，当依赖项的值发生变化时，会触发校验
-   */
-  dependencies: [String, Function, RegExp, Array] as PropType<Dependencie | Dependencie[]>,
-  /**
-   * 后置状态钩子，可以二次修改数据，返回的值为表单的最终结果值
-   * @param val 当前表单值
-   * @returns 表单结果值
-   */
-  postValue: Function as PropType<(val: any) => any>,
-  /**
    * 表单值发生变化后触发的回调函数
    * @param val 当前表单值
    */
   onChange: Function as PropType<(val: any) => void>,
-  /**
-   * 提交时转化值，返回为一个对象会和当前层级所在对象深度合并，返回非对象会改变原有值
-   */
-  transform: Function as PropType<(val: any, path: string) => any>,
   /**
    * 是否为列表，会根据此字段判断使用 createField 还是 createArrayField
    */
@@ -124,7 +105,6 @@ const proListFieldIgnoreKeys = [
   'simple',
   'isList',
   'onChange',
-  'postValue',
   'valueType',
   'fieldProps',
   'placeholder',
