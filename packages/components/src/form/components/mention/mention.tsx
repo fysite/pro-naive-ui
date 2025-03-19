@@ -2,7 +2,7 @@ import type { SlotsType } from 'vue'
 import type { ProMentionProps } from './props'
 import type { ProMentionSlots } from './slots'
 import { defineComponent } from 'vue'
-import { useOverrideProps, usePostValue } from '../../../composables'
+import { useOverrideProps } from '../../../composables'
 import { ProField } from '../field'
 import { InternalValueTypeEnum } from '../field/enums'
 import Mention from './components/mention'
@@ -24,13 +24,8 @@ export default defineComponent({
       props,
     )
 
-    const postValue = usePostValue(overridedProps, {
-      nilToNull: true,
-    })
-
     expose(exposed)
     return {
-      postValue,
       overridedProps,
     }
   },
@@ -38,8 +33,8 @@ export default defineComponent({
     return (
       <ProField
         {...this.overridedProps}
-        postValue={this.postValue}
         valueType={InternalValueTypeEnum.MENTION}
+        initialValue={this.overridedProps.initialValue ?? null}
       >
         {{
           ...this.$slots,

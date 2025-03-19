@@ -3,7 +3,7 @@ import type { ProDatePickerProps } from './props'
 import type { ProDatePickerSlots } from './slots'
 import { defineComponent } from 'vue'
 import { nilOrEmptyStringToNull } from '../../../_utils/nilOrEmptyStringToNull'
-import { useOverrideProps, usePostValue } from '../../../composables'
+import { useOverrideProps } from '../../../composables'
 import { ProField } from '../field'
 import { InternalValueTypeEnum } from '../field/enums'
 import DatePicker from './components/date-picker'
@@ -25,13 +25,8 @@ export default defineComponent({
       props,
     )
 
-    const postValue = usePostValue(overridedProps, {
-      transform: nilOrEmptyStringToNull,
-    })
-
     expose(exposed)
     return {
-      postValue,
       overridedProps,
     }
   },
@@ -44,8 +39,8 @@ export default defineComponent({
           ...(this.overridedProps.fieldProps ?? {}),
           type: 'week',
         }}
-        postValue={this.postValue}
         valueType={InternalValueTypeEnum.DATE_WEEK}
+        initialValue={nilOrEmptyStringToNull(this.overridedProps.initialValue)}
       >
         {{
           ...this.$slots,
