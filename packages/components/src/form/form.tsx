@@ -6,6 +6,7 @@ import { useEventListener } from '@vueuse/core'
 import { NForm } from 'naive-ui'
 import { provideInternalForm } from 'pro-composables'
 import { computed, defineComponent, onMounted, provide, ref } from 'vue'
+import { warnOnce } from '../_utils/warn'
 import { useOmitProps, useOverrideProps } from '../composables'
 import { createProForm, proFormInternalKey, provideProForm } from './composables/createProForm'
 import { proFormConfigInjectionKey } from './context'
@@ -20,6 +21,10 @@ export default defineComponent({
     let form = props.form
     if (!form && __DEV__) {
       form = createProForm()
+      warnOnce(
+        'ProForm',
+        'You are using ProForm without form prop. Please use form prop to pass the form instance.',
+      )
     }
 
     const nFormInst = ref<FormInst>()
