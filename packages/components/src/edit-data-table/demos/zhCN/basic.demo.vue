@@ -4,7 +4,6 @@
 
 <script lang="tsx">
 import type { ProEditDataTableColumns } from 'pro-naive-ui'
-import { NButton, NFlex } from 'naive-ui'
 import { createProForm } from 'pro-naive-ui'
 import { defineComponent, ref } from 'vue'
 

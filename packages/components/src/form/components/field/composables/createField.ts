@@ -9,12 +9,10 @@ export function createField(props: ProFieldProps) {
     preserve,
     onChange,
     onInputValue,
-    initialValue,
   } = props
 
   const options: FieldOptions = {
     preserve,
-    initialValue,
     path: toRef(props, 'path'),
     hidden: toRef(props, 'hidden'),
     visible: toRef(props, 'visible'),

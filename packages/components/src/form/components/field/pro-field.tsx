@@ -90,11 +90,6 @@ export default defineComponent({
       return null
     }
 
-    if (this.simple) {
-      // 简单模式下不包裹 ProFormItem
-      return this.$slots.input(this.inputProps)
-    }
-
     return (
       <ProFormItem {...this.proFormItemProps}>
         {{

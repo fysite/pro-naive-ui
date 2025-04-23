@@ -7,10 +7,6 @@ import { proFormItemProps } from '../form-item'
 export const proFieldProps = {
   ...proFormItemProps,
   /**
-   * 初始值，优先级大于 Form 组件的 initialValues
-   */
-  initialValue: undefined as any as PropType<any>,
-  /**
    * 透传给表单控件的 placeholder
    */
   placeholder: [String, Array] as PropType<string | [string, string]>,
@@ -63,10 +59,6 @@ export const proFieldProps = {
     default: 'value',
   },
   /**
-   * 精简模式，不包装 formItem
-   */
-  simple: Boolean,
-  /**
    * 是否只读
    */
   readonly: {
@@ -81,9 +73,6 @@ export const proFieldProps = {
   onInputValue: Function as PropType<(fieldValue: Ref<any>, inputValue: any, ...args: any[]) => void>,
 } as const
 
-/**
- * 所有的非列表表单项应该共享的，例如 pro-input 等
- */
 const proFieldIgnoreKeys = [
   'isList',
   'valueType',
@@ -91,6 +80,9 @@ const proFieldIgnoreKeys = [
   'valueModelName',
 ] as const
 
+/**
+ * 所有的非列表表单项应该共享的，例如 pro-input 等
+ */
 export const proFieldSharedProps = {
   ...simplyOmit(
     proFieldProps,
@@ -102,7 +94,6 @@ export const proFieldSharedProps = {
  * 所有的列表表单项应该共享的，例如 pro-form-list 等
  */
 const proListFieldIgnoreKeys = [
-  'simple',
   'isList',
   'onChange',
   'valueType',
