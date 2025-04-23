@@ -20,8 +20,8 @@ export const proFormInternalKey = '__proFormInternalKey__'
 
 type StringKeyof<Values = any> = Exclude<Paths<Values>, symbol | number>
 
-export type CreateProFormReturn<Values = any, FieldsValue = Values> = Simplify<Pick<
-  BaseForm<Values, FieldsValue>,
+export type CreateProFormReturn<Values = any> = Simplify<Pick<
+  BaseForm<Values>,
   | 'values'
   | 'fieldsValue'
   | 'resetFieldValue'
@@ -64,7 +64,7 @@ export type CreateProFormReturn<Values = any, FieldsValue = Values> = Simplify<P
   }
 }>
 
-export interface CreateProFormOptions<Values = any, FieldsValue = Values> extends FormOptions<Values> {
+export interface CreateProFormOptions<Values = any> extends FormOptions<Values> {
   /**
    * 数据重置后的回调事件
    */
@@ -72,17 +72,16 @@ export interface CreateProFormOptions<Values = any, FieldsValue = Values> extend
   /**
    * 数据验证成功后的回调事件
    */
-  onSubmit?: (values: FieldsValue, warnings: ValidateError[][]) => void | Promise<void>
+  onSubmit?: (values: Values, warnings: ValidateError[][]) => void | Promise<void>
   /**
    * 数据验证失败后回调事件
    */
   onSubmitFailed?: (errors: ValidateError[][]) => void
 }
 
-export function createProForm<
-  Values = any,
-  FieldsValue = Values,
->(options: Simplify<CreateProFormOptions<Values, FieldsValue>> = {}): CreateProFormReturn<Values, FieldsValue> {
+export function createProForm<Values = any>(
+  options: Simplify<CreateProFormOptions<Values>> = {},
+): CreateProFormReturn<Values> {
   const {
     omitNil,
     onReset,
@@ -147,6 +146,12 @@ export function createProForm<
       ?.then(({ warnings }) => {
         if (onSubmit) {
           const response = onSubmit(fieldsValue.value as any, warnings ?? [])
+          if (response instanceof Promise) {
+            submiting.value = true
+            response.finally(() => {
+              submiting.value = false
+            })
+          }
           return response
         }
       })
@@ -239,8 +244,8 @@ export function useInjectProForm<Values = any>(): Simplify<CreateProFormReturn<V
   return inject(proFormContextKey, null)
 }
 
-export type ExtendProForm<V = any, FV = V, PM extends object = object, PO extends object = object> = Merge<
-  Merge<Omit<CreateProFormReturn<V, FV>, typeof proFormInternalKey>, PM>,
+export type ExtendProForm<V = any, PM extends object = object, PO extends object = object> = Merge<
+  Merge<Omit<CreateProFormReturn<V>, typeof proFormInternalKey>, PM>,
   {
     [proFormInternalKey]: Merge<CreateProFormReturn<V>[typeof proFormInternalKey], PO>
   }
@@ -248,14 +253,13 @@ export type ExtendProForm<V = any, FV = V, PM extends object = object, PO extend
 
 export function extendProForm<
   Values = any,
-  FieldsValue = Values,
   PublicMethods extends object = object,
   PrivateOptions extends object = object,
 >(
-  options: Simplify<CreateProFormOptions<Values, FieldsValue>>,
+  options: Simplify<CreateProFormOptions<Values>>,
   publicMethods: PublicMethods,
   privateOptions: PrivateOptions,
-): ExtendProForm<Values, FieldsValue, PublicMethods, PrivateOptions> {
+): ExtendProForm<Values, PublicMethods, PrivateOptions> {
   let returned = createProForm(options) as any
 
   if (publicMethods) {
