@@ -19,6 +19,9 @@
       ]
     },
     "resolveJsonModule": true,
+    "types": [
+      "vue/jsx"
+    ],
     "allowJs": true,
     /* Linting */
     "strict": true,
