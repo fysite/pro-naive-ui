@@ -4,7 +4,7 @@ import type { ProDynamicTagsSlots } from './slots'
 import { defineComponent } from 'vue'
 import { useOverrideProps } from '../../../composables'
 import { ProField } from '../field'
-import { InternalValueTypeEnum } from '../field/enums'
+import { useMergePlaceholder } from '../field/composables/useMergePlaceholder'
 import DynamicTags from './components/dynamic-tags'
 import { proDynamicTagsProps } from './props'
 
@@ -14,12 +14,17 @@ export default defineComponent({
   props: proDynamicTagsProps,
   slots: Object as SlotsType<ProDynamicTagsSlots>,
   setup(props) {
-    const overridedProps = useOverrideProps<ProDynamicTagsProps>(
+    const placeholder = useMergePlaceholder(
       name,
       props,
     )
 
+    const overridedProps = useOverrideProps<ProDynamicTagsProps>(
+      name,
+      props,
+    )
     return {
+      placeholder,
       overridedProps,
     }
   },
@@ -27,8 +32,7 @@ export default defineComponent({
     return (
       <ProField
         {...this.overridedProps}
-        valueType={InternalValueTypeEnum.DYNAMIC_TAGS}
-        initialValue={this.overridedProps.initialValue ?? []}
+        placeholder={this.placeholder}
       >
         {{
           ...this.$slots,

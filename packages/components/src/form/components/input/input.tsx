@@ -2,10 +2,9 @@ import type { SlotsType } from 'vue'
 import type { ProInputProps } from './props'
 import type { ProInputSlots } from './slots'
 import { defineComponent } from 'vue'
-import { nilOrEmptyStringToNull } from '../../../_utils/nilOrEmptyStringToNull'
 import { useOverrideProps } from '../../../composables'
 import { ProField } from '../field'
-import { InternalValueTypeEnum } from '../field/enums'
+import { useMergePlaceholder } from '../field/composables/useMergePlaceholder'
 import Input from './components/input'
 import { provideTextInstStore } from './inst'
 import { proInputProps } from './props'
@@ -20,6 +19,11 @@ export default defineComponent({
       exposed,
     } = provideTextInstStore()
 
+    const placeholder = useMergePlaceholder(
+      name,
+      props,
+    )
+
     const overridedProps = useOverrideProps<ProInputProps>(
       name,
       props,
@@ -27,6 +31,7 @@ export default defineComponent({
 
     expose(exposed)
     return {
+      placeholder,
       overridedProps,
     }
   },
@@ -38,8 +43,7 @@ export default defineComponent({
           ...this.overridedProps.fieldProps,
           type: 'text',
         }}
-        valueType={InternalValueTypeEnum.INPUT}
-        initialValue={nilOrEmptyStringToNull(this.overridedProps.initialValue)}
+        placeholder={this.placeholder}
       >
         {{
           ...this.$slots,

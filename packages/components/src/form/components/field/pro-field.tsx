@@ -26,12 +26,11 @@ export default defineComponent({
       mergedTitle,
       mergedReadonly,
       mergedShowLabel,
-      mergedPlaceholder,
-    } = useMergeOptions(props, { field })
+    } = useMergeOptions(props)
 
     const inputProps = computed(() => {
       const fieldProps = props.fieldProps ?? {}
-      if (mergedPlaceholder.value === undefined) {
+      if (props.placeholder === undefined) {
         return {
           ...fieldProps,
           ...vModelProps.value,
@@ -40,7 +39,7 @@ export default defineComponent({
       return {
         ...fieldProps,
         ...vModelProps.value,
-        placeholder: mergedPlaceholder.value,
+        placeholder: props.placeholder,
       }
     })
 

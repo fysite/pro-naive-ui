@@ -2,10 +2,9 @@ import type { SlotsType } from 'vue'
 import type { ProDatePickerProps } from './props'
 import type { ProDatePickerSlots } from './slots'
 import { defineComponent } from 'vue'
-import { nilOrEmptyStringToNull } from '../../../_utils/nilOrEmptyStringToNull'
 import { useOverrideProps } from '../../../composables'
 import { ProField } from '../field'
-import { InternalValueTypeEnum } from '../field/enums'
+import { useMergePlaceholder } from '../field/composables/useMergePlaceholder'
 import DatePicker from './components/date-picker'
 import { provideDatePickerInstStore } from './inst'
 import { proDatePickerProps } from './props'
@@ -20,6 +19,11 @@ export default defineComponent({
       exposed,
     } = provideDatePickerInstStore()
 
+    const placeholder = useMergePlaceholder(
+      name,
+      props,
+    )
+
     const overridedProps = useOverrideProps<ProDatePickerProps>(
       name,
       props,
@@ -27,6 +31,7 @@ export default defineComponent({
 
     expose(exposed)
     return {
+      placeholder,
       overridedProps,
     }
   },
@@ -38,8 +43,7 @@ export default defineComponent({
           ...(this.overridedProps.fieldProps ?? {}),
           type: 'datetimerange',
         }}
-        valueType={InternalValueTypeEnum.DATE_TIME_RANGE}
-        initialValue={nilOrEmptyStringToNull(this.overridedProps.initialValue)}
+        placeholder={this.placeholder}
       >
         {{
           ...this.$slots,

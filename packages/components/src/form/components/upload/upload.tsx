@@ -4,7 +4,7 @@ import type { ProUploadSlots } from './slots'
 import { defineComponent } from 'vue'
 import { useOverrideProps } from '../../../composables'
 import { ProField } from '../field'
-import { InternalValueTypeEnum } from '../field/enums'
+import { useMergePlaceholder } from '../field/composables/useMergePlaceholder'
 import Upload from './components/upload'
 import { provideUploadInstStore } from './inst'
 import { proUploadProps } from './props'
@@ -19,6 +19,11 @@ export default defineComponent({
       exposed,
     } = provideUploadInstStore()
 
+    const placeholder = useMergePlaceholder(
+      name,
+      props,
+    )
+
     const overridedProps = useOverrideProps<ProUploadProps>(
       name,
       props,
@@ -26,6 +31,7 @@ export default defineComponent({
 
     expose(exposed)
     return {
+      placeholder,
       overridedProps,
     }
   },
@@ -34,8 +40,7 @@ export default defineComponent({
       <ProField
         {...this.overridedProps}
         valueModelName="fileList"
-        valueType={InternalValueTypeEnum.UPLOAD}
-        initialValue={this.overridedProps.initialValue ?? []}
+        placeholder={this.placeholder}
       >
         {{
           ...this.$slots,

@@ -4,7 +4,7 @@ import type { ProCheckboxGroupSlots } from './slots'
 import { defineComponent } from 'vue'
 import { useOverrideProps } from '../../../composables'
 import { ProField } from '../field'
-import { InternalValueTypeEnum } from '../field/enums'
+import { useMergePlaceholder } from '../field/composables/useMergePlaceholder'
 import CheckboxGroup from './components/checkbox-group'
 import { proCheckboxGroupProps } from './props'
 
@@ -14,12 +14,18 @@ export default defineComponent({
   props: proCheckboxGroupProps,
   slots: Object as SlotsType<ProCheckboxGroupSlots>,
   setup(props) {
+    const placeholder = useMergePlaceholder(
+      name,
+      props,
+    )
+
     const overridedProps = useOverrideProps<ProCheckboxGroupProps>(
       name,
       props,
     )
 
     return {
+      placeholder,
       overridedProps,
     }
   },
@@ -27,8 +33,7 @@ export default defineComponent({
     return (
       <ProField
         {...this.overridedProps}
-        valueType={InternalValueTypeEnum.CHECKBOX_GROUP}
-        initialValue={this.overridedProps.initialValue ?? []}
+        placeholder={this.placeholder}
       >
         {{
           ...this.$slots,

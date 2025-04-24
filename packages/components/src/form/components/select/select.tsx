@@ -4,7 +4,7 @@ import type { ProSelectSlots } from './slots'
 import { defineComponent } from 'vue'
 import { useOverrideProps } from '../../../composables'
 import { ProField } from '../field'
-import { InternalValueTypeEnum } from '../field/enums'
+import { useMergePlaceholder } from '../field/composables/useMergePlaceholder'
 import Select from './components/select'
 import { provideSelectInstStore } from './inst'
 import { proSelectProps } from './props'
@@ -19,6 +19,11 @@ export default defineComponent({
       exposed,
     } = provideSelectInstStore()
 
+    const placeholder = useMergePlaceholder(
+      name,
+      props,
+    )
+
     const overridedProps = useOverrideProps<ProSelectProps>(
       name,
       props,
@@ -26,6 +31,7 @@ export default defineComponent({
 
     expose(exposed)
     return {
+      placeholder,
       overridedProps,
     }
   },
@@ -33,8 +39,7 @@ export default defineComponent({
     return (
       <ProField
         {...this.overridedProps}
-        valueType={InternalValueTypeEnum.SELECT}
-        initialValue={this.overridedProps.initialValue ?? null}
+        placeholder={this.placeholder}
       >
         {{
           ...this.$slots,

@@ -4,7 +4,7 @@ import type { ProSliderSlots } from './slots'
 import { defineComponent } from 'vue'
 import { useOverrideProps } from '../../../composables'
 import { ProField } from '../field'
-import { InternalValueTypeEnum } from '../field/enums'
+import { useMergePlaceholder } from '../field/composables/useMergePlaceholder'
 import Slider from './components/slider'
 import { proSliderProps } from './props'
 
@@ -14,12 +14,18 @@ export default defineComponent({
   props: proSliderProps,
   slots: Object as SlotsType<ProSliderSlots>,
   setup(props) {
+    const placeholder = useMergePlaceholder(
+      name,
+      props,
+    )
+
     const overridedProps = useOverrideProps<ProSliderProps>(
       name,
       props,
     )
 
     return {
+      placeholder,
       overridedProps,
     }
   },
@@ -27,8 +33,7 @@ export default defineComponent({
     return (
       <ProField
         {...this.overridedProps}
-        valueType={InternalValueTypeEnum.SLIDER}
-        initialValue={this.overridedProps.initialValue ?? null}
+        placeholder={this.placeholder}
       >
         {{
           ...this.$slots,

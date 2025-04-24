@@ -4,7 +4,7 @@ import type { ProSwitchSlots } from './slots'
 import { defineComponent } from 'vue'
 import { useOverrideProps } from '../../../composables'
 import { ProField } from '../field'
-import { InternalValueTypeEnum } from '../field/enums'
+import { useMergePlaceholder } from '../field/composables/useMergePlaceholder'
 import Switch from './components/switch'
 import { proSwitchProps } from './props'
 
@@ -14,12 +14,18 @@ export default defineComponent({
   props: proSwitchProps,
   slots: Object as SlotsType<ProSwitchSlots>,
   setup(props) {
+    const placeholder = useMergePlaceholder(
+      name,
+      props,
+    )
+
     const overridedProps = useOverrideProps<ProSwitchProps>(
       name,
       props,
     )
 
     return {
+      placeholder,
       overridedProps,
     }
   },
@@ -27,8 +33,7 @@ export default defineComponent({
     return (
       <ProField
         {...this.overridedProps}
-        valueType={InternalValueTypeEnum.SWITCH}
-        initialValue={this.overridedProps.initialValue ?? false}
+        placeholder={this.placeholder}
       >
         {{
           ...this.$slots,

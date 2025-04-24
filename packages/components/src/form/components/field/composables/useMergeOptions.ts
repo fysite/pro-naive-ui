@@ -1,23 +1,9 @@
-import type { BaseField } from 'pro-composables'
 import type { ProFieldProps } from '../props'
-import { toString } from 'lodash-es'
 import { computed, inject, unref } from 'vue'
-import { useLocale } from '../../../../locales'
 import { useInjectProFormConfig } from '../../../context'
 import { proFieldConfigInjectionKey } from '../context'
 
-interface UseMergeOptions {
-  field: BaseField
-}
-export function useMergeOptions(props: ProFieldProps, options: UseMergeOptions) {
-  const {
-    field,
-  } = options
-
-  const {
-    getMessage,
-  } = useLocale('ProForm')
-
+export function useMergeOptions(props: ProFieldProps) {
   const {
     readonly: formReadonlyRef,
   } = useInjectProFormConfig()
@@ -31,16 +17,6 @@ export function useMergeOptions(props: ProFieldProps, options: UseMergeOptions) 
     return props.title ?? props.label
   })
 
-  const mergedPlaceholder = computed(() => {
-    if (props.placeholder !== undefined) {
-      return props.placeholder
-    }
-    if (!field.isList) {
-      const localePlaceholder = getMessage('fieldPlaceholder')
-      return localePlaceholder(toString(mergedTitle.value), props.valueType)
-    }
-  })
-
   const mergedReadonly = computed(() => {
     if (props.readonly !== undefined) {
       return !!props.readonly
@@ -51,7 +27,7 @@ export function useMergeOptions(props: ProFieldProps, options: UseMergeOptions) 
     }
     const formReadonly = unref(formReadonlyRef)
     if (formReadonly !== undefined) {
-      return !!formReadonly
+      return formReadonly
     }
     return false
   })
@@ -70,6 +46,5 @@ export function useMergeOptions(props: ProFieldProps, options: UseMergeOptions) 
     mergedTitle,
     mergedReadonly,
     mergedShowLabel,
-    mergedPlaceholder,
   }
 }

@@ -4,7 +4,7 @@ import type { ProTimePickerSlots } from './slots'
 import { defineComponent } from 'vue'
 import { useOverrideProps } from '../../../composables'
 import { ProField } from '../field'
-import { InternalValueTypeEnum } from '../field/enums'
+import { useMergePlaceholder } from '../field/composables/useMergePlaceholder'
 import TimePicker from './components/time-picker'
 import { provideTimePickerInstStore } from './inst'
 import { proTimePickerProps } from './props'
@@ -19,6 +19,11 @@ export default defineComponent({
       exposed,
     } = provideTimePickerInstStore()
 
+    const placeholder = useMergePlaceholder(
+      name,
+      props,
+    )
+
     const overridedProps = useOverrideProps<ProTimePickerProps>(
       name,
       props,
@@ -26,6 +31,7 @@ export default defineComponent({
 
     expose(exposed)
     return {
+      placeholder,
       overridedProps,
     }
   },
@@ -33,8 +39,7 @@ export default defineComponent({
     return (
       <ProField
         {...this.overridedProps}
-        valueType={InternalValueTypeEnum.TIME}
-        initialValue={this.overridedProps.initialValue ?? null}
+        placeholder={this.placeholder}
       >
         {{
           ...this.$slots,

@@ -2,10 +2,9 @@ import type { SlotsType } from 'vue'
 import type { ProDigitProps } from './props'
 import type { ProDigitSlots } from './slots'
 import { defineComponent } from 'vue'
-import { nilOrEmptyStringToNull } from '../../../_utils/nilOrEmptyStringToNull'
 import { useOverrideProps } from '../../../composables'
 import { ProField } from '../field'
-import { InternalValueTypeEnum } from '../field/enums'
+import { useMergePlaceholder } from '../field/composables/useMergePlaceholder'
 import Digit from './components/digit'
 import { provideDigitInstStore } from './inst'
 import { proDigitProps } from './props'
@@ -20,6 +19,11 @@ export default defineComponent({
       exposed,
     } = provideDigitInstStore()
 
+    const placeholder = useMergePlaceholder(
+      name,
+      props,
+    )
+
     const overridedProps = useOverrideProps<ProDigitProps>(
       name,
       props,
@@ -27,6 +31,7 @@ export default defineComponent({
 
     expose(exposed)
     return {
+      placeholder,
       overridedProps,
     }
   },
@@ -34,8 +39,7 @@ export default defineComponent({
     return (
       <ProField
         {...this.overridedProps}
-        valueType={InternalValueTypeEnum.DIGIT}
-        initialValue={nilOrEmptyStringToNull(this.overridedProps.initialValue)}
+        placeholder={this.placeholder}
       >
         {{
           ...this.$slots,

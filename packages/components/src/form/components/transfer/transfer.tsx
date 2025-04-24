@@ -4,7 +4,7 @@ import type { ProTransferSlots } from './slots'
 import { defineComponent } from 'vue'
 import { useOverrideProps } from '../../../composables'
 import { ProField } from '../field'
-import { InternalValueTypeEnum } from '../field/enums'
+import { useMergePlaceholder } from '../field/composables/useMergePlaceholder'
 import Transfer from './components/transfer'
 import { proTransferProps } from './props'
 
@@ -14,12 +14,18 @@ export default defineComponent({
   props: proTransferProps,
   slots: Object as SlotsType<ProTransferSlots>,
   setup(props) {
+    const placeholder = useMergePlaceholder(
+      name,
+      props,
+    )
+
     const overridedProps = useOverrideProps<ProTransferProps>(
       name,
       props,
     )
 
     return {
+      placeholder,
       overridedProps,
     }
   },
@@ -27,8 +33,7 @@ export default defineComponent({
     return (
       <ProField
         {...this.overridedProps}
-        valueType={InternalValueTypeEnum.TRANSFER}
-        initialValue={this.overridedProps.initialValue ?? []}
+        placeholder={this.placeholder}
       >
         {{
           ...this.$slots,
