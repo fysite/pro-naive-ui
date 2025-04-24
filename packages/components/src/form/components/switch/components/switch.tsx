@@ -28,7 +28,6 @@ export default defineComponent({
   },
   render() {
     let dom: VNodeChild
-
     if (this.readonly) {
       dom = this.value
         ? this.$slots.checked?.() ?? this.getMessage('checked')
@@ -44,7 +43,6 @@ export default defineComponent({
         </NSwitch>
       )
     }
-
     return this.$slots.input
       ? this.$slots.input({
           inputDom: dom,

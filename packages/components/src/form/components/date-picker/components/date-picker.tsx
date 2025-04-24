@@ -7,7 +7,7 @@ import { computed, defineComponent } from 'vue'
 import { useFieldUtils } from '../../field'
 import { useInjectDatePickerInstStore } from '../inst'
 import { useMergeFormat } from './composables/useMergeFormat'
-import { toDisplayDate } from './utils/toDisplayDate'
+import { stringifyDate } from './utils/stringifyDate'
 
 export default defineComponent({
   name: 'DatePicker',
@@ -47,20 +47,20 @@ export default defineComponent({
         valueFormat,
         onUpdateValue,
       } = props
+
       if (valueFormat && (isString(value) || (isArray(value) && value.every(isString)))) {
         return {
           formattedValue: value,
           onUpdateFormattedValue: onUpdateValue,
         } as any
       }
-
       return {
         value,
         onUpdateValue,
       }
     })
 
-    const convertPlaceholder = computed(() => {
+    const convertedPlaceholder = computed(() => {
       const { placeholder } = props
       if (!isArray(placeholder)) {
         return { placeholder }
@@ -77,19 +77,19 @@ export default defineComponent({
       return {
         ...rest as any,
         ...vModelProps.value,
-        ...convertPlaceholder.value,
+        ...convertedPlaceholder.value,
       }
     })
 
-    const displayDateText = computed(() => {
-      return toDisplayDate(
+    const dateText = computed(() => {
+      return stringifyDate(
         value.value,
         mergedFormat.value,
       )
     })
 
     const arrayableDateText = computed(() => {
-      return isArray(displayDateText.value)
+      return isArray(dateText.value)
     })
 
     registerInst({
@@ -101,14 +101,13 @@ export default defineComponent({
       instRef,
       readonly,
       emptyDom,
-      displayDateText,
+      dateText,
       nDatePickerProps,
       arrayableDateText,
     }
   },
   render() {
     let dom: VNodeChild
-
     if (this.readonly) {
       if (this.empty) {
         dom = this.emptyDom
@@ -117,14 +116,14 @@ export default defineComponent({
         const separator = this.$slots.separator?.() ?? this.$props.separator
         dom = (
           <NFlex size="small">
-            <span>{(this.displayDateText as [string, string])[0]}</span>
+            <span>{(this.dateText as [string, string])[0]}</span>
             {separator && <span>{separator}</span>}
-            <span>{(this.displayDateText as [string, string])[1]}</span>
+            <span>{(this.dateText as [string, string])[1]}</span>
           </NFlex>
         )
       }
       else {
-        dom = <span>{this.displayDateText}</span>
+        dom = <span>{this.dateText}</span>
       }
     }
     else {
@@ -138,7 +137,6 @@ export default defineComponent({
         </NDatePicker>
       )
     }
-
     return this.$slots.input
       ? this.$slots.input({
           inputDom: dom,

@@ -116,10 +116,7 @@ export default defineComponent({
   },
   render() {
     this.fixUploadDragger()
-    const disabled = this.readonly
-      ? true
-      : this.$props.disabled
-
+    const disabled = this.readonly || this.$props.disabled
     const dom = this.readonly && this.empty
       ? this.emptyDom
       : (
@@ -142,7 +139,6 @@ export default defineComponent({
             }}
           </NUpload>
         )
-
     return this.$slots.input
       ? this.$slots.input({
           inputDom: dom,

@@ -1,6 +1,5 @@
 import type { TupleToUnion } from 'type-fest'
 import type { ExtractPublicPropTypes, PropType, Ref } from 'vue'
-import type { InternalFieldValueType } from './enums'
 import { simplyOmit } from '../../../_utils/simplyOmit'
 import { proFormItemProps } from '../form-item'
 
@@ -47,10 +46,6 @@ export const proFieldProps = {
     type: Boolean,
     default: undefined,
   },
-  /**
-   * 用于表示值的类型是属于哪个组件的
-   */
-  valueType: String as PropType<InternalFieldValueType>,
   /**
    * 用于 v-model:xxx 的名称，默认为 'value'，用于支持 'v-model:value'
    */

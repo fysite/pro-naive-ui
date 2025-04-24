@@ -25,30 +25,20 @@ export default defineComponent({
   render() {
     const slots = {
       ...this.$slots,
-      input: this.$slots['input-input'],
+      input: this.$slots['tags-input'],
     }
-
-    const closable = !this.readonly
-      ? false
-      : this.$props.closable
-
-    const disabled = this.readonly
-      ? true
-      : this.$props.disabled
-
     const dom = this.readonly && this.empty
       ? this.emptyDom
       : (
           <NDynamicTags
             {...this.$props}
             {...this.$attrs}
-            closable={closable}
-            disabled={disabled}
+            disabled={this.readonly || this.$props.disabled}
+            closable={this.readonly ? false : this.$props.closable}
           >
             {slots}
           </NDynamicTags>
         )
-
     return this.$slots.input
       ? this.$slots.input({
           inputDom: dom,

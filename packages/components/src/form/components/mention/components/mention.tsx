@@ -43,7 +43,6 @@ export default defineComponent({
           >
           </NMention>
         )
-
     return this.$slots.input
       ? this.$slots.input({
           inputDom: dom,

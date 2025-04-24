@@ -82,7 +82,6 @@ export default defineComponent({
   },
   render() {
     let dom: VNodeChild
-
     if (this.readonly) {
       dom = this.empty
         ? this.emptyDom
@@ -111,7 +110,6 @@ export default defineComponent({
         </NCheckboxGroup>
       )
     }
-
     return this.$slots.input
       ? this.$slots.input({
           inputDom: dom,

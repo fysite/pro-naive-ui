@@ -23,15 +23,11 @@ export default defineComponent({
     }
   },
   render() {
+    const disabled = this.readonly || this.$props.disabled
     const slots = {
       ...this.$slots,
-      label: this.$slots['input-label'],
+      label: this.$slots['picker-label'],
     }
-
-    const disabled = this.readonly
-      ? true
-      : this.$props.disabled
-
     const dom = this.readonly && this.empty
       ? this.emptyDom
       : (
@@ -43,7 +39,6 @@ export default defineComponent({
             {slots}
           </NColorPicker>
         )
-
     return this.$slots.input
       ? this.$slots.input({
           inputDom: dom,

@@ -19,10 +19,7 @@ export default defineComponent({
     }
   },
   render() {
-    const rateReadonly = this.readonly
-      ? true
-      : this.$props.readonly
-
+    const rateReadonly = this.readonly || this.$props.readonly
     const dom = (
       <NRate
         {...this.$props}
@@ -32,7 +29,6 @@ export default defineComponent({
       >
       </NRate>
     )
-
     return this.$slots.input
       ? this.$slots.input({
           inputDom: dom,

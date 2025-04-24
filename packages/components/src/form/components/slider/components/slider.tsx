@@ -31,7 +31,6 @@ export default defineComponent({
           >
           </NSlider>
         )
-
     return this.$slots.input
       ? this.$slots.input({
           inputDom: dom,

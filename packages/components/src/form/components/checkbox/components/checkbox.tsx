@@ -30,10 +30,7 @@ export default defineComponent({
     }
   },
   render() {
-    const disabled = this.readonly
-      ? true
-      : this.$props.disabled
-
+    const disabled = this.readonly || this.$props.disabled
     const dom = (
       <NCheckbox
         ref="instRef"
@@ -44,7 +41,6 @@ export default defineComponent({
       >
       </NCheckbox>
     )
-
     return this.$slots.input
       ? this.$slots.input({
           inputDom: dom,
