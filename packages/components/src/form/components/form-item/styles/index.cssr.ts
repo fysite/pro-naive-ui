@@ -7,6 +7,6 @@ export default cB('pro-form-item', [
   `),
   cE('icon', `
     cursor: help;
-     margin-inline-start: 4px;
+    margin-inline-start: 4px;
   `),
 ])

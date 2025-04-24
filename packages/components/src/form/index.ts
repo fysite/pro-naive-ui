@@ -5,8 +5,6 @@ export {
   useInjectProForm,
 } from './composables/createProForm'
 
-export * from './context'
-
 export {
   default as ProForm,
 } from './form'
