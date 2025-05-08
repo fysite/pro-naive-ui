@@ -4,11 +4,10 @@ import type { ProFormListSlots } from '../slots'
 import { CopyOutlined, DeleteOutlined } from '@vicons/antd'
 import { get } from 'lodash-es'
 import { NFormItem, NIcon } from 'naive-ui'
-import { ROW_UUID, useInjectField } from 'pro-composables'
-import { computed, defineComponent, Fragment, inject, provide, ref, toRef } from 'vue'
+import { useInjectField } from 'pro-composables'
+import { computed, defineComponent, Fragment, provide, ref, toRef } from 'vue'
 import { useNaiveClsPrefix } from '../../_internal/useClsPrefix'
 import { resolveSlotWithProps } from '../../_utils/resolveSlot'
-import { simplyOmit } from '../../_utils/simplyOmit'
 import { ProButton } from '../../button'
 import { useInjectProForm } from '../../form'
 import { useFieldUtils } from '../../form/components'
@@ -107,13 +106,13 @@ const Action = defineComponent({
       const { beforeAddRow, afterAddRow } = actionGuard ?? {}
 
       const insertIndex = index + 1
-      const row = form.getFieldValue(path!) ?? {}
+      const row = get(form.values.value, path!, {})
 
       if (beforeAddRow) {
         copyLoading.value = true
         const success = await beforeAddRow({ index, insertIndex, total: list.value.length })
         if (success) {
-          insert(insertIndex, simplyOmit(row, [ROW_UUID]))
+          insert(insertIndex, row)
           if (afterAddRow) {
             afterAddRow({ index, insertIndex, total: list.value.length })
           }
@@ -121,7 +120,7 @@ const Action = defineComponent({
         copyLoading.value = false
       }
       else {
-        insert(insertIndex, simplyOmit(row, [ROW_UUID]))
+        insert(insertIndex, row)
         if (afterAddRow) {
           afterAddRow({ index, insertIndex, total: list.value.length })
         }
@@ -205,7 +204,6 @@ export default defineComponent({
 
     const {
       path,
-      rowPath,
     } = useResolvePath(toRef(props, 'index'))
 
     const {
@@ -229,7 +227,6 @@ export default defineComponent({
     })
 
     provide(proFieldConfigInjectionKey, {
-      ...inject(proFieldConfigInjectionKey, {}),
       readonly,
       showLabel: showItemLabel,
     })
@@ -239,7 +236,6 @@ export default defineComponent({
       path,
       total,
       action,
-      rowPath,
       showItemLabel,
       mergedClsPrefix,
     }
@@ -254,7 +250,6 @@ export default defineComponent({
       $props,
       $slots,
       action,
-      rowPath,
       showItemLabel,
       mergedClsPrefix,
     } = this
@@ -288,7 +283,6 @@ export default defineComponent({
           total,
           index,
           action,
-          rowPath,
           actionDom,
         }, () => actionDom)}
       </NFormItem>
@@ -301,7 +295,6 @@ export default defineComponent({
           total,
           index,
           action,
-          rowPath,
         })}
       </Fragment>
     )
@@ -312,7 +305,6 @@ export default defineComponent({
       index,
       action,
       itemDom,
-      rowPath,
       actionDom: resolvedActionDom,
     }, () => (
       <div class={[`${mergedClsPrefix}-pro-form-list__item`]}>

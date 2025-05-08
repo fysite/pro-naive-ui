@@ -4,7 +4,7 @@ import type { ProFormListInst } from '../inst'
 import type { ProFormListSlots } from '../slots'
 import { PlusOutlined } from '@vicons/antd'
 import { NIcon } from 'naive-ui'
-import { ROW_UUID, useInjectField } from 'pro-composables'
+import { ROW_UUID_KEY, useInjectField } from 'pro-composables'
 import { computed, defineComponent, ref } from 'vue'
 import { useNaiveClsPrefix } from '../../_internal/useClsPrefix'
 import { resolveSlotWithProps } from '../../_utils/resolveSlot'
@@ -121,8 +121,6 @@ export default defineComponent({
     } = useFieldUtils()
 
     const {
-      get,
-      set,
       pop,
       push,
       move,
@@ -132,19 +130,17 @@ export default defineComponent({
       remove,
       unshift,
       moveDown,
-      value: list,
+      uidValue: uidList,
     } = useInjectField(true)!
 
     const showCreatorButton = computed(() => {
       const { max, creatorButtonProps } = props
       return !readonly.value
         && creatorButtonProps !== false
-        && list.value.length < (max ?? Number.POSITIVE_INFINITY)
+        && uidList.value.length < (max ?? Number.POSITIVE_INFINITY)
     })
 
     const exposed: ProFormListInst = {
-      get,
-      set,
       pop,
       push,
       move,
@@ -159,13 +155,13 @@ export default defineComponent({
     registerInst(exposed)
     provideProFormListInst(exposed)
     return {
-      list,
+      uidList,
       showCreatorButton,
     }
   },
   render() {
     const {
-      list,
+      uidList,
       $props,
       $slots,
     } = this
@@ -182,10 +178,10 @@ export default defineComponent({
       onlyShowFirstItemLabel,
     } = $props
 
-    const listDom = list.map((item, index) => {
+    const listDom = uidList.map((item, index) => {
       return (
         <FormListItem
-          key={item[ROW_UUID]}
+          key={item[ROW_UUID_KEY]}
           min={min}
           max={max}
           index={index}
