@@ -21,7 +21,6 @@ async-form.vue
 | ------------------------------------------------------------------------------------- | -------------------------------------------------------- | --------- | ----------------------------------------------------------- | ---- |
 | form                                                                                  | 必填，参考 <n-a href="#createProForm">createProForm</n-a> | `-`       | 表单控制器                                                  |      |
 | fieldEmptyText                                                                        | `string \| (() => VNodeChild)`                           | `'-'`     | 表单项的值为空时展示的内容，只在 `readonly` 为 `true` 时生效 |      |
-| loading                                                                               | `boolean`                                                | `false`   | 表单是否在 `loading` 中，防止重复提交表单                    |      |
 | readonly                                                                              | `boolean`                                                | `-`       | 表单是否为只读状态                                          |      |
 | submitOnPressEnter                                                                    | `boolean`                                                | `false`   | 是否在按下回车后提交表单                                    |      |
 | validationTrigger                                                                     | `ValidationTrigger \| ValidationTrigger[]`               | `'input'` | 表单验证时机                                                |      |

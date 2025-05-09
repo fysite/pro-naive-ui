@@ -78,7 +78,10 @@ export default defineComponent({
       },
     ]
 
-    const form = createProForm<Info>({
+    const form = createProForm({
+      initialValues: {
+        age: 18,
+      },
       onReset: console.log,
       onSubmit: async (values) => {
         loading.value = true
@@ -101,7 +104,10 @@ export default defineComponent({
       onSubmitFailed: console.log,
     })
 
-    const modalForm = createProModalForm<Info>({
+    const modalForm = createProModalForm({
+      initialValues: {
+        age: 18,
+      },
       onReset: console.log,
       onSubmit: async (values) => {
         loading.value = true
@@ -113,7 +119,10 @@ export default defineComponent({
       onSubmitFailed: console.log,
     })
 
-    const drawerForm = createProDrawerForm<Info>({
+    const drawerForm = createProDrawerForm({
+      initialValues: {
+        age: 18,
+      },
       onReset: console.log,
       onSubmit: async (values) => {
         loading.value = true
@@ -166,7 +175,6 @@ export default defineComponent({
         <pro-digit
           title="年龄"
           path="age"
-          :initial-value="18"
         />
       </n-gi>
       <n-gi>
@@ -236,7 +244,6 @@ export default defineComponent({
         <pro-digit
           title="年龄"
           path="age"
-          :initial-value="18"
         />
       </n-gi>
       <n-gi>
@@ -291,7 +298,6 @@ export default defineComponent({
           <pro-digit
             title="年龄"
             path="age"
-            :initial-value="18"
           />
         </n-gi>
         <n-gi>
