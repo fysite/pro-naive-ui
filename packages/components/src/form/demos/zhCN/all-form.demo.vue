@@ -42,7 +42,6 @@ export default defineComponent({
       {
         title: '年龄',
         path: 'age',
-        initialValue: 18,
         valueType: 'digit',
       },
       {

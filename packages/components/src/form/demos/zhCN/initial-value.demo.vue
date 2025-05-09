@@ -1,7 +1,7 @@
 <markdown>
 # 表单默认值
 
-所有的表单项都支持 `value`、`initial-value`、如果想要统一配置，请设置 `initial-values`，他们的优先级从高到低排列 `value`、`initial-value`、`initial-values`。任何直接使用组件 `v-model:xxx` 和 `default-xxx` 的方式都有可能导致值绑定失效
+所有的默认值建议统一配置在 `createProForm` 的 `initialValues` 属性中，任何直接使用组件 `v-model:xxx` 和 `default-xxx` 的方式都有可能导致值绑定失效
 </markdown>
 
 <script lang="ts">
@@ -11,13 +11,10 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   setup() {
     return {
-      form: createProForm<Partial<{
-        value: string
-        initialValue: string
-        initialValues: string
-      }>>({
+      form: createProForm({
         initialValues: {
-          initialValues: '使用 initialValues 属性',
+          name: 'zcf',
+          age: 18,
         },
         onReset: console.log,
         onSubmit: console.log,
@@ -35,25 +32,16 @@ export default defineComponent({
     label-placement="left"
   >
     <pro-input
-      title="value"
-      path="value"
-      required
-      value="使用 value 属性"
+      title="用户名"
+      path="name"
     />
-    <pro-input
-      title="initial-value"
-      path="initialValue"
-      required
-      initial-value="使用 initial-value 属性"
-    />
-    <pro-input
-      title="initial-values"
-      path="initialValues"
-      required
+    <pro-digit
+      title="年龄"
+      path="age"
     />
     <n-flex>
       <n-button attr-type="reset">
-        重置到默认值
+        重置
       </n-button>
       <n-button type="primary" attr-type="submit">
         提交

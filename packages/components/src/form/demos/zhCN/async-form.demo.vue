@@ -43,7 +43,7 @@ export default defineComponent({
       manual: true,
       onSuccess(res) {
         form.restoreValidation() // 根据实际需求判断是否需要添加此代码，这里添加此行代码是有可能先点击提交触发校验，在点击获取数据需要清空校验
-        form.setFieldsValue(res) // 覆盖表单的所有数据，而不是合并
+        form.values.value = res
         form.setInitialValues(res) // 将请求回来的值作为初始值，重置会回到初始值
       },
     })
