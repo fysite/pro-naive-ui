@@ -1,7 +1,5 @@
 <markdown>
 # 编辑表单回显
-
-你不需要等待表单挂载完成在进行赋值
 </markdown>
 
 <script lang="tsx">
@@ -30,13 +28,10 @@ export default defineComponent({
     })
 
     function edit() {
-      /**
-       * 打开抽屉、赋值不需要考虑顺序问题
-       */
-      drawerForm.setFieldsValue({
+      drawerForm.values.value = {
         name: 'zcf',
         age: 26,
-      })
+      }
       drawerForm.open()
     }
 

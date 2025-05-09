@@ -84,7 +84,7 @@ import type { VNodeChild } from 'vue'
 <script setup lang="ts">
 import { createProModalForm } from 'pro-naive-ui'
 
-const modalForm = createProModalForm<{name?:string}>()
+const modalForm = createProModalForm()
 </script>
 
 <template>
@@ -97,7 +97,7 @@ const modalForm = createProModalForm<{name?:string}>()
 <script setup lang="ts">
 import { useInjectProModalForm } from 'pro-naive-ui'
 
-const modalForm = useInjectProModalForm()!
+const modalForm = useInjectProModalForm<{name?:string}>()!
 </script>
 
 <template>
