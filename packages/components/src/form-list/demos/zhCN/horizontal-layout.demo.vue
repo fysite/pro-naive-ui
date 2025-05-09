@@ -9,7 +9,19 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   setup() {
     return {
-      form: createProForm(),
+      form: createProForm({
+        initialValues: {
+          attributes: [
+            {
+              name: '颜色',
+              items: [
+                { name: '红' },
+                { name: '橙' },
+              ],
+            },
+          ],
+        },
+      }),
     }
   },
 })
@@ -21,15 +33,6 @@ export default defineComponent({
       title="规格信息"
       path="attributes"
       :min="1"
-      :initial-value="[
-        {
-          name: '颜色',
-          items: [
-            { name: '红' },
-            { name: '橙' },
-          ],
-        },
-      ]"
       :creator-initial-value="() => ({
         name: '颜色',
         items: [

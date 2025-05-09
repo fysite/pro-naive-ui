@@ -16,7 +16,15 @@ export default defineComponent({
   },
   setup() {
     return {
-      form: createProForm(),
+      form: createProForm({
+        initialValues: {
+          userInfo: [
+            { name: 'zcf', age: 26 },
+            { name: 'zzx', age: 0.5 },
+            { name: 'cxh', age: 28 },
+          ],
+        },
+      }),
     }
   },
 })
@@ -31,11 +39,6 @@ export default defineComponent({
         :copy-button-props="false"
         :creator-button-props="false"
         :remove-button-props="false"
-        :initial-value="[
-          { name: 'zcf', age: 26 },
-          { name: 'zzx', age: 0.5 },
-          { name: 'cxh', age: 28 },
-        ]"
       >
         <template #default="{ index, action }">
           <n-flex>

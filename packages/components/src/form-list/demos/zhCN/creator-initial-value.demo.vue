@@ -9,7 +9,15 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   setup() {
     return {
-      form: createProForm(),
+      form: createProForm({
+        initialValues: {
+          userInfo: [
+            { name: 'zcf', age: 26 },
+            { name: 'zzx', age: 0.5 },
+            { name: 'cxh', age: 28 },
+          ],
+        },
+      }),
     }
   },
 })
@@ -21,11 +29,6 @@ export default defineComponent({
       title="用户信息"
       path="userInfo"
       only-show-first-item-label
-      :initial-value="[
-        { name: 'zcf', age: 26 },
-        { name: 'zzx', age: 0.5 },
-        { name: 'cxh', age: 28 },
-      ]"
       :creator-initial-value="() => ({ name: 'Name', age: 0 })"
     >
       <pro-input
