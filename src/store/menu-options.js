@@ -195,12 +195,6 @@ export function createComponentMenuOptions({ lang, theme }) {
       type: 'group',
       children: [
         {
-          en: 'ProLayout',
-          zh: '布局',
-          enSuffix: true,
-          path: '/layout',
-        },
-        {
           en: 'ProCard',
           zh: '卡片',
           enSuffix: true,
