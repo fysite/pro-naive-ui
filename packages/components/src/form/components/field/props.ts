@@ -1,5 +1,5 @@
 import type { TupleToUnion } from 'type-fest'
-import type { ExtractPublicPropTypes, PropType, Ref } from 'vue'
+import type { ExtractPublicPropTypes, PropType } from 'vue'
 import { simplyOmit } from '../../../_utils/simplyOmit'
 import { proFormItemProps } from '../form-item'
 
@@ -61,11 +61,10 @@ export const proFieldProps = {
     default: undefined,
   },
   /**
-   * 手动更新值
-   * @param fieldValue 表单值
-   * @param inputValue 输入值
+   * 手动控制值的更新
+   * @param value 输入值
    */
-  onInputValue: Function as PropType<(fieldValue: Ref<any>, inputValue: any, ...args: any[]) => void>,
+  onUpdateValue: Function as PropType<(value: any, ...args: any[]) => void>,
 } as const
 
 const proFieldIgnoreKeys = [

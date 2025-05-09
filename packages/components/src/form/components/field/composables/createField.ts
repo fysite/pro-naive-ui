@@ -8,7 +8,7 @@ export function createField(props: ProFieldProps) {
     isList,
     preserve,
     onChange,
-    onInputValue,
+    onUpdateValue,
   } = props
 
   const options: FieldOptions = {
@@ -17,7 +17,7 @@ export function createField(props: ProFieldProps) {
     hidden: toRef(props, 'hidden'),
     visible: toRef(props, 'visible'),
     onChange,
-    onInputValue,
+    onUpdateValue,
   }
 
   return isList ? createArrayField(options) : _createField(options)
