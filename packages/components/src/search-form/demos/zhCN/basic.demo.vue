@@ -1,7 +1,7 @@
 <markdown>
 # 基本使用
 
-`valueType` 代表要被渲染的组件, 默认为 `'input'`
+`field` 代表要被渲染的组件, 默认为 `'input'`
 </markdown>
 
 <script lang="tsx">
@@ -44,7 +44,7 @@ export default defineComponent({
       {
         title: '创建时间',
         path: 'createTime',
-        valueType: 'date',
+        field: 'date',
       },
       {
         title: '应用状态',
@@ -53,12 +53,12 @@ export default defineComponent({
       {
         title: '响应日期',
         path: 'responseDate',
-        valueType: 'date-time',
+        field: 'date-time',
       },
       {
         title: '结束日期',
         path: 'endTime',
-        valueType: 'date',
+        field: 'date',
       },
     ]
 

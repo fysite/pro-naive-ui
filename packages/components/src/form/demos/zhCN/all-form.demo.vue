@@ -42,12 +42,12 @@ export default defineComponent({
       {
         title: '年龄',
         path: 'age',
-        valueType: 'digit',
+        field: 'digit',
       },
       {
         title: '状态',
         path: 'status',
-        valueType: 'select',
+        field: 'select',
         fieldProps: {
           options: [
             { label: '正常', value: 0 },
@@ -59,22 +59,22 @@ export default defineComponent({
       {
         title: '日期',
         path: 'date',
-        valueType: 'date',
+        field: 'date',
       },
       {
         title: '时间',
         path: 'time',
-        valueType: 'time',
+        field: 'time',
       },
       {
         title: '日期时间',
         path: 'info.dateRange',
-        valueType: 'date-time',
+        field: 'date-time',
       },
       {
         title: '项目名称',
         path: 'projectName',
-        valueType: 'date-time',
+        field: 'date-time',
       },
     ]
 

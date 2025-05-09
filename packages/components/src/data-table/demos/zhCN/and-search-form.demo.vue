@@ -69,17 +69,17 @@ export default defineComponent({
       {
         title: '创建时间',
         path: 'createTime',
-        valueType: 'date',
+        field: 'date',
       },
       {
         title: '响应时间',
         path: 'responseTime',
-        valueType: 'date',
+        field: 'date',
       },
       {
         title: '响应时间',
         path: 'responseTime',
-        valueType: 'date',
+        field: 'date',
       },
     ]
 
