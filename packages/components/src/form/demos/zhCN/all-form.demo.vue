@@ -92,7 +92,7 @@ export default defineComponent({
       onSubmitFailed: console.log,
     })
 
-    const searchForm = createProSearchForm<Info>({
+    const searchForm = createProSearchForm<Partial<Info>>({
       onReset: console.log,
       onSubmit: async (values) => {
         loading.value = true

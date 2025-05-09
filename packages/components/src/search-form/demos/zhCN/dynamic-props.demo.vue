@@ -25,7 +25,7 @@ export default defineComponent({
     const citys = ref<any[]>([])
     const title = ref('动态通用属性')
 
-    const form = createProSearchForm<Info>({
+    const form = createProSearchForm<Partial<Info>>({
       onReset: console.log,
       onSubmit: console.log,
     })

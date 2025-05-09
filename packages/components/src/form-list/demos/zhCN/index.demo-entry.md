@@ -104,7 +104,7 @@ import { ref } from 'vue'
 import { createProForm } from 'pro-naive-ui'
 
 const formListInst = ref<ProFormListInst>()
-const proForm = createProForm<{name:string}>()
+const proForm = createProForm<{name?:string}>()
 
 function handleClick(){
   formListInst.value!.push({....})
@@ -128,7 +128,7 @@ function handleClick(){
 <!-- 父组件 -->
 <script setup lang="ts">
 import { createProForm } from 'pro-naive-ui'
-const proForm = createProForm<{name:string}>()
+const proForm = createProForm<{name?:string}>()
 </script>
 
 <template>

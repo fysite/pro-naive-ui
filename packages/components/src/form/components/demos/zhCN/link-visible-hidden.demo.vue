@@ -13,7 +13,7 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   setup() {
-    const form = createProForm<{ color: string }>({
+    const form = createProForm<{ color?: string }>({
       onSubmit: console.log,
       initialValues: {
         color: '#ccc',

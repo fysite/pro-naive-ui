@@ -35,7 +35,7 @@ async function reqUserInfo() {
 
 export default defineComponent({
   setup() {
-    const form = createProForm<Info>({
+    const form = createProForm<Partial<Info>>({
       onSubmit: console.log,
     })
 

@@ -25,7 +25,7 @@ export default defineComponent({
   setup() {
     const loading = ref(false)
 
-    const form = createProSearchForm<Info>({
+    const form = createProSearchForm<Partial<Info>>({
       defaultCollapsed: true, // 默认收起
       onReset: console.log,
       onSubmit: async (values) => {

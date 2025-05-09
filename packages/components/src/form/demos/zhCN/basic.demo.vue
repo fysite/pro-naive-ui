@@ -16,8 +16,8 @@ export default defineComponent({
     return {
       readonly: ref(false),
       form: createProForm<{
-        username: string
-        password: string
+        username?: string
+        password?: string
       }>({
         onReset: console.log,
         onSubmit: console.log,

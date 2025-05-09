@@ -15,9 +15,9 @@ function delay(time: number) {
 export default defineComponent({
   setup() {
     const form = createProForm<{
-      A: number
-      B: number
-      name: string
+      A?: number
+      B?: number
+      name?: string
     }>()
 
     async function fetchUpdateBAndName() {

@@ -16,7 +16,7 @@ export default defineComponent({
     const loading = ref(false)
     const message = useMessage()
 
-    const drawerForm = createProDrawerForm<{ name: string, age: number }>({
+    const drawerForm = createProDrawerForm<{ name?: string, age?: number }>({
       onSubmit: async (values) => {
         loading.value = true
         await delay(1500)
