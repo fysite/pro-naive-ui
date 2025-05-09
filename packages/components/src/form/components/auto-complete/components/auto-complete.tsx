@@ -1,7 +1,7 @@
 import type { SlotsType, VNodeChild } from 'vue'
 import type { ProAutoCompleteSlots } from '../slots'
 import { autoCompleteProps, NAutoComplete, NFlex } from 'naive-ui'
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 import { useFieldUtils } from '../../field'
 import { useInjectAutoCompleteInstStore } from '../inst'
 
@@ -10,7 +10,7 @@ export default defineComponent({
   inheritAttrs: false,
   props: autoCompleteProps,
   slots: Object as SlotsType<ProAutoCompleteSlots>,
-  setup() {
+  setup(props) {
     const {
       instRef,
       registerInst,
@@ -23,6 +23,13 @@ export default defineComponent({
       emptyDom,
     } = useFieldUtils()
 
+    const nAutoCompleteProps = computed(() =>{
+      return {
+        ...props,
+        value:props.value ?? ''
+      }
+    })
+
     registerInst({
       blur: () => instRef.value?.blur(),
       focus: () => instRef.value?.blur(),
@@ -33,6 +40,7 @@ export default defineComponent({
       instRef,
       readonly,
       emptyDom,
+      nAutoCompleteProps
     }
   },
   render() {
@@ -53,7 +61,7 @@ export default defineComponent({
         <NAutoComplete
           ref="instRef"
           {...this.$attrs}
-          {...this.$props}
+          {...this.nAutoCompleteProps}
           v-slots={this.$slots}
         >
         </NAutoComplete>
@@ -63,7 +71,7 @@ export default defineComponent({
       ? this.$slots.input({
           inputDom: dom,
           readonly: this.readonly,
-          inputProps: this.$props,
+          inputProps: this.nAutoCompleteProps,
         })
       : dom
   },
