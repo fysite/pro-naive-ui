@@ -11,7 +11,7 @@ export default defineComponent({
   props: inputProps,
   slots: Object as SlotsType<ProPasswordSlots>,
   inheritAttrs: false,
-  setup() {
+  setup(props) {
     const open = ref(false)
 
     const {
@@ -25,6 +25,13 @@ export default defineComponent({
       readonly,
       emptyDom,
     } = useFieldUtils()
+
+    const nInputProps = computed(() => {
+      return {
+        ...props,
+        value: props.value ?? null,
+      }
+    })
 
     function setOpen(v: boolean) {
       open.value = v
@@ -51,6 +58,7 @@ export default defineComponent({
       setOpen,
       readonly,
       emptyDom,
+      nInputProps,
     }
   },
   render() {
@@ -73,8 +81,8 @@ export default defineComponent({
       dom = (
         <NInput
           ref="instRef"
-          {...this.$props}
           {...this.$attrs}
+          {...this.nInputProps}
           v-slots={this.$slots}
         >
         </NInput>
@@ -84,7 +92,7 @@ export default defineComponent({
       ? this.$slots.input({
           inputDom: dom,
           readonly: this.readonly,
-          inputProps: this.$props,
+          inputProps: this.nInputProps,
         })
       : dom
   },

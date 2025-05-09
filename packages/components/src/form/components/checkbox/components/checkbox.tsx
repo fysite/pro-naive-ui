@@ -1,7 +1,7 @@
 import type { SlotsType } from 'vue'
 import type { ProCheckboxSlots } from '../slots'
 import { checkboxProps, NCheckbox } from 'naive-ui'
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 import { useFieldUtils } from '../../field'
 import { useInjectCheckboxInstStore } from '../inst'
 
@@ -10,7 +10,7 @@ export default defineComponent({
   inheritAttrs: false,
   props: checkboxProps,
   slots: Object as SlotsType<ProCheckboxSlots>,
-  setup() {
+  setup(props) {
     const {
       instRef,
       registerInst,
@@ -20,6 +20,14 @@ export default defineComponent({
       readonly,
     } = useFieldUtils()
 
+    const nCheckboxProps = computed(() => {
+      return {
+        ...props,
+        checked: props.checked ?? false,
+        disabled: readonly.value || props.disabled,
+      }
+    })
+
     registerInst({
       blur: () => instRef.value?.blur(),
       focus: () => instRef.value?.focus(),
@@ -27,16 +35,15 @@ export default defineComponent({
     return {
       instRef,
       readonly,
+      nCheckboxProps,
     }
   },
   render() {
-    const disabled = this.readonly || this.$props.disabled
     const dom = (
       <NCheckbox
         ref="instRef"
-        {...this.$props}
         {...this.$attrs}
-        disabled={disabled}
+        {...this.nCheckboxProps}
         v-slots={this.$slots}
       >
       </NCheckbox>
@@ -45,7 +52,7 @@ export default defineComponent({
       ? this.$slots.input({
           inputDom: dom,
           readonly: this.readonly,
-          inputProps: this.$props,
+          inputProps: this.nCheckboxProps,
         })
       : dom
   },

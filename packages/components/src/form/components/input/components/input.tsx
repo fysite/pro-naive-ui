@@ -10,7 +10,7 @@ export default defineComponent({
   props: inputProps,
   slots: Object as SlotsType<ProInputSlots>,
   inheritAttrs: false,
-  setup() {
+  setup(props) {
     const {
       instRef,
       registerInst,
@@ -22,6 +22,13 @@ export default defineComponent({
       readonly,
       emptyDom,
     } = useFieldUtils()
+
+    const nInputProps = computed(() => {
+      return {
+        ...props,
+        value: props.value ?? null,
+      }
+    })
 
     registerInst({
       blur: () => instRef.value?.blur(),
@@ -42,6 +49,7 @@ export default defineComponent({
       instRef,
       readonly,
       emptyDom,
+      nInputProps,
     }
   },
   render() {
@@ -61,8 +69,8 @@ export default defineComponent({
       dom = (
         <NInput
           ref="instRef"
-          {...this.$props}
           {...this.$attrs}
+          {...this.nInputProps}
           v-slots={this.$slots}
         >
         </NInput>
@@ -72,7 +80,7 @@ export default defineComponent({
       ? this.$slots.input({
           inputDom: dom,
           readonly: this.readonly,
-          inputProps: this.$props,
+          inputProps: this.nInputProps,
         })
       : dom
   },

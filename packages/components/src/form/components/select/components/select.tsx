@@ -62,6 +62,13 @@ export default defineComponent({
       return labels
     })
 
+    const nSelectProps = computed(() => {
+      return {
+        ...props,
+        value: props.value ?? null,
+      }
+    })
+
     registerInst({
       blur: () => instRef.value?.blur(),
       focus: () => instRef.value?.focus(),
@@ -73,6 +80,7 @@ export default defineComponent({
       instRef,
       readonly,
       emptyDom,
+      nSelectProps,
       selectedLabels,
     }
   },
@@ -91,8 +99,8 @@ export default defineComponent({
       dom = (
         <NSelect
           ref="instRef"
-          {...this.$props}
           {...this.$attrs}
+          {...this.nSelectProps}
           v-slots={this.$slots}
         >
         </NSelect>
@@ -102,7 +110,7 @@ export default defineComponent({
       ? this.$slots.input({
           inputDom: dom,
           readonly: this.readonly,
-          inputProps: this.$props,
+          inputProps: this.nSelectProps,
         })
       : dom
   },

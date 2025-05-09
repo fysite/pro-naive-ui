@@ -50,12 +50,12 @@ export default defineComponent({
 
       if (valueFormat && (isString(value) || (isArray(value) && value.every(isString)))) {
         return {
-          formattedValue: value,
+          formattedValue: value ?? null,
           onUpdateFormattedValue: onUpdateValue,
         } as any
       }
       return {
-        value,
+        value: value ?? null,
         onUpdateValue,
       }
     })
@@ -114,11 +114,12 @@ export default defineComponent({
       }
       else if (this.arrayableDateText) {
         const separator = this.$slots.separator?.() ?? this.$props.separator
+        const [s, e] = this.dateText as [string, string]
         dom = (
           <NFlex size="small">
-            <span>{(this.dateText as [string, string])[0]}</span>
+            <span>{s}</span>
             {separator && <span>{separator}</span>}
-            <span>{(this.dateText as [string, string])[1]}</span>
+            <span>{e}</span>
           </NFlex>
         )
       }

@@ -62,6 +62,13 @@ export default defineComponent({
       return labels
     })
 
+    const nTreeSelectProps = computed(() => {
+      return {
+        ...props,
+        value: props.value ?? null,
+      }
+    })
+
     registerInst({
       blur: () => instRef.value?.blur(),
       focus: () => instRef.value?.focus(),
@@ -76,6 +83,7 @@ export default defineComponent({
       readonly,
       emptyDom,
       selectedLabels,
+      nTreeSelectProps,
     }
   },
   render() {
@@ -94,7 +102,7 @@ export default defineComponent({
         <NTreeSelect
           ref="instRef"
           {...this.$attrs}
-          {...this.$props}
+          {...this.nTreeSelectProps}
           v-slots={this.$slots}
         >
         </NTreeSelect>
@@ -104,7 +112,7 @@ export default defineComponent({
       ? this.$slots.input({
           inputDom: dom,
           readonly: this.readonly,
-          inputProps: this.$props,
+          inputProps: this.nTreeSelectProps,
         })
       : dom
   },

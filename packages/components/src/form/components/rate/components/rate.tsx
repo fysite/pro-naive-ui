@@ -1,7 +1,7 @@
 import type { SlotsType } from 'vue'
 import type { ProRateSlots } from '../slots'
 import { NRate, rateProps } from 'naive-ui'
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 import { useFieldUtils } from '../../field'
 
 export default defineComponent({
@@ -9,22 +9,29 @@ export default defineComponent({
   props: rateProps,
   slots: Object as SlotsType<ProRateSlots>,
   inheritAttrs: false,
-  setup() {
+  setup(props) {
     const {
       readonly,
     } = useFieldUtils()
 
+    const nRateProps = computed(() => {
+      return {
+        ...props,
+        value: props.value ?? null as any,
+        readonly: readonly.value || props.readonly,
+      }
+    })
+
     return {
       readonly,
+      nRateProps,
     }
   },
   render() {
-    const rateReadonly = this.readonly || this.$props.readonly
     const dom = (
       <NRate
-        {...this.$props}
         {...this.$attrs}
-        readonly={rateReadonly}
+        {...this.nRateProps}
         v-slots={this.$slots}
       >
       </NRate>
@@ -33,7 +40,7 @@ export default defineComponent({
       ? this.$slots.input({
           inputDom: dom,
           readonly: this.readonly,
-          inputProps: this.$props,
+          inputProps: this.nRateProps,
         })
       : dom
   },

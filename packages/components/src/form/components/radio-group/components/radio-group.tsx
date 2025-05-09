@@ -59,9 +59,13 @@ export default defineComponent({
         flexProps,
         labelField,
         valueField,
+        value,
         ...rest
       } = props
-      return rest
+      return {
+        ...rest,
+        value: value ?? null,
+      }
     })
 
     const selectedLabel = computed(() => {

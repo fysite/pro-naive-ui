@@ -53,10 +53,11 @@ export default defineComponent({
     })
 
     const nTransferProps = computed<TransferProps>(() => {
-      const { placeholder, ...rest } = props
+      const { value, placeholder, ...rest } = props
       const [s, t] = placeholder ?? []
       return {
         ...rest,
+        value: value ?? null,
         options: normalizedOptions.value,
         sourceFilterPlaceholder: s as string,
         targetFilterPlaceholder: t as string,

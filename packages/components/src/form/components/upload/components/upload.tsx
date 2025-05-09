@@ -41,6 +41,7 @@ export default defineComponent({
       return {
         ...pureProps.value as UploadProps,
         onBeforeUpload,
+        disabled: readonly.value || props.disabled,
       }
     })
 
@@ -116,7 +117,6 @@ export default defineComponent({
   },
   render() {
     this.fixUploadDragger()
-    const disabled = this.readonly || this.$props.disabled
     const dom = this.readonly && this.empty
       ? this.emptyDom
       : (
@@ -124,7 +124,6 @@ export default defineComponent({
             ref="instRef"
             {...this.$attrs}
             {...this.nUploadProps}
-            disabled={disabled}
           >
             {{
               ...this.$slots,

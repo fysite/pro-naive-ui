@@ -49,13 +49,13 @@ export default defineComponent({
 
       if (valueFormat && isString(value)) {
         return {
-          formattedValue: value,
+          formattedValue: value ?? null,
           onUpdateFormattedValue: onUpdateValue,
         } as any
       }
 
       return {
-        value,
+        value: value ?? null,
         onUpdateValue,
       }
     })

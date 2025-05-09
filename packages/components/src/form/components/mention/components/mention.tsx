@@ -1,7 +1,7 @@
 import type { SlotsType } from 'vue'
 import type { ProMentionSlots } from '../slots'
 import { mentionProps, NMention } from 'naive-ui'
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 import { useFieldUtils } from '../../field'
 import { useInjectMentionInstStore } from '../inst'
 
@@ -10,7 +10,7 @@ export default defineComponent({
   props: mentionProps,
   slots: Object as SlotsType<ProMentionSlots>,
   inheritAttrs: false,
-  setup() {
+  setup(props) {
     const {
       instRef,
       registerInst,
@@ -21,6 +21,13 @@ export default defineComponent({
       readonlyText,
     } = useFieldUtils()
 
+    const nMentionProps = computed(() => {
+      return {
+        ...props,
+        value: props.value ?? '',
+      }
+    })
+
     registerInst({
       blur: () => instRef.value?.blur(),
       focus: () => instRef.value?.focus(),
@@ -29,6 +36,7 @@ export default defineComponent({
       instRef,
       readonly,
       readonlyText,
+      nMentionProps,
     }
   },
   render() {
@@ -37,8 +45,8 @@ export default defineComponent({
       : (
           <NMention
             ref="instRef"
-            {...this.$props}
             {...this.$attrs}
+            {...this.nMentionProps}
             v-slots={this.$slots}
           >
           </NMention>
@@ -47,7 +55,7 @@ export default defineComponent({
       ? this.$slots.input({
           inputDom: dom,
           readonly: this.readonly,
-          inputProps: this.$props,
+          inputProps: this.nMentionProps,
         })
       : dom
   },
