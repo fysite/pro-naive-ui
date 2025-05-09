@@ -69,7 +69,6 @@ export const proFieldProps = {
 
 const proFieldIgnoreKeys = [
   'isList',
-  'valueType',
   'fieldProps',
   'valueModelName',
 ] as const
@@ -90,7 +89,6 @@ export const proFieldSharedProps = {
 const proListFieldIgnoreKeys = [
   'isList',
   'onChange',
-  'valueType',
   'fieldProps',
   'placeholder',
   'onInputValue',
