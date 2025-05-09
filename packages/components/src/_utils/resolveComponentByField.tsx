@@ -1,12 +1,12 @@
-import type { ProFieldColumnValueType } from '../form'
+import type { ProFieldColumnType } from '../form'
 import type { AnyFn } from '../types'
 import { isString } from 'lodash-es'
 import { h, resolveComponent } from 'vue'
 import { warnOnce } from './warn'
 
-interface ResolveComponentByValueTypeOptions {
+interface ResolveComponentByFieldOptions {
   /**
-   * valueType 前缀
+   * field 前缀
    * @default 'pro'
    */
   prefix?: string
@@ -23,7 +23,7 @@ interface ResolveComponentByValueTypeOptions {
    */
   proFieldProps?: Record<string, any>
 }
-export function resolveComponentByValueType(valueType: ProFieldColumnValueType, options: ResolveComponentByValueTypeOptions = {}) {
+export function resolveComponentByField(field: ProFieldColumnType, options: ResolveComponentByFieldOptions = {}) {
   const {
     fieldSlots,
     fieldProps,
@@ -31,7 +31,7 @@ export function resolveComponentByValueType(valueType: ProFieldColumnValueType, 
     prefix = 'pro',
   } = options
 
-  const Component = resolveComponent(`${prefix}-${valueType}`)
+  const Component = resolveComponent(`${prefix}-${field}`)
   if (!isString(Component)) {
     return h(Component, {
       ...proFieldProps,
@@ -40,7 +40,7 @@ export function resolveComponentByValueType(valueType: ProFieldColumnValueType, 
   }
   if (__DEV__) {
     warnOnce(
-      'valueType',
+      'field',
       `${Component} is not registered !`,
     )
   }

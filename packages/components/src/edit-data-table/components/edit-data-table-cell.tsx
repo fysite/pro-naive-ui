@@ -2,7 +2,7 @@ import type { PropType } from 'vue'
 import type { ProEditDataTableBaseColumn } from '../types'
 import { isFunction } from 'lodash-es'
 import { computed, defineComponent, inject } from 'vue'
-import { resolveComponentByValueType } from '../../_utils/resolveComponentByValueType'
+import { resolveComponentByField } from '../../_utils/resolveComponentByField'
 import { editDataTableInjectionKey, useInjectProEditDataTableInst } from '../context'
 import { useResolvePath } from './composables/useResolvePath'
 
@@ -79,7 +79,7 @@ export default defineComponent({
           ...this.action,
           editable: this.rowEditable,
         })
-      : resolveComponentByValueType(column.valueType ?? 'input', {
+      : resolveComponentByField(column.field ?? 'input', {
           fieldProps: this.fieldProps,
           fieldSlots: column.fieldSlots,
           proFieldProps: {
