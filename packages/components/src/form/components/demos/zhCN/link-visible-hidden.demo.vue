@@ -1,8 +1,6 @@
 <markdown>
 # 联动-显示隐藏
-
-每个表单项都有 `visible` 和 `hidden` 属性来控制显示和隐藏,`visible` 的优先级比 `hidden` 高, 当然你也可以用 `v-if`,
-使用 `getFieldValue` 或者 `values` 获取表单的值控制联动
+每个表单项都有 `visible` 和 `hidden` 属性来控制显示和隐藏,`visible` 的优先级比 `hidden` 高，你也可以使用 `v-if`，这取决于你自己。
 
 <n-alert type="warning" title="注意" :bordered="false">
   被隐藏的表单项值在提交时并不会包含在内
@@ -17,11 +15,13 @@ export default defineComponent({
   setup() {
     const form = createProForm<{ color: string }>({
       onSubmit: console.log,
+      initialValues: {
+        color: '#ccc',
+      },
     })
     return {
       form,
       values: form.values,
-      get: form.getFieldValue,
     }
   },
 })
@@ -33,24 +33,23 @@ export default defineComponent({
       title="颜色"
       path="color"
       required
-      initial-value="#ccc"
       :field-props="{
         style: {
           background: values.color,
         },
       }"
     />
-    <pro-digit
-      title="#ccc显示"
+    <pro-input
+      title="请在颜色中输入#ccc显示"
       path="color#ccc"
       required
       :visible="values.color === '#ccc'"
     />
-    <pro-digit
-      title="#eee隐藏"
+    <pro-input
+      title="请在颜色中输入#eee隐藏"
       path="color#eee"
       required
-      :hidden="get('color') === '#eee'"
+      :hidden="values.color === '#eee'"
     />
     <n-button type="primary" attr-type="submit">
       提交

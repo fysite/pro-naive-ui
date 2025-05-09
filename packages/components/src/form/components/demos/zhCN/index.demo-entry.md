@@ -1,10 +1,10 @@
 # 表单项 ProField
 <!--single-column-->
 
-一个表单除了 `Form` 之外还是需要一系列的表单项,`ProForm` 自带了数量可观的表单项,这些组件本质上是 `NFormItem` 和组件的结合,我们可以把他们当成一个 `NFormItem` 来使用,并且支持各种 `props`。每个表单项都支持 `fieldProps` 属性来支持设置输入组件的 `props`。 我们支持了 `placeholder` 的透传,你可以直接在组件上设置 `placeholder`。
-每个表单项同时也支持了 `readonly` ,不同的组件会有不同的只读样式,与 disable 相比 readonly 展示更加友好。生成的 dom 也更小（PS：这段说明是抄的 [ProComponents](https://procomponents.ant.design/components/field-set#proformtext-demo-components-other),因为懒得写一大段字）
+一个表单除了 `Form` 之外还是需要一系列的表单项，`ProForm` 自带了数量可观的表单项，这些组件本质上是 `NFormItem` 和组件的结合，我们可以把他们当成一个 `NFormItem` 来使用，并且支持各种 `props`。每个表单项都支持 `fieldProps` 属性来支持设置输入组件的 `props`。 我们支持了 `placeholder` 的透传，你可以直接在组件上设置 `placeholder`。
+每个表单项同时也支持了 `readonly` ，不同的组件会有不同的只读样式，与 disable 相比 readonly 展示更加友好。生成的 dom 也更小（PS：这段说明是抄的 [ProComponents](https://procomponents.ant.design/components/field-set#proformtext-demo-components-other)，因为懒得写一大段字）
 
-ProInput 是 NFormItem + Input 的产物,可以简单理解成以下的代码
+ProInput 是 NFormItem + Input 的产物，可以简单理解成以下的代码
 ```html
 <!-- ProInput -->
 <template>
@@ -15,7 +15,7 @@ ProInput 是 NFormItem + Input 的产物,可以简单理解成以下的代码
 ```
 
 <n-alert type="warning" title="注意" :bordered="false">
-  我们给 ProInput 设置的 props 其实是 NFormItem 的,fieldProps 才是包含的组件的,要切记。
+  我们给 ProInput 设置的 props 其实是 NFormItem 的，fieldProps 才是包含的组件的，要切记。
 </n-alert>
 
 ## 演示
@@ -24,49 +24,44 @@ ProInput 是 NFormItem + Input 的产物,可以简单理解成以下的代码
 item.vue
 date.vue
 upload.vue
-input-value.vue
-post-value.vue
-transform.vue
-dependencies.vue
+update-value.vue
 link-visible-hidden.vue
 link-async-loop.vue
 cross-component.vue
 feedback.vue
 input-slot.vue
-develop-custom-component.vue
 ```
 
 ## API
 ### 通用的属性
-每个表单项都支持以下属性,引用到的类型声明介绍如下
+每个表单项都支持以下属性，引用到的类型声明介绍如下
 ```typescript
 import type { Ref } from 'vue'
 import type { PopoverProps } from 'naive-ui'
 import type { Dependencie } from 'pro-naive-ui'
 ```
 
-| 名称                                                                                          | 类型                                                              | 默认值 | 说明                                                                                                                 | 版本 |
-| --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------- | ---- |
-| title                                                                                         | `string`                                                          | `-`    | 同 `label`,为了工程化统一                                                                                            |      |
-| readonly                                                                                      | `boolean`                                                         | `-`    | 是否为只读态,如果设置给了 `pro-form-list`,会应用到内部的控件中,不包含嵌套的 `pro-form-list`                          |      |
-| initialValue                                                                                  | `any`                                                             | `-`    | 初始值,优先级大于表单的 `initialValues`,不支持响应式                                                                 |      |
-| preserve                                                                                      | `boolean`                                                         | `true` | 字段被隐藏或卸载时是否还保留值                                                                                       |      |
-| visible                                                                                       | `boolean`                                                         | `-`    | 是否显示,优先级高于 `hidden`                                                                                         |      |
-| hidden                                                                                        | `boolean`                                                         | `-`    | 是否隐藏,优先级低于 `visible`                                                                                        |      |
-| placeholder                                                                                   | `any`                                                             | `-`    | 会透传给支持 `placeholder` 的控件,`pro-form-list` 中不支持该属性                                                     |      |
-| fieldProps                                                                                    | `object`                                                          | `-`    | 控件的 `props`,比如 `pro-input` 控件,这里就支持 `n-input` 的所有 `props`,其他控件同理,`pro-form-list` 中不支持该属性 |      |
-| onChange                                                                                      | `(val: any) => void`                                              | `-`    | 字段值发生变化后触发的回调函数,手动交互才会触发,`pro-form-list` 中不支持该属性                                       |      |
-| onInputValue                                                                                  | `(fieldValue: Ref<any>, inputValue: any, ...args: any[]) => void` | `-`    | 手动更新值,<n-a href="#input-value.vue">查看完整例子</n-a>,`pro-form-list` 中不支持该属性                            |      |
-| tooltip                                                                                       | `string \| string[]`                                              | `-`    | 显示在 `label` 右边的提示                                                                                            |      |
-| [参考 NFormItem Props](https://www.naiveui.com/zh-CN/os-theme/components/form#FormItem-Props) |                                                                   |        |                                                                                                                      |      |
+| 名称                                                                                          | 类型                                   | 默认值 | 说明                                                                                                                     | 版本 |
+| --------------------------------------------------------------------------------------------- | -------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------ | ---- |
+| title                                                                                         | `string`                               | `-`    | 同 `label`，为了工程化统一                                                                                               |      |
+| readonly                                                                                      | `boolean`                              | `-`    | 是否为只读态，如果设置给了 `pro-form-list`，会应用到内部的控件中，不包含嵌套的 `pro-form-list`                           |      |
+| preserve                                                                                      | `boolean`                              | `true` | 字段被隐藏或卸载时是否还保留值                                                                                           |      |
+| visible                                                                                       | `boolean`                              | `-`    | 是否显示，优先级高于 `hidden`                                                                                            |      |
+| hidden                                                                                        | `boolean`                              | `-`    | 是否隐藏，优先级低于 `visible`                                                                                           |      |
+| placeholder                                                                                   | `any`                                  | `-`    | 会透传给支持 `placeholder` 的控件，`pro-form-list` 中不支持该属性                                                        |      |
+| fieldProps                                                                                    | `object`                               | `-`    | 控件的 `props`，比如 `pro-input` 控件，这里就支持 `n-input` 的所有 `props`，其他控件同理，`pro-form-list` 中不支持该属性 |      |
+| onChange                                                                                      | `(val: any) => void`                   | `-`    | 字段值发生变化后触发的回调函数，手动交互才会触发，`pro-form-list` 中不支持该属性                                         |      |
+| onUpdateValue                                                                                 | `(value: any, ...args: any[]) => void` | `-`    | 手动更新值，<n-a href="#input-value.vue">查看完整例子</n-a>，`pro-form-list` 中不支持该属性                              |      |
+| tooltip                                                                                       | `string \| string[]`                   | `-`    | 显示在 `label` 右边的提示                                                                                                |      |
+| [参考 NFormItem Props](https://www.naiveui.com/zh-CN/os-theme/components/form#FormItem-Props) |                                        |        |                                                                                                                          |      |
 
 ### 通用的插槽
-每个表单项支持`自身插槽` + `form-item 插槽`外,还支持以下插槽
+每个表单项支持`自身插槽` + `form-item 插槽`外，还支持以下插槽
 
-| 名称     | 参数                                                                                                                              | 说明                                                                                                                                                                                                                                                                       | 版本 |
-| -------- | --------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
-| input    | `(opt:{readonly: boolean;inputProps: object; inputDom: VNodeChild})`                                                              | `readonly` 是否为只读态,`inputProps` 是传递给表单项的所有 `props`,`inputDom` 是表单项虚拟 dom（会根据 `readonly` 自动切换）                                                                                                                                                |      |
-| feedback | `(opt:{errors: ValidateError;warnings: ValidateError; feedbacks: ValidateError; feedbackColor: string; feedbackDom: VNodeChild})` | `errors` 是表单项验证的错误信息列表,`warnings` 是表单项验证的警告信息列表,`feedbacks` 是表单项验证的反馈信息列表（warnings 和 errors 信息内部自动判断）,`feedbackColor` 是表单项验证的反馈信息颜色（warnings 和 errors 颜色内部自动判断）,`feedbackDom` 是反馈信息虚拟 dom |      |
+| 名称     | 参数                                                                                                                              | 说明                                                                                                                                                                                                                                                                           | 版本 |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---- |
+| input    | `(opt:{readonly: boolean;inputProps: object; inputDom: VNodeChild})`                                                              | `readonly` 是否为只读态，`inputProps` 是传递给表单项组件的所有 `props`，`inputDom` 是表单项虚拟 dom（会根据 `readonly` 自动切换）                                                                                                                                              |      |
+| feedback | `(opt:{errors: ValidateError;warnings: ValidateError; feedbacks: ValidateError; feedbackColor: string; feedbackDom: VNodeChild})` | `errors` 是表单项验证的错误信息列表，`warnings` 是表单项验证的警告信息列表，`feedbacks` 是表单项验证的反馈信息列表（warnings 和 errors 信息内部自动判断），`feedbackColor` 是表单项验证的反馈信息颜色（warnings 和 errors 颜色内部自动判断），`feedbackDom` 是反馈信息虚拟 dom |      |
 
 ### ProTreeSelect
 基于 [n-tree-select](https://www.naiveui.com/zh-CN/os-theme/components/tree-select) 封装
@@ -120,25 +115,13 @@ import type { Dependencie } from 'pro-naive-ui'
 ```
 
 ### ProAutoComplete
-基于 [n-auto-complete](https://www.naiveui.com/zh-CN/os-theme/components/auto-complete) 封装,`options` 支持函数
+基于 [n-auto-complete](https://www.naiveui.com/zh-CN/os-theme/components/auto-complete) 封装
 ```html
 <template>
   <pro-auto-complete
     title="自动填充"
     path="auto-complete"
-    :field-props="{
-      ...nAutoCompleteProps,
-      options:(value) =>{
-        return ['@gmail.com', '@163.com', '@qq.com'].map((suffix) => {
-          const prefix = (value ?? '').split('@')[0]
-          return {
-            label: prefix + suffix,
-            value: prefix + suffix,
-          }
-        })
-      }
-    }"
-
+    :field-props="nAutoCompleteProps"
   />
 </template>
 ```
@@ -168,10 +151,10 @@ import type { Dependencie } from 'pro-naive-ui'
 ```
 
 ### ProCheckboxGroup
-基于 [n-checkbox-group](https://www.naiveui.com/zh-CN/os-theme/components/checkbox) 封装,`fieldProps` 中新增了一些属性
-- labelField：label 属性的字段名,默认 'label'
-- valueField：value 属性的字段名,默认 'value'
-- flexProps: 传递给 `n-flex` 的属性,默认使用 `n-flex` 布局
+基于 [n-checkbox-group](https://www.naiveui.com/zh-CN/os-theme/components/checkbox) 封装，`fieldProps` 中新增了一些属性
+- labelField：label 属性的字段名，默认 'label'
+- valueField：value 属性的字段名，默认 'value'
+- flexProps: 传递给 `n-flex` 的属性，默认使用 `n-flex` 布局
 - options: 每一项 `n-checkbox` 的配置
 ```html
 <template>
@@ -195,7 +178,7 @@ import type { Dependencie } from 'pro-naive-ui'
 
 ### ProColorPicker
 基于 [n-color-picker](https://www.naiveui.com/zh-CN/os-theme/components/color-picker) 封装<br/>
-`n-color-picker` 的 `label` 插槽因为和通用插槽有冲突,所以改名为 `input-label`
+`n-color-picker` 的 `label` 插槽因为和通用插槽有冲突，所以改名为 `picker-label`
 ```html
 <template>
   <pro-color-picker
@@ -203,14 +186,14 @@ import type { Dependencie } from 'pro-naive-ui'
     path="color-picker"
     :field-props="nColorPickerProps"
   >
-    <!-- 用 input-label 插槽代替组件本身的 label 插槽 -->
-    <template #input-label>title...</template>
+    <!-- 用 picker-label 插槽代替组件本身的 label 插槽 -->
+    <template #picker-label>title...</template>
   </pro-color-picker>
 </template>
 ```
 
 ### ProDate
-基于 [n-date-picker](https://www.naiveui.com/zh-CN/os-theme/components/date-picker) 封装,请直接使用 `placeholder` 属性代替 `startPlaceholder` 和 `endPlaceholder`,支持字符串格式和时间戳格式,以下是和 `n-date-picker type` 属性的映射关系
+基于 [n-date-picker](https://www.naiveui.com/zh-CN/os-theme/components/date-picker) 封装，请直接使用 `placeholder` 属性代替 `startPlaceholder` 和 `endPlaceholder`，支持字符串格式和时间戳格式，以下是和 `n-date-picker type` 属性的映射关系
 - pro-date：等同于 type 为 'date'
 - pro-date-year：等同于 type 为 'year'
 - pro-date-week：等同于 type 为 'week'
@@ -270,10 +253,10 @@ import type { Dependencie } from 'pro-naive-ui'
 ```
 
 ### ProRadioGroup
-基于 [n-radio](https://www.naiveui.com/zh-CN/os-theme/components/radio) 封装,`fieldProps` 中新增了一些属性
-- labelField：label 属性的字段名,默认 'label'
-- valueField：value 属性的字段名,默认 'value'
-- flexProps: 传递给 `n-flex` 的属性,默认使用 `n-flex` 布局
+基于 [n-radio](https://www.naiveui.com/zh-CN/os-theme/components/radio) 封装，`fieldProps` 中新增了一些属性
+- labelField：label 属性的字段名，默认 'label'
+- valueField：value 属性的字段名，默认 'value'
+- flexProps: 传递给 `n-flex` 的属性，默认使用 `n-flex` 布局
 - options: 每一项 `n-radio` 的配置
 ```html
 <template>
@@ -344,7 +327,7 @@ import type { Dependencie } from 'pro-naive-ui'
 ```
 
 ### ProTime
-基于 [n-time-picker](https://www.naiveui.com/zh-CN/os-theme/components/time-picker) 封装,支持字符串格式和时间戳格式
+基于 [n-time-picker](https://www.naiveui.com/zh-CN/os-theme/components/time-picker) 封装，支持字符串格式和时间戳格式
 ```html
 <template>
   <pro-time
@@ -356,9 +339,9 @@ import type { Dependencie } from 'pro-naive-ui'
 ```
 
 ### ProTransfer
-基于 [n-transfer](https://www.naiveui.com/zh-CN/os-theme/components/transfer) 封装,请直接使用 `placeholder` 属性代替 `sourceFilterPlaceholder` 和 `targetFilterPlaceholder`,`fieldProps` 中新增了一些属性
-- labelField：label 属性的字段名,默认 'label'
-- valueField：value 属性的字段名,默认 'value'
+基于 [n-transfer](https://www.naiveui.com/zh-CN/os-theme/components/transfer) 封装，请直接使用 `placeholder` 属性代替 `sourceFilterPlaceholder` 和 `targetFilterPlaceholder`，`fieldProps` 中新增了一些属性
+- labelField：label 属性的字段名，默认 'label'
+- valueField：value 属性的字段名，默认 'value'
 ```html
 <template>
   <pro-transfer
@@ -374,9 +357,9 @@ import type { Dependencie } from 'pro-naive-ui'
 ```
 
 ### ProUpload
-基于 [n-upload](https://www.naiveui.com/zh-CN/os-theme/components/upload) 封装,支持字符串格式、字符串组成的数组格式、原有格式,`fieldProps` 中新增了一些属性
-- title：按钮文本,优先级低于默认插槽
-- maxSize：文件的最大大小,单位 kb
+基于 [n-upload](https://www.naiveui.com/zh-CN/os-theme/components/upload) 封装，`fieldProps` 中新增了一些属性
+- title：按钮文本，优先级低于默认插槽
+- maxSize：文件的最大大小，单位 kb
 - onlyAcceptImage：是否只允许上传图片类型
 - onOverSize：超出文件最大大小时触发的回调
 - onUnAcceptType：上传不支持的类型文件时触发的回调
