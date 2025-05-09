@@ -1,7 +1,5 @@
 <markdown>
 # 编辑表单回显
-
-你不需要等待表单挂载完成在进行赋值
 </markdown>
 
 <script lang="tsx">
@@ -18,7 +16,7 @@ export default defineComponent({
     const loading = ref(false)
     const message = useMessage()
 
-    const modalForm = createProModalForm<{ name: string, age: number }>({
+    const modalForm = createProModalForm<{ name?: string, age?: number }>({
       onSubmit: async (values) => {
         loading.value = true
         await delay(1500)
@@ -30,13 +28,10 @@ export default defineComponent({
     })
 
     function edit() {
-      /**
-       * 打开弹窗、赋值不需要考虑顺序问题
-       */
-      modalForm.setFieldsValue({
+      modalForm.values.value = {
         name: 'zcf',
         age: 26,
-      })
+      }
       modalForm.open()
     }
 
