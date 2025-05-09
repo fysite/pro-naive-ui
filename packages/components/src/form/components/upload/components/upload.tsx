@@ -38,9 +38,11 @@ export default defineComponent({
     const { localeRef } = useLocale('ProUpload')
 
     const nUploadProps = computed<UploadProps>(() => {
+      const { fileList, ...rest } = pureProps.value
       return {
-        ...pureProps.value as UploadProps,
+        ...rest as UploadProps,
         onBeforeUpload,
+        fileList: fileList ?? [],
         disabled: readonly.value || props.disabled,
       }
     })
