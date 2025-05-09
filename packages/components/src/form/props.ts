@@ -21,6 +21,10 @@ export const proFormExtendProps = {
     required: true,
   },
   /**
+   * 表单是否在提交中,防止重复提交
+   */
+  loading: Boolean,
+  /**
    * 是否在按下回车后提交
    */
   submitOnPressEnter: Boolean,

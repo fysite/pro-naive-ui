@@ -50,8 +50,10 @@ export default defineComponent({
          */
         onSubmit: (e) => {
           e.preventDefault()
-          form.submit()
-          props.onSubmit && props.onSubmit(e)
+          if (!overridedProps.value.loading) {
+            form.submit()
+            props.onSubmit && props.onSubmit(e)
+          }
         },
         /**
          * 支持 button `attr-type = reset` 重置表单
