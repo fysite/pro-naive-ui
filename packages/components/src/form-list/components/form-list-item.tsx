@@ -2,7 +2,7 @@ import type { PropType, SlotsType } from 'vue'
 import type { ProButtonProps } from '../../button'
 import type { ProFormListSlots } from '../slots'
 import { CopyOutlined, DeleteOutlined } from '@vicons/antd'
-import { get } from 'lodash-es'
+import { cloneDeep, get } from 'lodash-es'
 import { NFormItem, NIcon } from 'naive-ui'
 import { useInjectField } from 'pro-composables'
 import { computed, defineComponent, Fragment, provide, ref, toRef } from 'vue'
@@ -103,11 +103,9 @@ const Action = defineComponent({
       if (!form)
         return
       const { path, index, actionGuard } = props
-      const { beforeAddRow, afterAddRow } = actionGuard ?? {}
-
       const insertIndex = index + 1
-      const row = get(form.values.value, path!, {})
-
+      const { beforeAddRow, afterAddRow } = actionGuard ?? {}
+      const row = cloneDeep(get(form.values.value, path!, {}))
       if (beforeAddRow) {
         copyLoading.value = true
         const success = await beforeAddRow({ index, insertIndex, total: list.value.length })
@@ -131,7 +129,6 @@ const Action = defineComponent({
     async function remove() {
       const { index, actionGuard } = props
       const { beforeRemoveRow, afterRemoveRow } = actionGuard ?? {}
-
       if (beforeRemoveRow) {
         removeLoading.value = true
         const success = await beforeRemoveRow({ index, total: list.value.length })

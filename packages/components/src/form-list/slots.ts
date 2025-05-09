@@ -17,9 +17,9 @@ export interface ProFormListSlots extends Omit<ProFieldSharedSlots<any>, 'input'
      */
     action: ProFormListInst
     /**
-     * 当前行信息,它是只读的
+     * 当前行信息
      */
-    row: Record<string, any>
+    row: any
   }
   /**
    * 自定义渲染每一行的结构，主要就是将 action 放在别的地方

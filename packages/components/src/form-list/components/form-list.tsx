@@ -62,7 +62,6 @@ const CreatorButton = defineComponent({
       const { position, actionGuard, creatorInitialValue } = props
       const { beforeAddRow, afterAddRow } = actionGuard ?? {}
       const insertIndex = position === 'top' ? 0 : list.value.length
-
       if (beforeAddRow) {
         addRowLoading.value = true
         const success = await beforeAddRow({ total: list.value.length, index: -1, insertIndex })

@@ -34,20 +34,20 @@ export interface ActionGuard {
 }
 
 export type ActionRender = (opt: {
+  row: any
   index: number
   total: number
   actionDom: VNodeChild
   action: ProFormListInst
-  row: Record<string, any>
 }) => VNodeChild
 
 export type ItemRender = (opt: {
+  row: any
   index: number
   total: number
   itemDom: VNodeChild
   actionDom: VNodeChild
   action: ProFormListInst
-  row: Record<string, any>
 }) => VNodeChild
 
 export type ContainerRender = (opt: {
