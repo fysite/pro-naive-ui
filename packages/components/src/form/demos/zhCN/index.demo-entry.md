@@ -71,7 +71,7 @@ interface ValidateError {
 | initialValues  | `object`                                                              | `{}`   | 表单初始值，表单重置时会参考初始值                               |      |  |
 | omitNil        | `boolean`                                                             | `true` | 提交或读取 `fieldsValue` 时是否忽略 `null` 和 `undefined` 的数据 |      |  |
 | onReset        | `() => void`                                                          | `-`    | 数据重置后的回调                                                 |      |  |
-| onSubmit       | `(values: any, warnings: ValidateError[][]) => void \| Promise<void>` | `-`    | 表单数据提交的回调，如果返回了一个 Promise，会防止重复提交       |      |  |
+| onSubmit       | `(values: any, warnings: ValidateError[][]) => void \| Promise<void>` | `-`    | 表单数据提交的回调                                               |      |  |
 | onSubmitFailed | `(errors: ValidateError[][]) => void`                                 | `-`    | 提交失败后回调                                                   |      |  |
 | onValueChange  | `(opt:{ value: any; path: string }) => void`                          | `-`    | 任何一项值发生变化后的回调(手动交互才会触发)                     |      |  |
 

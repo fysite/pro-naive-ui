@@ -88,9 +88,9 @@ const modalForm = createProModalForm()
 </script>
 
 <template>
-  <pro-form :form="modalForm">
+  <pro-modal-form :form="modalForm">
     <pro-input path="name" />
-  </pro-form>
+  </pro-modal-form>
 </template>
 
 <!-- 后代组件 -->
