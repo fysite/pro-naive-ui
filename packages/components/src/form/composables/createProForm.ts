@@ -16,6 +16,10 @@ export interface ValidateError {
   message?: string
 }
 
+interface ProFormInst extends FormInst {
+  loading: boolean
+}
+
 export const proFormInternalKey = '__proFormInternalKey__'
 
 type StringKeyof<Values = any> = Exclude<Paths<Values>, symbol | number>
@@ -59,7 +63,7 @@ export type CreateProFormReturn<Values = any> = Simplify<Pick<
    */
   [proFormInternalKey]: {
     internalForm: BaseForm
-    registerNFormInst: (nForm: FormInst) => void
+    registerProFormInst: (form: ProFormInst) => void
     validationResults: ReturnType<typeof useValidationResults>
   }
 }>
@@ -91,8 +95,6 @@ export function createProForm<Values = any>(
     onSubmitFailed,
   } = options
 
-  const submiting = ref(false)
-
   const internalForm = createForm({
     omitNil,
     initialValues,
@@ -109,7 +111,7 @@ export function createProForm<Values = any>(
     _: { fieldStore },
   } = internalForm
 
-  const nFormInst = ref<FormInst>()
+  const proFormInst = ref<ProFormInst>()
   const validationResults = useValidationResults()
 
   const {
@@ -119,18 +121,18 @@ export function createProForm<Values = any>(
     getFieldValidationResult,
   } = validationResults
 
-  function registerNFormInst(nForm: FormInst) {
-    nFormInst.value = nForm
+  function registerProFormInst(form: ProFormInst) {
+    proFormInst.value = form
   }
 
   function validate(paths?: InternalPath) {
     if (!paths) {
-      return nFormInst.value?.validate(addValidateResults, (rule) => {
+      return proFormInst.value?.validate(addValidateResults, (rule) => {
         return !(rule as any).readonly
       })
     }
     paths = (isString(paths) ? [paths] : paths).map(stringifyPath)
-    return nFormInst.value?.validate(
+    return proFormInst.value?.validate(
       (errors, extra) => addValidateResults(errors, extra, false),
       (rule) => {
         return paths.includes(rule.key!) && !(rule as any).readonly
@@ -139,20 +141,14 @@ export function createProForm<Values = any>(
   }
 
   function submit() {
-    if (submiting.value) {
+    const loading = proFormInst.value?.loading
+    if (loading) {
       return
     }
     validate()
       ?.then(({ warnings }) => {
         if (onSubmit) {
-          const response = onSubmit(fieldsValue.value as any, warnings ?? [])
-          if (response instanceof Promise) {
-            submiting.value = true
-            response.finally(() => {
-              submiting.value = false
-            })
-          }
-          return response
+          onSubmit(fieldsValue.value as any, warnings ?? [])
         }
       })
       ?.catch((errors) => {
@@ -165,7 +161,7 @@ export function createProForm<Values = any>(
 
   function restoreValidation(paths?: InternalPath) {
     if (!paths) {
-      nFormInst.value?.restoreValidation()
+      proFormInst.value?.restoreValidation()
       return
     }
     const field = fieldStore.getFieldByPath(paths)
@@ -227,8 +223,8 @@ export function createProForm<Values = any>(
     getFieldValidationResult,
     [proFormInternalKey]: {
       internalForm,
-      registerNFormInst,
       validationResults,
+      registerProFormInst,
     },
   }
   return Object.freeze(returned)

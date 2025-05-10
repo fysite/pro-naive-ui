@@ -39,6 +39,10 @@ export default defineComponent({
       proFormExtendProps,
     )
 
+    const loading = computed(() => {
+      return !!overridedProps.value.loading
+    })
+
     const nFormProps = computed<FormProps>(() => {
       return {
         ...formProps.value,
@@ -50,7 +54,7 @@ export default defineComponent({
          */
         onSubmit: (e) => {
           e.preventDefault()
-          if (!overridedProps.value.loading) {
+          if (!loading.value) {
             form.submit()
             props.onSubmit && props.onSubmit(e)
           }
@@ -68,7 +72,7 @@ export default defineComponent({
     const {
       internalForm,
       validationResults,
-      registerNFormInst,
+      registerProFormInst,
     } = form[proFormInternalKey]
 
     /**
@@ -85,7 +89,10 @@ export default defineComponent({
     })
 
     onMounted(() => {
-      registerNFormInst(nFormInst.value!)
+      registerProFormInst({
+        ...nFormInst.value!,
+        loading: loading as any,
+      })
     })
 
     provide(proFormConfigInjectionKey, {
