@@ -1,6 +1,7 @@
 import type { ComputedRef } from 'vue'
 import type { ProModalProps } from '../props'
 import { useEventListener } from '@vueuse/core'
+import { get } from 'lodash-es'
 import { computed, onScopeDispose } from 'vue'
 
 export const DRAGGABLE_CLASS = 'pro-modal--draggable'
@@ -21,8 +22,9 @@ export function useDragModal(props: ComputedRef<ProModalProps>, options: UseDrag
       : ''
   })
 
-  const sticky = computed(() => {
-    return props.value.draggable !== false && (props.value.draggable?.sticky ?? true)
+  const boundsToWindow = computed(() => {
+    const draggable = props.value.draggable
+    return get(draggable, 'bounds') !== 'none'
   })
 
   function startDrag(modal: HTMLElement) {
@@ -74,7 +76,7 @@ export function useDragModal(props: ComputedRef<ProModalProps>, options: UseDrag
 
         let moveX = event.clientX - downX
         let moveY = event.clientY - downY
-        if (sticky.value) {
+        if (boundsToWindow.value) {
           if (moveX > maxMoveX) {
             moveX = maxMoveX
           }
