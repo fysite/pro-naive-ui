@@ -42,10 +42,6 @@ export const proFormExtendProps = {
     type: Boolean,
     default: undefined,
   },
-  /**
-   * 字段为空时的文本
-   */
-  fieldEmptyText: [String, Function] as PropType<string | (() => VNodeChild)>,
 } as const
 
 export const proFormProps = {

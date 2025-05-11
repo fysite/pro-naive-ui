@@ -3,9 +3,10 @@ import type { FieldExtraInfo } from '../field-extra-info'
 import { toValue } from '@vueuse/core'
 import { useThemeVars } from 'naive-ui'
 import { useInjectField } from 'pro-composables'
-import { computed, isVNode } from 'vue'
+import { computed, isVNode, unref } from 'vue'
 import { isEmptyValue } from '../../../../_utils/isEmptyValue'
 import { throwError } from '../../../../_utils/warn'
+import { useInjectGlobalConfig } from '../../../../config-provider'
 import { useInjectProFormConfig } from '../../../context'
 import { fieldExtraKey } from '../field-extra-info'
 
@@ -21,17 +22,20 @@ export function useFieldUtils(field?: BaseField) {
   } = field[fieldExtraKey] as FieldExtraInfo
 
   const {
-    fieldEmptyText,
     validationResults,
   } = useInjectProFormConfig()
+
+  const {
+    mergedEmpty,
+  } = useInjectGlobalConfig()
 
   const empty = computed(() => {
     return isEmptyValue(field.value.value)
   })
 
   const emptyDom = computed(() => {
-    const dom = toValue(fieldEmptyText)
-    return isVNode(dom) ? dom : <span>{dom}</span>
+    const formEmptyNode = toValue(unref(mergedEmpty).form)
+    return isVNode(formEmptyNode) ? formEmptyNode : <span>{formEmptyNode}</span>
   })
 
   const readonlyText = computed(() => {

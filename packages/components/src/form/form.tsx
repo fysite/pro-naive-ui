@@ -99,7 +99,6 @@ export default defineComponent({
       validationResults,
       rules: computed(() => overridedProps.value.rules),
       readonly: computed(() => overridedProps.value.readonly),
-      fieldEmptyText: computed(() => overridedProps.value.fieldEmptyText ?? '-'),
       validationTrigger: computed(() => overridedProps.value.validationTrigger!),
     })
     provideProForm(form)
