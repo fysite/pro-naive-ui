@@ -1,8 +1,10 @@
 import type { MaybeRef } from 'vue'
+import type { EmptyConfig } from './props'
 import { inject, provide } from 'vue'
 import { createInjectionKey } from '../composables/createInjectionKey'
 
 interface GlobalConfig {
+  mergedEmpty: MaybeRef<Required<EmptyConfig>>
   mergedPropOverrides: MaybeRef<Record<string, object>>
 }
 
@@ -14,6 +16,11 @@ export function provideGlobalConfig(config: GlobalConfig) {
 
 export function useInjectGlobalConfig() {
   return inject(globalConfigInjectionKey, {
+    mergedEmpty: {
+      form: '-',
+      table: '-',
+      copyableText: '-',
+    },
     mergedPropOverrides: {},
   })
 }

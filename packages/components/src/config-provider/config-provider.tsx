@@ -1,6 +1,6 @@
 import type { ConfigProviderProps } from 'naive-ui'
 import type { ComputedRef } from 'vue'
-import type { ProConfigProviderProps } from './props'
+import type { EmptyConfig, ProConfigProviderProps } from './props'
 import { NConfigProvider } from 'naive-ui'
 import { computed, defineComponent, unref } from 'vue'
 import { useOmitProps } from '../composables'
@@ -13,6 +13,7 @@ export default defineComponent({
   props: proConfigProviderProps,
   setup(props) {
     const {
+      mergedEmpty: inheritedEmpty,
       mergedPropOverrides: inheritedPropOverrides,
     } = useInjectGlobalConfig()
 
@@ -28,7 +29,22 @@ export default defineComponent({
       )
     })
 
+    const emptyConfig: EmptyConfig = {
+      table: '-',
+      form: '-',
+      copyableText: '-',
+    }
+
+    const mergedEmpty = computed(() => {
+      return {
+        ...emptyConfig,
+        ...unref(inheritedEmpty),
+        ...(props.empty ?? {}),
+      }
+    })
+
     provideGlobalConfig({
+      mergedEmpty,
       mergedPropOverrides,
     })
     return {
