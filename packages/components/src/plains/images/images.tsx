@@ -1,20 +1,22 @@
 import type { PropType } from 'vue'
 import type { ProImagesConfig } from './types'
+import { isArray, isString } from 'lodash-es'
 import { NFlex, NImage, NImageGroup } from 'naive-ui'
-import { defineComponent } from 'vue'
+import { defineComponent, toValue } from 'vue'
 import { useNaiveClsPrefix } from '../../_internal/useClsPrefix'
 import { isEmptyValue } from '../../_utils/isEmptyValue'
+
 import { useOverrideProps } from '../../composables'
-import { usePlainComponentConfig } from '../composables'
+import { useInjectGlobalConfig } from '../../config-provider'
 
 const name = 'ProImages'
-export const ProImages = defineComponent({
+const ProImages = defineComponent({
   name,
   props: {
     /**
      * 传递进来的值
      */
-    value: undefined as unknown as PropType<any>,
+    value: Array as PropType<string[]>,
     /**
      * 传递给 n-image 的选项，里面的 imageGroupProps 是传递给 n-image-group 组件的
      */
@@ -29,25 +31,24 @@ export const ProImages = defineComponent({
     )
 
     const {
-      empty,
-      mergedValue,
-    } = usePlainComponentConfig('images', overridedProps)
+      mergedEmpty,
+    } = useInjectGlobalConfig()
 
     return {
-      empty,
-      mergedValue,
+      mergedEmpty,
+      overridedProps,
       mergedClsPrefix,
     }
   },
   render() {
-    if (this.empty) {
-      return null
+    const { value, config } = this.overridedProps
+    if (isEmptyValue(value)) {
+      return toValue(this.mergedEmpty.images)
     }
-
     const {
       imageGroupProps = {},
       ...nImageProps
-    } = this.$props.config ?? {}
+    } = config ?? {}
 
     function renderSingleImage(src: string) {
       return (
@@ -58,16 +59,16 @@ export const ProImages = defineComponent({
         />
       )
     }
-
-    if (this.mergedValue.length === 1) {
-      const src = this.mergedValue[0]
+    const srcs = value as string[]
+    if (srcs.length === 1) {
+      const src = srcs[0]
       return renderSingleImage(src)
     }
     else {
       return (
         <NImageGroup {...imageGroupProps}>
           <NFlex size="small">
-            {this.mergedValue.map(renderSingleImage)}
+            {srcs.map(renderSingleImage)}
           </NFlex>
         </NImageGroup>
       )
@@ -76,13 +77,21 @@ export const ProImages = defineComponent({
 
 })
 
-export function renderImages(value: any, config?: ProImagesConfig) {
-  return isEmptyValue(value)
-    ? null
-    : (
-        <ProImages
-          value={value}
-          config={config}
-        />
-      )
+function transformValueToSrcs(value: any) {
+  const list = isArray(value) ? value : [value]
+  return list.reduce<string[]>((p, c) => {
+    if (isString(c) && c.length > 0) {
+      p.push(c)
+    }
+    return p
+  }, [])
+}
+
+export function renderProImages(value: any, config?: ProImagesConfig) {
+  return (
+    <ProImages
+      config={config}
+      value={transformValueToSrcs(value)}
+    />
+  )
 }

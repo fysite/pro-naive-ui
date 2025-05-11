@@ -1,20 +1,21 @@
 import type { PropType } from 'vue'
 import type { ProTagsConfig } from './types'
+import { isArray, isPlainObject, isString } from 'lodash-es'
 import { NFlex, NTag } from 'naive-ui'
-import { defineComponent } from 'vue'
+import { defineComponent, toValue } from 'vue'
 import { useNaiveClsPrefix } from '../../_internal/useClsPrefix'
 import { isEmptyValue } from '../../_utils/isEmptyValue'
 import { useOverrideProps } from '../../composables'
-import { usePlainComponentConfig } from '../composables'
+import { useInjectGlobalConfig } from '../../config-provider'
 
 const name = 'ProTags'
-export const ProTags = defineComponent({
+const ProTags = defineComponent({
   name,
   props: {
     /**
      * 传递进来的值
      */
-    value: undefined as unknown as PropType<any>,
+    value: Array as PropType<ProTagsConfig[]>,
     /**
      * 占位，现在没什么用
      */
@@ -29,23 +30,23 @@ export const ProTags = defineComponent({
     )
 
     const {
-      empty,
-      mergedValue,
-    } = usePlainComponentConfig('tags', overridedProps)
+      mergedEmpty,
+    } = useInjectGlobalConfig()
 
     return {
-      empty,
-      mergedValue,
+      mergedEmpty,
+      overridedProps,
       mergedClsPrefix,
     }
   },
   render() {
-    if (this.empty) {
-      return null
+    const { value: tags } = this.overridedProps
+    if (isEmptyValue(tags)) {
+      return toValue(this.mergedEmpty.tags)
     }
     return (
       <NFlex class={[`${this.mergedClsPrefix}-pro-tags`]}>
-        {this.mergedValue.map((option, index) => {
+        {tags!.map((option, index) => {
           const { content, ...nTagProps } = option
           return (
             <NTag
@@ -62,16 +63,35 @@ export const ProTags = defineComponent({
 
 })
 
-export function renderTags(
+function transformValueToTagOptions(value: any) {
+  const list = isArray(value) ? value : [value]
+  return list.reduce<ProTagsConfig[]>((p, c) => {
+    if (isString(c) && c.length > 0) {
+      p.push({
+        content: c,
+        type: 'primary',
+        bordered: false,
+      })
+    }
+    if (isPlainObject(c) && isString(c.content) && c.content.length > 0) {
+      p.push({
+        type: 'primary',
+        bordered: false,
+        ...c,
+      })
+    }
+    return p
+  }, [])
+}
+
+export function renderProTags(
   value: string | ProTagsConfig | Array<string | ProTagsConfig>,
   config?: Record<string, any>,
 ) {
-  return isEmptyValue(value)
-    ? null
-    : (
-        <ProTags
-          value={value}
-          config={config}
-        />
-      )
+  return (
+    <ProTags
+      config={config}
+      value={transformValueToTagOptions(value)}
+    />
+  )
 }

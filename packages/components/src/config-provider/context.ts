@@ -18,7 +18,10 @@ export function useInjectGlobalConfig() {
   return inject(globalConfigInjectionKey, {
     mergedEmpty: {
       form: '-',
+      tags: '-',
       table: '-',
+      images: '-',
+      dateText: '-',
       copyableText: '-',
     },
     mergedPropOverrides: {},

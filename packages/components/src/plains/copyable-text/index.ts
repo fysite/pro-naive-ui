@@ -1,6 +1,5 @@
 export {
-  ProCopyableText,
-  renderCopyableText,
+  renderProCopyableText,
 } from './copyable-text'
 
 export type {

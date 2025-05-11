@@ -2,15 +2,15 @@ import type { PropType } from 'vue'
 import type { ProDateTextConfig } from './types'
 import { format } from 'date-fns'
 import { isDate, isNumber, isString } from 'lodash-es'
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, toValue, unref } from 'vue'
 import { useNaiveClsPrefix } from '../../_internal/useClsPrefix'
 import { isEmptyValue } from '../../_utils/isEmptyValue'
 import { useOverrideProps } from '../../composables'
+import { useInjectGlobalConfig } from '../../config-provider'
 import { useLocale } from '../../locales'
-import { usePlainComponentConfig } from '../composables'
 
 const name = 'ProDateText'
-export const ProDateText = defineComponent({
+const ProDateText = defineComponent({
   name,
   props: {
     /**
@@ -35,9 +35,8 @@ export const ProDateText = defineComponent({
     } = useLocale('DatePicker')
 
     const {
-      empty,
-      mergedValue,
-    } = usePlainComponentConfig('dateText', overridedProps)
+      mergedEmpty,
+    } = useInjectGlobalConfig()
 
     const pattern = computed(() => {
       const locale = localeRef.value
@@ -59,7 +58,10 @@ export const ProDateText = defineComponent({
      * 支持字符串时间戳、时间戳、日期对象
      */
     const finalValue = computed(() => {
-      const value = mergedValue.value
+      const value = props.value
+      if (isEmptyValue(value)) {
+        return toValue(unref(mergedEmpty).dateText)
+      }
       if (isString(value)) {
         if (/^\d+$/.test(value)) {
           return format(Number(value), pattern.value, {
@@ -76,15 +78,12 @@ export const ProDateText = defineComponent({
     })
 
     return {
-      empty,
       finalValue,
+      overridedProps,
       mergedClsPrefix,
     }
   },
   render() {
-    if (this.empty) {
-      return null
-    }
     return (
       <span class={[`${this.mergedClsPrefix}-pro-date-text`]}>
         {this.finalValue}
@@ -94,13 +93,11 @@ export const ProDateText = defineComponent({
 
 })
 
-export function renderDateText(value: any, config?: ProDateTextConfig) {
-  return isEmptyValue(value)
-    ? null
-    : (
-        <ProDateText
-          value={value}
-          config={config}
-        />
-      )
+export function renderProDateText(value: any, config?: ProDateTextConfig) {
+  return (
+    <ProDateText
+      value={value}
+      config={config}
+    />
+  )
 }

@@ -30,8 +30,11 @@ export default defineComponent({
     })
 
     const emptyConfig: EmptyConfig = {
-      table: '-',
+      tags: '-',
       form: '-',
+      table: '-',
+      images: '-',
+      dateText: '-',
       copyableText: '-',
     }
 

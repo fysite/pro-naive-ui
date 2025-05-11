@@ -5,7 +5,10 @@ type EmptyRender = string | (() => VNodeChild)
 
 export interface EmptyConfig {
   form?: EmptyRender
+  tags?: EmptyRender
   table?: EmptyRender
+  images?: EmptyRender
+  dateText?: EmptyRender
   copyableText?: EmptyRender
 }
 
