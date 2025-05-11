@@ -90,8 +90,9 @@ export default defineComponent({
 
     onMounted(() => {
       registerProFormInst({
-        ...nFormInst.value!,
         loading: loading as any,
+        validate:nFormInst.value!.validate,
+        restoreValidation:nFormInst.value!.restoreValidation,
       })
     })
 
