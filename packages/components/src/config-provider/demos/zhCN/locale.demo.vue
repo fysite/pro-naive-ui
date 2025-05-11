@@ -55,7 +55,6 @@ export default defineComponent({
       <pro-form :readonly="readonly" :form="form">
         <pro-date-week path="test" />
       </pro-form>
-      <pro-date-text :value="Date.now()" :config="{ pattern: 'week' }" />
     </pro-config-provider>
   </n-flex>
 </template>
