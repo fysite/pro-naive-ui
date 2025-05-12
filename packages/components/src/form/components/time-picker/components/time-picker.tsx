@@ -4,7 +4,7 @@ import type { ProTimePickerSlots } from '../slots'
 import { isString } from 'lodash-es'
 import { NTimePicker, timePickerProps } from 'naive-ui'
 import { computed, defineComponent } from 'vue'
-import { toDisplayDate } from '../../date-picker/components/utils/toDisplayDate'
+import { stringifyDate } from '../../date-picker/components/utils/stringifyDate'
 import { useFieldUtils } from '../../field'
 import { useInjectTimePickerInstStore } from '../inst'
 import { useMergeFormat } from './composables/useMergeFormat'
@@ -49,13 +49,13 @@ export default defineComponent({
 
       if (valueFormat && isString(value)) {
         return {
-          formattedValue: value,
+          formattedValue: value ?? null,
           onUpdateFormattedValue: onUpdateValue,
         } as any
       }
 
       return {
-        value,
+        value: value ?? null,
         onUpdateValue,
       }
     })
@@ -69,7 +69,7 @@ export default defineComponent({
     })
 
     const displayDateText = computed(() => {
-      return toDisplayDate(
+      return stringifyDate(
         value.value,
         mergedFormat.value,
       )
@@ -90,7 +90,6 @@ export default defineComponent({
   },
   render() {
     let dom: VNodeChild
-
     if (this.readonly) {
       dom = this.empty
         ? this.emptyDom
@@ -107,7 +106,6 @@ export default defineComponent({
         </NTimePicker>
       )
     }
-
     return this.$slots.input
       ? this.$slots.input({
           inputDom: dom,

@@ -59,9 +59,13 @@ export default defineComponent({
         flexProps,
         labelField,
         valueField,
+        value,
         ...rest
       } = props
-      return rest
+      return {
+        ...rest,
+        value: value ?? null,
+      }
     })
 
     const selectedLabel = computed(() => {
@@ -81,7 +85,6 @@ export default defineComponent({
   },
   render() {
     let dom: VNodeChild
-
     if (this.readonly) {
       dom = this.empty
         ? this.emptyDom
@@ -110,7 +113,6 @@ export default defineComponent({
         </NRadioGroup>
       )
     }
-
     return this.$slots.input
       ? this.$slots.input({
           inputDom: dom,

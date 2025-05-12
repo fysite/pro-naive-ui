@@ -4,7 +4,7 @@
 
 <script lang="tsx">
 import type { ProDataTableColumns } from 'pro-naive-ui'
-import { renderCopyableText, renderDateText, renderImages, renderTags } from 'pro-naive-ui'
+import { renderProCopyableText, renderProDateText, renderProImages, renderProTags } from 'pro-naive-ui'
 import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
@@ -13,24 +13,24 @@ export default defineComponent({
       {
         title: '可复制文本',
         width: 300,
-        render: row => renderCopyableText(row.title),
+        render: row => renderProCopyableText(row.title),
       },
       {
         title: 'tags',
         width: 100,
-        render: row => renderTags(row.title),
+        render: row => renderProTags(row.title),
       },
       {
         title: '日期格式化',
         width: 100,
-        render: row => renderDateText(row.now, {
+        render: row => renderProDateText(row.now, {
           pattern: 'quarter',
         }),
       },
       {
         title: '图片',
         width: 200,
-        render: row => renderImages(row.src),
+        render: row => renderProImages(row.src),
       },
       {
         title: 'No',

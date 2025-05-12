@@ -1,6 +1,5 @@
 export {
-  ProDateText,
-  renderDateText,
+  renderProDateText,
 } from './date-text'
 
 export type {

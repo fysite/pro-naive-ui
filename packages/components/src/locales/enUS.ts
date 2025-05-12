@@ -1,6 +1,4 @@
-import type { ProFieldColumnValueType } from '../form'
 import { createLocale, enUS as nEnUS } from 'naive-ui'
-import { InternalValueTypeEnum } from '../form/components/field/enums'
 
 export const enUS = createLocale({
   ProForm: {
@@ -9,34 +7,34 @@ export const enUS = createLocale({
         return `${title} Not Empty`
       },
     },
-    fieldPlaceholder: (title: string, valueType: ProFieldColumnValueType) => {
-      switch (valueType) {
-        case InternalValueTypeEnum.INPUT:
-        case InternalValueTypeEnum.DIGIT:
-        case InternalValueTypeEnum.MENTION:
-        case InternalValueTypeEnum.PASSWORD:
-        case InternalValueTypeEnum.TEXTAREA:
-        case InternalValueTypeEnum.AUTO_COMPLETE:
+    placeholder: (title: string, componentName: string) => {
+      switch (componentName) {
+        case 'ProInput':
+        case 'ProDigit':
+        case 'ProMention':
+        case 'ProPassword':
+        case 'ProTextarea':
+        case 'ProAutoComplete':
           return `Please Input ${title}`
-        case InternalValueTypeEnum.DATE:
-        case InternalValueTypeEnum.TIME:
-        case InternalValueTypeEnum.SELECT:
-        case InternalValueTypeEnum.CASCADER:
-        case InternalValueTypeEnum.DATE_TIME:
-        case InternalValueTypeEnum.DATE_YEAR:
-        case InternalValueTypeEnum.DATE_WEEK:
-        case InternalValueTypeEnum.DATE_MONTH:
-        case InternalValueTypeEnum.TREE_SELECT:
-        case InternalValueTypeEnum.DATE_QUARTER:
+        case 'ProDate':
+        case 'ProTime':
+        case 'ProSelect':
+        case 'ProCascader':
+        case 'ProDateTime':
+        case 'ProDateYear':
+        case 'ProDateWeek':
+        case 'ProDateMonth':
+        case 'ProTreeSelect':
+        case 'ProDateQuarter':
           return `Please Select ${title}`
-        case InternalValueTypeEnum.DATE_RANGE:
-        case InternalValueTypeEnum.DATE_TIME_RANGE:
+        case 'ProDateRange':
+        case 'ProDateTimeRange':
           return ['Start Date', 'End Date']
-        case InternalValueTypeEnum.DATE_YEAR_RANGE:
+        case 'ProDateYearRange':
           return ['Start Year', 'End Year']
-        case InternalValueTypeEnum.DATE_MONTH_RANGE:
+        case 'ProDateMonthRange':
           return ['Start Month', 'End Month']
-        case InternalValueTypeEnum.DATE_QUARTER_RANGE:
+        case 'ProDateQuarterRange':
           return ['Start Quarter', 'End Quarter']
       }
     },

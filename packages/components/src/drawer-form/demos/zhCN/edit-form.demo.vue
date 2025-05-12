@@ -1,13 +1,11 @@
 <markdown>
 # 编辑表单回显
-
-你不需要等待表单挂载完成在进行赋值
 </markdown>
 
 <script lang="tsx">
 import { useMessage } from 'naive-ui'
 import { createProDrawerForm } from 'pro-naive-ui'
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 function delay(time: number) {
   return new Promise(resolve => setTimeout(resolve, time))
@@ -15,30 +13,31 @@ function delay(time: number) {
 
 export default defineComponent({
   setup() {
+    const loading = ref(false)
     const message = useMessage()
 
-    const drawerForm = createProDrawerForm<{ name: string, age: number }>({
+    const drawerForm = createProDrawerForm<{ name?: string, age?: number }>({
       onSubmit: async (values) => {
+        loading.value = true
         await delay(1500)
         message.success('更新成功')
         console.log(values)
         drawerForm.close()
+        loading.value = false
       },
     })
 
     function edit() {
-      /**
-       * 打开抽屉、赋值不需要考虑顺序问题
-       */
-      drawerForm.setFieldsValue({
+      drawerForm.values.value = {
         name: 'zcf',
         age: 26,
-      })
+      }
       drawerForm.open()
     }
 
     return {
       edit,
+      loading,
       form: drawerForm,
     }
   },
@@ -53,6 +52,7 @@ export default defineComponent({
   </n-flex>
   <pro-drawer-form
     :form="form"
+    :loading="loading"
     label-width="80"
     label-placement="left"
   >

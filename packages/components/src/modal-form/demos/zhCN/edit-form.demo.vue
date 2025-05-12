@@ -1,13 +1,11 @@
 <markdown>
 # 编辑表单回显
-
-你不需要等待表单挂载完成在进行赋值
 </markdown>
 
 <script lang="tsx">
 import { useMessage } from 'naive-ui'
 import { createProModalForm } from 'pro-naive-ui'
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 function delay(time: number) {
   return new Promise(resolve => setTimeout(resolve, time))
@@ -15,30 +13,31 @@ function delay(time: number) {
 
 export default defineComponent({
   setup() {
+    const loading = ref(false)
     const message = useMessage()
 
-    const modalForm = createProModalForm<{ name: string, age: number }>({
+    const modalForm = createProModalForm<{ name?: string, age?: number }>({
       onSubmit: async (values) => {
+        loading.value = true
         await delay(1500)
         message.success('更新成功')
         console.log(values)
         modalForm.close()
+        loading.value = false
       },
     })
 
     function edit() {
-      /**
-       * 打开弹窗、赋值不需要考虑顺序问题
-       */
-      modalForm.setFieldsValue({
+      modalForm.values.value = {
         name: 'zcf',
         age: 26,
-      })
+      }
       modalForm.open()
     }
 
     return {
       edit,
+      loading,
       form: modalForm,
     }
   },
@@ -53,6 +52,7 @@ export default defineComponent({
   </n-flex>
   <pro-modal-form
     :form="form"
+    :loading="loading"
     title="新建表单"
     preset="card"
     label-width="80"

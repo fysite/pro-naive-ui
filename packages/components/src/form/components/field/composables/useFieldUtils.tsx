@@ -1,44 +1,41 @@
 import type { BaseField } from 'pro-composables'
 import type { FieldExtraInfo } from '../field-extra-info'
+import { toValue } from '@vueuse/core'
 import { useThemeVars } from 'naive-ui'
 import { useInjectField } from 'pro-composables'
-import { computed, isVNode } from 'vue'
+import { computed, isVNode, unref } from 'vue'
 import { isEmptyValue } from '../../../../_utils/isEmptyValue'
 import { throwError } from '../../../../_utils/warn'
-import { useInjectGlobalConfig, useInjectWrappedIn } from '../../../../config-provider'
+import { useInjectGlobalConfig } from '../../../../config-provider'
 import { useInjectProFormConfig } from '../../../context'
 import { fieldExtraKey } from '../field-extra-info'
 
-/**
- * 工具 composable
- */
 export function useFieldUtils(field?: BaseField) {
   field = field ?? useInjectField()!
-  if (!field && __DEV__) {
+  if (!field) {
     throwError('useFieldUtils', 'field not exist')
   }
   const themeVars = useThemeVars()
-  const wrappedIn = useInjectWrappedIn()
 
   const {
     readonly,
   } = field[fieldExtraKey] as FieldExtraInfo
 
   const {
-    mergedEmpty,
-  } = useInjectGlobalConfig()
-
-  const {
     validationResults,
   } = useInjectProFormConfig()
+
+  const {
+    mergedEmpty,
+  } = useInjectGlobalConfig()
 
   const empty = computed(() => {
     return isEmptyValue(field.value.value)
   })
 
   const emptyDom = computed(() => {
-    const dom = mergedEmpty(wrappedIn)
-    return isVNode(dom) ? dom : <span>{dom}</span>
+    const formEmptyNode = toValue(unref(mergedEmpty).form)
+    return isVNode(formEmptyNode) ? formEmptyNode : <span>{formEmptyNode}</span>
   })
 
   const readonlyText = computed(() => {

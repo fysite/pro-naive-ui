@@ -1,7 +1,7 @@
 <markdown>
 # 基本使用
 
-`valueType` 代表要被渲染的组件, 默认为 `'input'`
+`field` 代表要被渲染的组件, 默认为 `'input'`
 </markdown>
 
 <script lang="tsx">
@@ -17,12 +17,23 @@ interface Info {
   endTime: number
 }
 
+function delay(time: number) {
+  return new Promise(resolve => setTimeout(resolve, time))
+}
+
 export default defineComponent({
   setup() {
-    const form = createProSearchForm<Info>({
+    const loading = ref(false)
+
+    const form = createProSearchForm<Partial<Info>>({
       defaultCollapsed: true, // 默认收起
       onReset: console.log,
-      onSubmit: console.log,
+      onSubmit: async (values) => {
+        console.log(values)
+        loading.value = true
+        await delay(1500)
+        loading.value = false
+      },
     })
 
     const columns: ProSearchFormColumns<Info> = [
@@ -33,7 +44,7 @@ export default defineComponent({
       {
         title: '创建时间',
         path: 'createTime',
-        valueType: 'date',
+        field: 'date',
       },
       {
         title: '应用状态',
@@ -42,17 +53,18 @@ export default defineComponent({
       {
         title: '响应日期',
         path: 'responseDate',
-        valueType: 'date-time',
+        field: 'date-time',
       },
       {
         title: '结束日期',
         path: 'endTime',
-        valueType: 'date',
+        field: 'date',
       },
     ]
 
     return {
       form,
+      loading,
       columns,
       layout: ref<'left' | 'top'>('left'),
     }
@@ -73,6 +85,7 @@ export default defineComponent({
   <pro-card title="搜索表单">
     <pro-search-form
       :form="form"
+      :loading="loading"
       :columns="columns"
       :label-placement="layout"
     />

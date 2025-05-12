@@ -38,9 +38,12 @@ export default defineComponent({
     const { localeRef } = useLocale('ProUpload')
 
     const nUploadProps = computed<UploadProps>(() => {
+      const { fileList, ...rest } = pureProps.value
       return {
-        ...pureProps.value as UploadProps,
+        ...rest as UploadProps,
         onBeforeUpload,
+        fileList: fileList ?? [],
+        disabled: readonly.value || props.disabled,
       }
     })
 
@@ -116,10 +119,6 @@ export default defineComponent({
   },
   render() {
     this.fixUploadDragger()
-    const disabled = this.readonly
-      ? true
-      : this.$props.disabled
-
     const dom = this.readonly && this.empty
       ? this.emptyDom
       : (
@@ -127,7 +126,6 @@ export default defineComponent({
             ref="instRef"
             {...this.$attrs}
             {...this.nUploadProps}
-            disabled={disabled}
           >
             {{
               ...this.$slots,
@@ -142,7 +140,6 @@ export default defineComponent({
             }}
           </NUpload>
         )
-
     return this.$slots.input
       ? this.$slots.input({
           inputDom: dom,

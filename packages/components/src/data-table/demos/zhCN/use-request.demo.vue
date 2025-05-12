@@ -6,7 +6,7 @@
 
 <script lang="tsx">
 import type { ProDataTableColumns } from 'pro-naive-ui'
-import { renderCopyableText, renderImages, useNDataTable } from 'pro-naive-ui'
+import { renderProCopyableText, renderProImages, useNDataTable } from 'pro-naive-ui'
 import { defineComponent, ref } from 'vue'
 
 function fetchList(params: any) {
@@ -50,7 +50,7 @@ export default defineComponent({
             value: 2,
           },
         ],
-        render: row => renderCopyableText(row.title),
+        render: row => renderProCopyableText(row.title),
       },
       {
         title: '远程排序',
@@ -61,7 +61,7 @@ export default defineComponent({
       },
       {
         title: '图片',
-        render: row => renderImages(row.src),
+        render: row => renderProImages(row.src),
       },
     ])
 

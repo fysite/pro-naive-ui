@@ -86,15 +86,12 @@ export default defineComponent({
         fieldProps={this.internalEditDataTableProps}
       >
         {{
+          ...this.$slots,
           input: (pureProps: any) => {
             return (
               <EditDataTable
                 class={[`${mergedClsPrefix}-pro-edit-data-table`]}
                 {...pureProps}
-                extraProFieldConfig={{
-                  validateBehavior: this.proFieldProps.validateBehavior,
-                  validateBehaviorProps: this.proFieldProps.validateBehaviorProps,
-                }}
                 v-slots={this.$slots}
               />
             )

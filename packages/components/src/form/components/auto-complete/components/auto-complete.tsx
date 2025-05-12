@@ -1,7 +1,5 @@
-import type { AutoCompleteProps } from 'naive-ui'
-import type { PropType, SlotsType, VNodeChild } from 'vue'
+import type { SlotsType, VNodeChild } from 'vue'
 import type { ProAutoCompleteSlots } from '../slots'
-import { isFunction } from 'lodash-es'
 import { autoCompleteProps, NAutoComplete, NFlex } from 'naive-ui'
 import { computed, defineComponent } from 'vue'
 import { useFieldUtils } from '../../field'
@@ -10,16 +8,7 @@ import { useInjectAutoCompleteInstStore } from '../inst'
 export default defineComponent({
   name: 'AutoComplete',
   inheritAttrs: false,
-  props: {
-    ...autoCompleteProps,
-    options: {
-      type: [Array, Function] as PropType<
-        | AutoCompleteProps['options']
-        | ((value: string | null) => NonNullable<AutoCompleteProps['options']>)
-      >,
-      default: [],
-    },
-  },
+  props: autoCompleteProps,
   slots: Object as SlotsType<ProAutoCompleteSlots>,
   setup(props) {
     const {
@@ -34,15 +23,10 @@ export default defineComponent({
       emptyDom,
     } = useFieldUtils()
 
-    const nAutoCompleteOptions = computed(() => {
-      const { options = [] } = props
-      return isFunction(options) ? options(value.value) : options
-    })
-
-    const nAutoCompleteProps = computed<AutoCompleteProps>(() => {
+    const nAutoCompleteProps = computed(() => {
       return {
         ...props,
-        options: nAutoCompleteOptions.value,
+        value: props.value ?? '',
       }
     })
 
@@ -61,7 +45,6 @@ export default defineComponent({
   },
   render() {
     let dom: VNodeChild
-
     if (this.readonly) {
       dom = this.empty
         ? this.emptyDom
@@ -84,7 +67,6 @@ export default defineComponent({
         </NAutoComplete>
       )
     }
-
     return this.$slots.input
       ? this.$slots.input({
           inputDom: dom,

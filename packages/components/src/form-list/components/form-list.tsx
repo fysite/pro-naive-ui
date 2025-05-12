@@ -4,7 +4,7 @@ import type { ProFormListInst } from '../inst'
 import type { ProFormListSlots } from '../slots'
 import { PlusOutlined } from '@vicons/antd'
 import { NIcon } from 'naive-ui'
-import { ROW_UUID, useInjectListField } from 'pro-composables'
+import { ROW_UUID_KEY, useInjectField } from 'pro-composables'
 import { computed, defineComponent, ref } from 'vue'
 import { useNaiveClsPrefix } from '../../_internal/useClsPrefix'
 import { resolveSlotWithProps } from '../../_utils/resolveSlot'
@@ -20,7 +20,6 @@ import FormListItem from './form-list-item'
 const CreatorButton = defineComponent({
   name: 'CreatorButton',
   props: {
-    max: internalFormListProps.max,
     position: internalFormListProps.position,
     actionGuard: internalFormListProps.actionGuard,
     creatorButtonProps: internalFormListProps.creatorButtonProps,
@@ -35,22 +34,11 @@ const CreatorButton = defineComponent({
       insert,
       stringPath,
       value: list,
-    } = useInjectListField()!
-
-    const {
-      readonly,
-    } = useFieldUtils()
+    } = useInjectField(true)!
 
     const form = useInjectProForm()
     const addRowLoading = ref(false)
     const mergedClsPrefix = useNaiveClsPrefix()
-
-    const showButton = computed(() => {
-      const { max, creatorButtonProps } = props
-      return !readonly.value
-        && creatorButtonProps !== false
-        && list.value.length < (max ?? Number.POSITIVE_INFINITY)
-    })
 
     const proButtonProps = computed<ProButtonProps>(() => {
       const { creatorButtonProps } = props
@@ -74,7 +62,6 @@ const CreatorButton = defineComponent({
       const { position, actionGuard, creatorInitialValue } = props
       const { beforeAddRow, afterAddRow } = actionGuard ?? {}
       const insertIndex = position === 'top' ? 0 : list.value.length
-
       if (beforeAddRow) {
         addRowLoading.value = true
         const success = await beforeAddRow({ total: list.value.length, index: -1, insertIndex })
@@ -97,47 +84,42 @@ const CreatorButton = defineComponent({
 
     return {
       add,
-      showButton,
       proButtonProps,
       mergedClsPrefix,
     }
   },
   render() {
     const { mergedClsPrefix } = this
-
-    return this.showButton
-      ? (
-          <ProButton
-            {...this.proButtonProps}
-            class={[
-              `${mergedClsPrefix}-pro-form-list__button-add`,
-              {
-                [`${mergedClsPrefix}-pro-form-list__button-add--top`]: this.$props.position === 'top',
-                [`${mergedClsPrefix}-pro-form-list__button-add--bottom`]: this.$props.position !== 'top',
-              },
-            ]}
-            onClick={this.add}
-          />
-        )
-      : null
+    return (
+      <ProButton
+        {...this.proButtonProps}
+        class={[
+          `${mergedClsPrefix}-pro-form-list__button-add`,
+          {
+            [`${mergedClsPrefix}-pro-form-list__button-add--top`]: this.$props.position === 'top',
+            [`${mergedClsPrefix}-pro-form-list__button-add--bottom`]: this.$props.position !== 'top',
+          },
+        ]}
+        onClick={this.add}
+      />
+    )
   },
 })
 
 export default defineComponent({
   name: 'FormList',
-  props: {
-    ...internalFormListProps,
-    extraProFieldConfig: Object,
-  },
+  props: internalFormListProps,
   slots: Object as SlotsType<ProFormListSlots>,
-  setup() {
+  setup(props) {
     const {
       registerInst,
     } = useInjectFormListInstStore()!
 
     const {
-      get,
-      set,
+      readonly,
+    } = useFieldUtils()
+
+    const {
       pop,
       push,
       move,
@@ -147,12 +129,17 @@ export default defineComponent({
       remove,
       unshift,
       moveDown,
-      value: list,
-    } = useInjectListField()!
+      uidValue: uidList,
+    } = useInjectField(true)!
+
+    const showCreatorButton = computed(() => {
+      const { max, creatorButtonProps } = props
+      return !readonly.value
+        && creatorButtonProps !== false
+        && uidList.value.length < (max ?? Number.POSITIVE_INFINITY)
+    })
 
     const exposed: ProFormListInst = {
-      get,
-      set,
       pop,
       push,
       move,
@@ -167,12 +154,13 @@ export default defineComponent({
     registerInst(exposed)
     provideProFormListInst(exposed)
     return {
-      list,
+      uidList,
+      showCreatorButton,
     }
   },
   render() {
     const {
-      list,
+      uidList,
       $props,
       $slots,
     } = this
@@ -186,21 +174,19 @@ export default defineComponent({
       position = 'bottom',
       creatorButtonProps,
       creatorInitialValue,
-      extraProFieldConfig,
       onlyShowFirstItemLabel,
     } = $props
 
-    const listDom = list.map((item, index) => {
+    const listDom = uidList.map((item, index) => {
       return (
         <FormListItem
-          key={item[ROW_UUID]}
+          key={item[ROW_UUID_KEY]}
           min={min}
           max={max}
           index={index}
           actionGuard={actionGuard}
           copyButtonProps={copyButtonProps}
           removeButtonProps={removeButtonProps}
-          extraProFieldConfig={extraProFieldConfig}
           onlyShowFirstItemLabel={onlyShowFirstItemLabel}
         >
           {$slots}
@@ -208,15 +194,16 @@ export default defineComponent({
       )
     })
 
-    const creatorButtonDom = (
-      <CreatorButton
-        max={max}
-        position={position}
-        actionGuard={actionGuard}
-        creatorButtonProps={creatorButtonProps}
-        creatorInitialValue={creatorInitialValue}
-      />
-    )
+    const creatorButtonDom = this.showCreatorButton
+      ? (
+          <CreatorButton
+            position={position}
+            actionGuard={actionGuard}
+            creatorButtonProps={creatorButtonProps}
+            creatorInitialValue={creatorInitialValue}
+          />
+        )
+      : null
 
     return resolveSlotWithProps($slots.container, {
       listDom,

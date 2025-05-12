@@ -6,8 +6,8 @@ import { useEventListener } from '@vueuse/core'
 import { NForm } from 'naive-ui'
 import { provideInternalForm } from 'pro-composables'
 import { computed, defineComponent, onMounted, provide, ref } from 'vue'
+import { warnOnce } from '../_utils/warn'
 import { useOmitProps, useOverrideProps } from '../composables'
-import { provideWrappedIn } from '../config-provider'
 import { createProForm, proFormInternalKey, provideProForm } from './composables/createProForm'
 import { proFormConfigInjectionKey } from './context'
 import { proFormExtendProps, proFormProps } from './props'
@@ -21,6 +21,10 @@ export default defineComponent({
     let form = props.form
     if (!form && __DEV__) {
       form = createProForm()
+      warnOnce(
+        'ProForm',
+        'You are using ProForm without form prop. Please use form prop to pass the form instance.',
+      )
     }
 
     const nFormInst = ref<FormInst>()
@@ -35,19 +39,25 @@ export default defineComponent({
       proFormExtendProps,
     )
 
+    const loading = computed(() => {
+      return !!overridedProps.value.loading
+    })
+
     const nFormProps = computed<FormProps>(() => {
       return {
         ...formProps.value,
         rules: undefined,
         ref: nFormInst,
-        model: form[proFormInternalKey].model.value,
+        model: form.values.value,
         /**
          * 支持 button `attr-type = submit` 提交表单
          */
         onSubmit: (e) => {
           e.preventDefault()
-          form.submit()
-          props.onSubmit && props.onSubmit(e)
+          if (!loading.value) {
+            form.submit()
+            props.onSubmit && props.onSubmit(e)
+          }
         },
         /**
          * 支持 button `attr-type = reset` 重置表单
@@ -62,12 +72,8 @@ export default defineComponent({
     const {
       internalForm,
       validationResults,
-      registerNFormInst,
+      registerProFormInst,
     } = form[proFormInternalKey]
-
-    onMounted(() => {
-      registerNFormInst(nFormInst.value!)
-    })
 
     /**
      * form 元素默认行为是支持按下回车提交的，所以这里只需要做阻止操作即可
@@ -82,16 +88,21 @@ export default defineComponent({
       }
     })
 
+    onMounted(() => {
+      registerProFormInst({
+        loading: loading as any,
+        validate: nFormInst.value!.validate,
+        restoreValidation: nFormInst.value!.restoreValidation,
+      })
+    })
+
     provide(proFormConfigInjectionKey, {
       validationResults,
       rules: computed(() => overridedProps.value.rules),
       readonly: computed(() => overridedProps.value.readonly),
-      validateBehavior: computed(() => overridedProps.value.validateBehavior),
       validationTrigger: computed(() => overridedProps.value.validationTrigger!),
-      validateBehaviorProps: computed(() => overridedProps.value.validateBehaviorProps),
     })
     provideProForm(form)
-    provideWrappedIn('form')
     provideInternalForm(internalForm)
     return {
       nFormProps,

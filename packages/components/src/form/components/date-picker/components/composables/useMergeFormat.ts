@@ -8,7 +8,6 @@ export function useMergeFormat(props: DatePickerProps) {
   return computed<string>(() => {
     const locale = localeRef.value
     const { type, format, valueFormat } = props
-
     if (valueFormat) {
       return valueFormat
     }

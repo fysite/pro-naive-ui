@@ -62,6 +62,13 @@ export default defineComponent({
       return labels
     })
 
+    const nSelectProps = computed(() => {
+      return {
+        ...props,
+        value: props.value ?? null,
+      }
+    })
+
     registerInst({
       blur: () => instRef.value?.blur(),
       focus: () => instRef.value?.focus(),
@@ -73,12 +80,12 @@ export default defineComponent({
       instRef,
       readonly,
       emptyDom,
+      nSelectProps,
       selectedLabels,
     }
   },
   render() {
     let dom: VNodeChild
-
     if (this.readonly) {
       dom = this.empty
         ? this.emptyDom
@@ -92,19 +99,18 @@ export default defineComponent({
       dom = (
         <NSelect
           ref="instRef"
-          {...this.$props}
           {...this.$attrs}
+          {...this.nSelectProps}
           v-slots={this.$slots}
         >
         </NSelect>
       )
     }
-
     return this.$slots.input
       ? this.$slots.input({
           inputDom: dom,
           readonly: this.readonly,
-          inputProps: this.$props,
+          inputProps: this.nSelectProps,
         })
       : dom
   },

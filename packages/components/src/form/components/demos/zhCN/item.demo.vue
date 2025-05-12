@@ -4,36 +4,54 @@
 
 <script lang="tsx">
 import { ArchiveOutline as ArchiveIcon } from '@vicons/ionicons5'
-import { createProForm } from 'pro-naive-ui'
-import { defineComponent, ref } from 'vue'
+import { createProForm, uid } from 'pro-naive-ui'
+import { computed, defineComponent, ref } from 'vue'
 
 export default defineComponent({
   components: { ArchiveIcon },
   setup() {
     const readonly = ref(false)
-
+    const form = createProForm({
+      initialValues: {
+        'name': 'zcf',
+        'password': 'zcf',
+        'select': 0,
+        'select-multiple': [0, 2],
+        'tree-select': 'Wait',
+        'radio-group': 0,
+        'radio-group-vertical': 1,
+        'radio-button': 2,
+        'checkbox-group': [0, 1, 2],
+        'checkbox-group-vertical': [1, 2, 3],
+        'checkbox-group-grid': [1, 2],
+        'input-number': 3,
+        'switch': true,
+        'slider': 37,
+        'rate': 3,
+        'upload': [
+          {
+            id: uid(),
+            name: 'naive',
+            status: 'finished',
+            url: 'https://www.naiveui.com/assets/naivelogo-BdDVTUmz.svg',
+          },
+        ],
+      },
+      onSubmit: console.log,
+    })
     return {
       readonly,
-      form: createProForm({
-        initialValues: {
-          'name': 'zcf',
-          'password': 'zcf',
-          'select': 0,
-          'select-multiple': [0, 2],
-          'tree-select': 'Wait',
-          'radio-group': 0,
-          'radio-group-vertical': 1,
-          'radio-button': 2,
-          'checkbox-group': [0, 1, 2],
-          'checkbox-group-vertical': [1, 2, 3],
-          'checkbox-group-grid': [1, 2],
-          'input-number': 3,
-          'switch': true,
-          'slider': 37,
-          'rate': 3,
-          'upload': 'https://www.naiveui.com/assets/naivelogo-BdDVTUmz.svg',
-        },
-        onSubmit: console.log,
+      form,
+      autoCompleteOptions: computed(() => {
+        return ['@gmail.com', '@163.com', '@qq.com'].map((suffix) => {
+          // @ts-ignore
+          const value = form.values.value['auto-complete']
+          const prefix = (value ?? '').split('@')[0]
+          return {
+            label: prefix + suffix,
+            value: prefix + suffix,
+          }
+        })
       }),
     }
   },
@@ -84,15 +102,7 @@ export default defineComponent({
           title="AutoComplete"
           path="auto-complete"
           :field-props="{
-            options: (value:string | null) => {
-              return ['@gmail.com', '@163.com', '@qq.com'].map((suffix) => {
-                const prefix = (value ?? '').split('@')[0]
-                return {
-                  label: prefix + suffix,
-                  value: prefix + suffix,
-                }
-              })
-            },
+            options: autoCompleteOptions,
           }"
         />
       </n-flex>

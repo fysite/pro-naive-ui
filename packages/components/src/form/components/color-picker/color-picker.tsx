@@ -2,9 +2,9 @@ import type { SlotsType } from 'vue'
 import type { ProColorPickerProps } from './props'
 import type { ProColorPickerSlots } from './slots'
 import { defineComponent } from 'vue'
-import { useOverrideProps, usePostValue } from '../../../composables'
+import { useOverrideProps } from '../../../composables'
 import { ProField } from '../field'
-import { InternalValueTypeEnum } from '../field/enums'
+import { useMergePlaceholder } from '../field/composables/useMergePlaceholder'
 import ColorPicker from './components/color-picker'
 import { proColorPickerProps } from './props'
 
@@ -14,17 +14,18 @@ export default defineComponent({
   props: proColorPickerProps,
   slots: Object as SlotsType<ProColorPickerSlots>,
   setup(props) {
+    const placeholder = useMergePlaceholder(
+      name,
+      props,
+    )
+
     const overridedProps = useOverrideProps<ProColorPickerProps>(
       name,
       props,
     )
 
-    const postValue = usePostValue(overridedProps, {
-      nilToNull: true,
-    })
-
     return {
-      postValue,
+      placeholder,
       overridedProps,
     }
   },
@@ -32,8 +33,7 @@ export default defineComponent({
     return (
       <ProField
         {...this.overridedProps}
-        postValue={this.postValue}
-        valueType={InternalValueTypeEnum.COLOR_PICKER}
+        placeholder={this.placeholder}
       >
         {{
           ...this.$slots,

@@ -1,7 +1,16 @@
 import type { ExtractPublicPropTypes, MaybeRef, PropType, VNodeChild } from 'vue'
-import type { PlainComponentValueTransform } from '../plains'
-import type { WrappedIn } from './context'
 import { configProviderProps } from 'naive-ui'
+
+type EmptyRender = string | (() => VNodeChild)
+
+export interface EmptyConfig {
+  form?: EmptyRender
+  tags?: EmptyRender
+  table?: EmptyRender
+  images?: EmptyRender
+  dateText?: EmptyRender
+  copyableText?: EmptyRender
+}
 
 export const proConfigProviderExtendProps = {
   /**
@@ -9,15 +18,9 @@ export const proConfigProviderExtendProps = {
    */
   propOverrides: Object as PropType<MaybeRef<Record<string, object>>>,
   /**
-   * 当内容为空时显示的内容（支持所有的表单项、表格以及 plain-components）
-   * 当为函数时接收一个参数 wrappedIn，代表了当前组件被包裹在哪个组件中
-   * @default '-'
+   * 全局配置空内容下的占位符
    */
-  empty: [String, Function] as PropType<string | ((wrappedIn: WrappedIn) => VNodeChild)>,
-  /**
-   * 简约组件的值转换
-   */
-  plainComponentValueTransform: Object as PropType<PlainComponentValueTransform>,
+  empty: Object as PropType<EmptyConfig>,
 } as const
 
 export const proConfigProviderProps = {

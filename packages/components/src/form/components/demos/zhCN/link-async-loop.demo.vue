@@ -15,25 +15,21 @@ function delay(time: number) {
 export default defineComponent({
   setup() {
     const form = createProForm<{
-      A: number
-      B: number
-      name: string
+      A?: number
+      B?: number
+      name?: string
     }>()
 
     async function fetchUpdateBAndName() {
       await delay(500)
-      form.setFieldsValue({
-        B: 1,
-        name: 'BBBBBB',
-      }, 'shallowMerge')
+      form.values.value.B = 1
+      form.values.value.name = 'BBBBBB'
     }
 
     async function fetchUpdateAAndName() {
       await delay(500)
-      form.setFieldsValue({
-        A: 0,
-        name: 'AAAAA',
-      }, 'shallowMerge')
+      form.values.value.A = 0
+      form.values.value.name = 'AAAAA'
     }
 
     return {

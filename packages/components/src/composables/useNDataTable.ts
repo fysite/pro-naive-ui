@@ -45,8 +45,8 @@ export type UseNDataTableParams = [
 
 export interface SearchFormLike {
   restoreFieldsValue: () => void
+  fieldsValue: ComputedRef<FormValues>
   validate: () => Promise<any> | undefined
-  getFieldsTransformedValue: () => FormValues
 }
 
 export type UseNDataTableService<Data extends UseNDataTableData, Params extends UseNDataTableParams> = (
@@ -164,7 +164,7 @@ export function useNDataTable<
       form.validate()
         ?.then(() => {
           const { params } = fetchInst
-          params.value[1] = form ? form.getFieldsTransformedValue() : {}
+          params.value[1] = form.fieldsValue.value
           searchLoading.value = true
           onTableChange({ page: 1 })
         })
@@ -180,7 +180,7 @@ export function useNDataTable<
     if (form) {
       form.restoreFieldsValue()
       const { params } = fetchInst
-      params.value[1] = form ? form.getFieldsTransformedValue() : {}
+      params.value[1] = form.fieldsValue.value
     }
     resetLoading.value = true
     onTableChange({ page: 1 })
@@ -248,9 +248,11 @@ export function useNDataTable<
       searchLoading: computed(() => searchLoading.value),
       proSearchFormProps: computed(() => {
         return {
+          loading: fetchInst.loading.value,
           searchButtonProps: {
             attrType: 'button',
             loading: searchLoading.value,
+            disabled: fetchInst.loading.value,
             onClick: submit,
           },
           resetButtonProps: {

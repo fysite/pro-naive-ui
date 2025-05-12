@@ -1,6 +1,5 @@
 export {
-  ProImages,
-  renderImages,
+  renderProImages,
 } from './images'
 
 export type {

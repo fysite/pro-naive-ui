@@ -8,7 +8,7 @@ export interface ProSearchFormColumnProps extends Omit<ProFieldSharedProps, 'pat
   | 'offset'
 > {
   /**
-   * 当 valueType 不满足需求时，可以自定义渲染
+   * 当 field 不满足需求时，可以自定义渲染
    */
   render?: () => VNodeChild
 }

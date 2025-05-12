@@ -39,6 +39,7 @@ export default defineComponent({
     class="w-600px"
     preset="card"
     title="card"
+    draggable
   >
     <div>这是一段内容...</div>
     <div>这是一段内容...</div>

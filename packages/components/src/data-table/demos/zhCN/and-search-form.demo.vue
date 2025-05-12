@@ -6,7 +6,7 @@
 
 <script lang="tsx">
 import type { ProDataTableColumns, ProSearchFormColumns } from 'pro-naive-ui'
-import { createProSearchForm, renderCopyableText, renderDateText, renderImages, renderTags, useNDataTable } from 'pro-naive-ui'
+import { createProSearchForm, renderProCopyableText, renderProDateText, renderProImages, renderProTags, useNDataTable } from 'pro-naive-ui'
 import { defineComponent, ref } from 'vue'
 
 function fetchList(params: any, values: any) {
@@ -37,22 +37,22 @@ export default defineComponent({
     const columns = ref<ProDataTableColumns<{ src: any, title: string, now: number }>>([
       {
         title: '可复制文本',
-        render: row => renderCopyableText(row.title),
+        render: row => renderProCopyableText(row.title),
       },
       {
         title: 'tags',
-        render: row => renderTags(row.title),
+        render: row => renderProTags(row.title),
       },
       {
         title: '日期格式化',
-        render: row => renderDateText(row.now, {
+        render: row => renderProDateText(row.now, {
           pattern: 'quarter',
         }),
       },
       {
         title: '图片',
         width: 200,
-        render: row => renderImages(row.src),
+        render: row => renderProImages(row.src),
       },
     ])
 
@@ -69,17 +69,17 @@ export default defineComponent({
       {
         title: '创建时间',
         path: 'createTime',
-        valueType: 'date',
+        field: 'date',
       },
       {
         title: '响应时间',
         path: 'responseTime',
-        valueType: 'date',
+        field: 'date',
       },
       {
         title: '响应时间',
         path: 'responseTime',
-        valueType: 'date',
+        field: 'date',
       },
     ]
 

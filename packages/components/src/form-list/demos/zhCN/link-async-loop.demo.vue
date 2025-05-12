@@ -1,15 +1,9 @@
 <markdown>
 # 联动-异步循环
-
 有的时候 A 发生变化要改变 B,B 发生变化要改变 A,你可以使用 `onChange` 完成需求
-
-<n-alert type="warning" title="注意" :bordered="false">
-  如果使用实例的 set 方法，你无需拼接路径，但是如果使用的是 form 的方法，你需要拼接路径
-</n-alert>
 </markdown>
 
 <script lang="tsx">
-import type { ProFormListInst } from 'pro-naive-ui'
 import { createProForm } from 'pro-naive-ui'
 import { defineComponent } from 'vue'
 
@@ -25,28 +19,26 @@ interface Info {
 
 export default defineComponent({
   setup() {
-    const form = createProForm<{
-      info: Info[]
-    }>()
+    const form = createProForm({
+      initialValues: {
+        info: [
+          { name: 'zcf', age: 26, A: null, B: null },
+          { name: 'zzx', age: 0.5, A: null, B: null },
+        ],
+      },
+    })
 
-    /**
-     * 你也可以使用 ref 绑定到 pro-form-list 组件上来获取 action
-     */
-    async function fetchUpdateBAndName(action: ProFormListInst<Info>, index: number) {
+    async function fetchUpdateBAndName(row: Info) {
       await delay(500)
-      // 这里会和行的值进行浅合并
-      action.set(index, {
-        B: 1,
-        name: 'BBBBBB',
-      })
+      row.B = 1
+      row.name = 'BBBBBB'
     }
 
-    async function fetchUpdateAAndName(rowPath: string) {
+    async function fetchUpdateAAndName(index: number) {
       await delay(500)
-      form.setFieldValue(rowPath, {
-        A: 0,
-        name: 'AAAAA',
-      })
+      // @ts-ignore
+      form.values.value.info[index].A = 0
+      form.values.value.info[index].name = 'AAAAA'
     }
 
     return {
@@ -67,12 +59,8 @@ export default defineComponent({
       title="用户信息"
       path="info"
       only-show-first-item-label
-      :initial-value="[
-        { name: 'zcf', age: 26 },
-        { name: 'cxh', age: 28 },
-      ]"
     >
-      <template #default="{ index, action, rowPath }">
+      <template #default="{ index, row }">
         <pro-select
           title="A"
           path="A"
@@ -83,7 +71,7 @@ export default defineComponent({
               { label: 'AA', value: 1 },
             ],
           }"
-          @change="fetchUpdateBAndName(action, index)"
+          @change="fetchUpdateBAndName(row)"
         />
         <pro-select
           title="B"
@@ -95,7 +83,7 @@ export default defineComponent({
               { label: 'BB', value: 1 },
             ],
           }"
-          @change="fetchUpdateAAndName(rowPath)"
+          @change="fetchUpdateAAndName(index)"
         />
         <pro-input
           title="姓名"

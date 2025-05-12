@@ -6,8 +6,8 @@ export interface ProDynamicTagsSlots extends ProFieldSharedSlots<DynamicTagsProp
     disabled: boolean
     activate: () => void
   }
-  // 原名 input，但是有冲突，这里用 input-input
-  'input-input': {
+  // 原名 input，但是有冲突，这里用 tags-input
+  'tags-input': {
     deactivate: () => void
     submit: (value: any) => void
   }

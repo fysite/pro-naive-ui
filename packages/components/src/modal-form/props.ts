@@ -30,9 +30,9 @@ export const proModalFormExtendProps = {
     default: true,
   },
   /**
-   * 提交时是否可以关闭
+   * loading 时是否可以关闭
    */
-  closeOnSubmiting: Boolean,
+  closeOnLoading: Boolean,
   /**
    * 传递给取消按钮的属性，false 不显示按钮
    */

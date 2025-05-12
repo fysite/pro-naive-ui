@@ -1,72 +1,70 @@
 <markdown>
-# 空内容
+# 空内容渲染
 
-当内容为空时显示的内容,默认为`'-'`,支持 [所有的表单项](field)、[数据表格](data-table)、[简约组件](plain),可以是字符串或者函数,
-当为函数时接收一个参数 `wrappedIn`,代表了当前组件被包裹在哪个组件中
+可以通过 `empty` 属性来渲染空内容，目前支持的有 `form`、`table`、`copyableText`、`dateText`、`images`、`tags`
 </markdown>
 
 <script lang="tsx">
-import type { ProDataTableColumns, WrappedIn } from 'pro-naive-ui'
-import { createProModalForm } from 'pro-naive-ui'
+import type { ProDataTableColumns } from 'pro-naive-ui'
+import { createProForm, renderProCopyableText, renderProDateText, renderProImages, renderProTags } from 'pro-naive-ui'
 import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   setup() {
-    const columns = ref<ProDataTableColumns>([
-      {
-        title: 'No',
-        path: 'no',
-        width: 80,
-        tooltip: ['123', '123'],
-      },
-    ])
-
-    const data = ref([
-      { now: Date.now(), no: '3' },
-      { now: Date.now(), no: '' },
-      { now: Date.now(), no: '' },
-      { now: Date.now(), no: [] },
-      { now: Date.now(), no: undefined },
-      { now: Date.now(), no: null },
-      { now: Date.now(), no: '33333' },
-    ])
-
     return {
-      data,
-      columns,
-      emptyRender: (wrappedIn: WrappedIn) => {
-        if (wrappedIn === 'form') {
-          return <span class="color-red">内容为空</span>
-        }
-        if (wrappedIn === 'data-table') {
-          return '空数据'
-        }
-        return '-'
+      empty: {
+        form: () => <span class="c-red">空</span>,
+        table: '没有数据',
+        copyableText: '没有数据',
+        dateText: '没有数据',
+        images: '没有数据',
+        tags: '没有数据',
       },
-      form: createProModalForm(),
+      form: createProForm(),
+      columns: ref<ProDataTableColumns<{ src: any, title: string, now: number }>>([
+        {
+          title: '可复制文本',
+          render: row => renderProCopyableText(row.title),
+        },
+        {
+          title: 'tags',
+          render: row => Math.random() < 0.5
+            ? renderProTags(row.title)
+            : renderProTags([
+                {
+                  type: 'info',
+                  content: row.title,
+                },
+              ]),
+        },
+        {
+          title: '日期格式化',
+          render: row => renderProDateText(row.now, {
+            pattern: Math.random() < 0.5 ? 'time' : 'week',
+          }),
+        },
+        {
+          title: '图片',
+          width: 200,
+          render: row => renderProImages(row.src),
+        },
+      ]),
+      tableData: ref([
+        { now: null, src: undefined, no: '', title: '', length: '' },
+        { now: Date.now(), src: ['https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg', 'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg'], no: '122', title: 'Champagne Supernova', length: '7:27' },
+      ]),
     }
   },
 })
 </script>
 
 <template>
-  <pro-config-provider :empty="emptyRender">
-    <pro-modal-form
-      readonly
-      :form="form"
-      title="空内容"
-      preset="card"
-      label-width="60"
-      label-placement="left"
-    >
+  <pro-config-provider :empty="empty">
+    <pro-form readonly :form="form">
       <pro-input title="用户名" path="name" />
-      <pro-digit title="年龄" path="age" />
-    </pro-modal-form>
-    <n-button class="mb-12px" type="primary" @click="form.open">
-      打开弹窗
-    </n-button>
+    </pro-form>
     <pro-data-table
-      :data="data"
+      :data="tableData"
       :columns="columns"
       row-key="no"
     />

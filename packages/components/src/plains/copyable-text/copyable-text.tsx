@@ -2,23 +2,25 @@ import type { PropType } from 'vue'
 import type { ProCopyableTextConfig } from './types'
 import { CheckOutlined, CopyOutlined } from '@vicons/antd'
 import { useClipboard } from '@vueuse/core'
+import { isString, toString } from 'lodash-es'
 import { NButton, NIcon, NTooltip } from 'naive-ui'
-import { defineComponent } from 'vue'
+import { computed, defineComponent, toValue } from 'vue'
 import { useNaiveClsPrefix } from '../../_internal/useClsPrefix'
 import { useMountStyle } from '../../_internal/useMountStyle'
+import { isEmptyValue } from '../../_utils/isEmptyValue'
 import { useOverrideProps } from '../../composables'
+import { useInjectGlobalConfig } from '../../config-provider'
 import { useLocale } from '../../locales'
-import { usePlainComponentConfig } from '../composables'
 import style from './styles/index.cssr'
 
 const name = 'ProCopyableText'
-export const ProCopyableText = defineComponent({
+const ProCopyableText = defineComponent({
   name,
   props: {
     /**
      * 复制的文本
      */
-    value: undefined as unknown as PropType<any>,
+    value: String,
     /**
      * 传递给 useClipboard 的选项
      */
@@ -37,15 +39,13 @@ export const ProCopyableText = defineComponent({
     } = useLocale(name)
 
     const {
-      empty,
-      emptyDom,
-      mergedValue,
-    } = usePlainComponentConfig('copyableText', overridedProps)
+      mergedEmpty,
+    } = useInjectGlobalConfig()
 
     const {
       copy,
       copied,
-    } = useClipboard({ source: mergedValue, ...props.config })
+    } = useClipboard({ source: computed(() => props.value!), ...props.config })
 
     useMountStyle(
       name,
@@ -59,22 +59,22 @@ export const ProCopyableText = defineComponent({
     }
 
     return {
-      empty,
       copied,
       copyText,
-      emptyDom,
       getMessage,
-      mergedValue,
+      mergedEmpty,
+      overridedProps,
       mergedClsPrefix,
     }
   },
   render() {
-    if (this.empty) {
-      return this.emptyDom
+    const { value } = this.overridedProps
+    if (isEmptyValue(value)) {
+      return toValue(this.mergedEmpty.copyableText)
     }
     return (
       <div class={[`${this.mergedClsPrefix}-pro-copyable-text`]}>
-        {this.mergedValue}
+        {value}
         <NTooltip trigger="hover">
           {{
             trigger: () => (
@@ -101,11 +101,15 @@ export const ProCopyableText = defineComponent({
 
 })
 
-export function renderCopyableText(value: any, config?: ProCopyableTextConfig) {
+function transformValueToString(value: any) {
+  return isString(value) ? value : toString(value)
+}
+
+export function renderProCopyableText(value: any, config?: ProCopyableTextConfig) {
   return (
     <ProCopyableText
-      value={value}
       config={config}
+      value={transformValueToString(value)}
     />
   )
 }

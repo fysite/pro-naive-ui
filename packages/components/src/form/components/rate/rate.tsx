@@ -2,9 +2,9 @@ import type { SlotsType } from 'vue'
 import type { ProRateProps } from './props'
 import type { ProRateSlots } from './slots'
 import { defineComponent } from 'vue'
-import { useOverrideProps, usePostValue } from '../../../composables'
+import { useOverrideProps } from '../../../composables'
 import { ProField } from '../field'
-import { InternalValueTypeEnum } from '../field/enums'
+import { useMergePlaceholder } from '../field/composables/useMergePlaceholder'
 import Rate from './components/rate'
 import { proRateProps } from './props'
 
@@ -14,17 +14,18 @@ export default defineComponent({
   props: proRateProps,
   slots: Object as SlotsType<ProRateSlots>,
   setup(props) {
+    const placeholder = useMergePlaceholder(
+      name,
+      props,
+    )
+
     const overridedProps = useOverrideProps<ProRateProps>(
       name,
       props,
     )
 
-    const postValue = usePostValue(overridedProps, {
-      nilToNull: true,
-    })
-
     return {
-      postValue,
+      placeholder,
       overridedProps,
     }
   },
@@ -32,8 +33,7 @@ export default defineComponent({
     return (
       <ProField
         {...this.overridedProps}
-        postValue={this.postValue}
-        valueType={InternalValueTypeEnum.RATE}
+        placeholder={this.placeholder}
       >
         {{
           ...this.$slots,

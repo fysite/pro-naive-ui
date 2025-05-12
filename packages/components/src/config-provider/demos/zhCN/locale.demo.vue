@@ -53,9 +53,8 @@ export default defineComponent({
     </n-flex>
     <pro-config-provider :locale="locale" :date-locale="dateLocale">
       <pro-form :readonly="readonly" :form="form">
-        <pro-date-week path="test" simple />
+        <pro-date-week path="test" />
       </pro-form>
-      <pro-date-text :value="Date.now()" :config="{ pattern: 'week' }" />
     </pro-config-provider>
   </n-flex>
 </template>

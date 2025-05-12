@@ -2,13 +2,12 @@ import type { PropType, SlotsType } from 'vue'
 import type { ProButtonProps } from '../../button'
 import type { ProFormListSlots } from '../slots'
 import { CopyOutlined, DeleteOutlined } from '@vicons/antd'
-import { get } from 'lodash-es'
+import { cloneDeep, get } from 'lodash-es'
 import { NFormItem, NIcon } from 'naive-ui'
-import { ROW_UUID, useInjectListField } from 'pro-composables'
+import { useInjectField } from 'pro-composables'
 import { computed, defineComponent, Fragment, provide, ref, toRef } from 'vue'
 import { useNaiveClsPrefix } from '../../_internal/useClsPrefix'
 import { resolveSlotWithProps } from '../../_utils/resolveSlot'
-import { simplyOmit } from '../../_utils/simplyOmit'
 import { ProButton } from '../../button'
 import { useInjectProForm } from '../../form'
 import { useFieldUtils } from '../../form/components'
@@ -16,7 +15,7 @@ import { proFieldConfigInjectionKey } from '../../form/components/field/context'
 import { useLocale } from '../../locales'
 import { useInjectProFormListInst } from '../context'
 import { internalFormListProps } from '../props'
-import { useProvidePath } from './composables/useProvidePath'
+import { useResolvePath } from './composables/useResolvePath'
 
 const Action = defineComponent({
   name: 'Action',
@@ -50,7 +49,7 @@ const Action = defineComponent({
       remove: _remove,
       stringPath,
       value: list,
-    } = useInjectListField()!
+    } = useInjectField(true)!
 
     const showCopyButton = computed(() => {
       const { max, copyButtonProps } = props
@@ -104,16 +103,14 @@ const Action = defineComponent({
       if (!form)
         return
       const { path, index, actionGuard } = props
-      const { beforeAddRow, afterAddRow } = actionGuard ?? {}
-
       const insertIndex = index + 1
-      const row = form.getFieldValue(path!) ?? {}
-
+      const { beforeAddRow, afterAddRow } = actionGuard ?? {}
+      const row = cloneDeep(get(form.values.value, path!, {}))
       if (beforeAddRow) {
         copyLoading.value = true
         const success = await beforeAddRow({ index, insertIndex, total: list.value.length })
         if (success) {
-          insert(insertIndex, simplyOmit(row, [ROW_UUID]))
+          insert(insertIndex, row)
           if (afterAddRow) {
             afterAddRow({ index, insertIndex, total: list.value.length })
           }
@@ -121,7 +118,7 @@ const Action = defineComponent({
         copyLoading.value = false
       }
       else {
-        insert(insertIndex, simplyOmit(row, [ROW_UUID]))
+        insert(insertIndex, row)
         if (afterAddRow) {
           afterAddRow({ index, insertIndex, total: list.value.length })
         }
@@ -132,7 +129,6 @@ const Action = defineComponent({
     async function remove() {
       const { index, actionGuard } = props
       const { beforeRemoveRow, afterRemoveRow } = actionGuard ?? {}
-
       if (beforeRemoveRow) {
         removeLoading.value = true
         const success = await beforeRemoveRow({ index, total: list.value.length })
@@ -182,7 +178,6 @@ const Action = defineComponent({
 export default defineComponent({
   name: 'FormListItem',
   props: {
-    extraProFieldConfig: Object,
     min: internalFormListProps.min,
     max: internalFormListProps.max,
     actionGuard: internalFormListProps.actionGuard,
@@ -206,12 +201,11 @@ export default defineComponent({
 
     const {
       path,
-      rowPath,
-    } = useProvidePath(toRef(props, 'index'))
+    } = useResolvePath(toRef(props, 'index'))
 
     const {
       value: list,
-    } = useInjectListField()!
+    } = useInjectField(true)!
 
     const total = computed(() => {
       return list.value.length
@@ -232,8 +226,6 @@ export default defineComponent({
     provide(proFieldConfigInjectionKey, {
       readonly,
       showLabel: showItemLabel,
-      validateBehavior: computed(() => props.extraProFieldConfig?.validateBehavior),
-      validateBehaviorProps: computed(() => props.extraProFieldConfig?.validateBehaviorProps),
     })
 
     return {
@@ -241,7 +233,6 @@ export default defineComponent({
       path,
       total,
       action,
-      rowPath,
       showItemLabel,
       mergedClsPrefix,
     }
@@ -256,7 +247,6 @@ export default defineComponent({
       $props,
       $slots,
       action,
-      rowPath,
       showItemLabel,
       mergedClsPrefix,
     } = this
@@ -290,7 +280,6 @@ export default defineComponent({
           total,
           index,
           action,
-          rowPath,
           actionDom,
         }, () => actionDom)}
       </NFormItem>
@@ -303,7 +292,6 @@ export default defineComponent({
           total,
           index,
           action,
-          rowPath,
         })}
       </Fragment>
     )
@@ -314,7 +302,6 @@ export default defineComponent({
       index,
       action,
       itemDom,
-      rowPath,
       actionDom: resolvedActionDom,
     }, () => (
       <div class={[`${mergedClsPrefix}-pro-form-list__item`]}>

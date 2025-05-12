@@ -1,6 +1,5 @@
 export {
-  ProTags,
-  renderTags,
+  renderProTags,
 } from './tags'
 
 export type {

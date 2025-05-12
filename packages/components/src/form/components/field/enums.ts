@@ -1,4 +1,4 @@
-export enum InternalValueTypeEnum {
+export enum BuiltinFieldEnum {
   RATE = 'rate',
   INPUT = 'input',
   DIGIT = 'digit',
@@ -33,4 +33,4 @@ export enum InternalValueTypeEnum {
   DATE_QUARTER_RANGE = 'date-quarter-range',
 }
 
-export type InternalFieldValueType = `${InternalValueTypeEnum}` | ({} & string)
+export type BuiltinFieldType = `${BuiltinFieldEnum}` | ({} & string)

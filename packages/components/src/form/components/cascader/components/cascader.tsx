@@ -26,6 +26,13 @@ export default defineComponent({
       emptyDom,
     } = useFieldUtils()
 
+    const nNCascaderProps = computed(() => {
+      return {
+        ...props,
+        value: props.value ?? null,
+      }
+    })
+
     const selectedLabels = computed(() => {
       const {
         renderLabel,
@@ -69,11 +76,11 @@ export default defineComponent({
       readonly,
       emptyDom,
       selectedLabels,
+      nNCascaderProps,
     }
   },
   render() {
     let dom: VNodeChild
-
     if (this.readonly) {
       dom = this.empty
         ? this.emptyDom
@@ -87,19 +94,18 @@ export default defineComponent({
       dom = (
         <NCascader
           ref="instRef"
-          {...this.$props}
           {...this.$attrs}
+          {...this.nNCascaderProps}
           v-slots={this.$slots}
         >
         </NCascader>
       )
     }
-
     return this.$slots.input
       ? this.$slots.input({
           inputDom: dom,
           readonly: this.readonly,
-          inputProps: this.$props,
+          inputProps: this.nNCascaderProps,
         })
       : dom
   },

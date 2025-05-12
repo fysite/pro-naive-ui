@@ -12,6 +12,11 @@ export default defineComponent({
   setup() {
     return {
       form: createProForm({
+        initialValues: {
+          users: [
+            { name: 'zcf' },
+          ],
+        },
         onSubmit: console.log,
       }),
     }
@@ -30,9 +35,6 @@ export default defineComponent({
       title="用户信息"
       path="users"
       required
-      :initial-value="[
-        { name: 'zcf' },
-      ]"
     >
       <template #item="{ index, itemDom, actionDom }">
         <n-card

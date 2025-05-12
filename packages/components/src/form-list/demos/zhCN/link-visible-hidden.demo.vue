@@ -1,7 +1,7 @@
 <markdown>
 # 联动-显示隐藏
 
-使用实例或者 `row` 获取当前行的值控制联动
+使用 `row` 或 `values` 获取当前行的值控制联动
 </markdown>
 
 <script lang="tsx">
@@ -10,10 +10,18 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   setup() {
+    const form = createProForm({
+      initialValues: {
+        userInfo: [
+          { name: 'zcf', age: 26 },
+          { name: 'cxh', age: 28 },
+        ],
+      },
+      onSubmit: console.log,
+    })
     return {
-      form: createProForm({
-        onSubmit: console.log,
-      }),
+      form,
+      values: form.values,
     }
   },
 })
@@ -25,13 +33,9 @@ export default defineComponent({
       title="用户信息"
       path="userInfo"
       only-show-first-item-label
-      :initial-value="[
-        { name: 'zcf', age: 26 },
-        { name: 'cxh', age: 28 },
-      ]"
       :creator-initial-value="() => ({ name: 'Name', age: 0 })"
     >
-      <template #default="{ row, index, total, action }">
+      <template #default="{ row, index, total }">
         <pro-input
           title="姓名"
           path="name"
@@ -53,7 +57,7 @@ export default defineComponent({
           :title="`城市-${total}`"
           path="city"
           required
-          :visible="action.get(index, 'name') === 'bj'"
+          :visible="values.userInfo[index]?.name === 'bj'"
         />
       </template>
     </pro-form-list>

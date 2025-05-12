@@ -59,9 +59,13 @@ export default defineComponent({
         flexProps,
         labelField,
         valueField,
+        value,
         ...rest
       } = props
-      return rest
+      return {
+        ...rest,
+        value: value ?? null,
+      }
     })
 
     const selectedLabels = computed(() => {
@@ -82,7 +86,6 @@ export default defineComponent({
   },
   render() {
     let dom: VNodeChild
-
     if (this.readonly) {
       dom = this.empty
         ? this.emptyDom
@@ -111,7 +114,6 @@ export default defineComponent({
         </NCheckboxGroup>
       )
     }
-
     return this.$slots.input
       ? this.$slots.input({
           inputDom: dom,

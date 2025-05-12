@@ -2,9 +2,9 @@ import type { SlotsType } from 'vue'
 import type { ProAutoCompleteProps } from './props'
 import type { ProAutoCompleteSlots } from './slots'
 import { defineComponent } from 'vue'
-import { useOverrideProps, usePostValue } from '../../../composables'
+import { useOverrideProps } from '../../../composables'
 import { ProField } from '../field'
-import { InternalValueTypeEnum } from '../field/enums'
+import { useMergePlaceholder } from '../field/composables/useMergePlaceholder'
 import AutoComplete from './components/auto-complete'
 import { provideAutoCompleteInstStore } from './inst'
 import { proAutoCompleteProps } from './props'
@@ -19,18 +19,19 @@ export default defineComponent({
       exposed,
     } = provideAutoCompleteInstStore()
 
+    const placeholder = useMergePlaceholder(
+      name,
+      props,
+    )
+
     const overridedProps = useOverrideProps<ProAutoCompleteProps>(
       name,
       props,
     )
 
-    const postValue = usePostValue(overridedProps, {
-      nilToNull: true,
-    })
-
     expose(exposed)
     return {
-      postValue,
+      placeholder,
       overridedProps,
     }
   },
@@ -38,8 +39,7 @@ export default defineComponent({
     return (
       <ProField
         {...this.overridedProps}
-        postValue={this.postValue}
-        valueType={InternalValueTypeEnum.AUTO_COMPLETE}
+        placeholder={this.placeholder}
       >
         {{
           ...this.$slots,

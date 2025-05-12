@@ -1,4 +1,4 @@
-import type { DeepReadonly, ExtractPublicPropTypes, PropType, VNodeChild } from 'vue'
+import type { ExtractPublicPropTypes, PropType, VNodeChild } from 'vue'
 import type { ProButtonProps } from '../button'
 import type { ProFormListInst } from './inst'
 import { keysOf } from '../_utils/keysOf'
@@ -34,22 +34,20 @@ export interface ActionGuard {
 }
 
 export type ActionRender = (opt: {
+  row: any
   index: number
   total: number
-  rowPath: string
   actionDom: VNodeChild
   action: ProFormListInst
-  row: DeepReadonly<Record<string, any>>
 }) => VNodeChild
 
 export type ItemRender = (opt: {
+  row: any
   index: number
   total: number
-  rowPath: string
   itemDom: VNodeChild
   actionDom: VNodeChild
   action: ProFormListInst
-  row: DeepReadonly<Record<string, any>>
 }) => VNodeChild
 
 export type ContainerRender = (opt: {

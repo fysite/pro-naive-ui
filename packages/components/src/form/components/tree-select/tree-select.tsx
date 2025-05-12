@@ -2,9 +2,9 @@ import type { SlotsType } from 'vue'
 import type { ProTreeSelectProps } from './props'
 import type { ProTreeSelectSlots } from './slots'
 import { defineComponent } from 'vue'
-import { useOverrideProps, usePostValue } from '../../../composables'
+import { useOverrideProps } from '../../../composables'
 import { ProField } from '../field'
-import { InternalValueTypeEnum } from '../field/enums'
+import { useMergePlaceholder } from '../field/composables/useMergePlaceholder'
 import TreeSelect from './components/tree-select'
 import { provideTreeSelectInstStore } from './inst'
 import { proTreeSelectProps } from './props'
@@ -19,18 +19,19 @@ export default defineComponent({
       exposed,
     } = provideTreeSelectInstStore()
 
+    const placeholder = useMergePlaceholder(
+      name,
+      props,
+    )
+
     const overridedProps = useOverrideProps<ProTreeSelectProps>(
       name,
       props,
     )
 
-    const postValue = usePostValue(overridedProps, {
-      nilToNull: true,
-    })
-
     expose(exposed)
     return {
-      postValue,
+      placeholder,
       overridedProps,
     }
   },
@@ -38,8 +39,7 @@ export default defineComponent({
     return (
       <ProField
         {...this.overridedProps}
-        postValue={this.postValue}
-        valueType={InternalValueTypeEnum.TREE_SELECT}
+        placeholder={this.placeholder}
       >
         {{
           ...this.$slots,

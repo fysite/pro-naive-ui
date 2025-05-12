@@ -1,5 +1,5 @@
 import type { IsAny, Merge, Paths } from 'type-fest'
-import type { VNodeChild } from 'vue'
+import type { MaybeFunction, UnwrapSlots } from '../../types'
 import type { ProAutoCompleteProps, ProAutoCompleteSlots } from './auto-complete'
 import type { ProCascaderProps, ProCascaderSlots } from './cascader'
 import type { ProCheckboxProps, ProCheckboxSlots } from './checkbox'
@@ -9,7 +9,7 @@ import type { ProDatePickerProps, ProDatePickerSlots } from './date-picker'
 import type { ProDigitProps, ProDigitSlots } from './digit'
 import type { ProDynamicTagsProps, ProDynamicTagsSlots } from './dynamic-tags'
 import type { ProFieldSharedProps } from './field'
-import type { InternalFieldValueType, InternalValueTypeEnum } from './field/enums'
+import type { BuiltinFieldEnum, BuiltinFieldType } from './field/enums'
 import type { ProInputProps, ProInputSlots } from './input'
 import type { ProMentionProps, ProMentionSlots } from './mention'
 import type { ProRadioGroupProps, ProRadioGroupSlots } from './radio-group'
@@ -21,12 +21,6 @@ import type { ProTimePickerProps, ProTimePickerSlots } from './time-picker'
 import type { ProTransferProps, ProTransferSlots } from './transfer'
 import type { ProTreeSelectProps, ProTreeSelectSlots } from './tree-select'
 import type { ProUploadProps, ProUploadSlots } from './upload'
-
-export type UnwrapSlots<T> = {
-  [K in keyof T]?: IsAny<T[K]> extends true ? () => VNodeChild : (params: NonNullable<T[K]>) => VNodeChild
-}
-
-export type MaybeFunction<T, Parameters extends any[]> = T | ((...args: Parameters) => T)
 
 export interface ProBaseFieldColumn<Values = any, ProFieldPropsParameters extends any[] = any[]> {
   /**
@@ -44,7 +38,7 @@ interface AutoCompleteColumn<
   FieldPropsParameters extends any[] = any[],
   ProFieldPropsParameters extends any[] = any[],
 > extends ProBaseFieldColumn<Values, ProFieldPropsParameters> {
-  valueType?: `${InternalValueTypeEnum.AUTO_COMPLETE}`
+  field?: `${BuiltinFieldEnum.AUTO_COMPLETE}`
   fieldSlots?: UnwrapSlots<ProAutoCompleteSlots>
   fieldProps?: MaybeFunction<NonNullable<ProAutoCompleteProps['fieldProps']>, FieldPropsParameters>
 }
@@ -54,7 +48,7 @@ interface CheckboxColumn<
   FieldPropsParameters extends any[] = any[],
   ProFieldPropsParameters extends any[] = any[],
 > extends ProBaseFieldColumn<Values, ProFieldPropsParameters> {
-  valueType?: `${InternalValueTypeEnum.CHECKBOX}`
+  field?: `${BuiltinFieldEnum.CHECKBOX}`
   fieldSlots?: UnwrapSlots<ProCheckboxSlots>
   fieldProps?: MaybeFunction<NonNullable<ProCheckboxProps['fieldProps']>, FieldPropsParameters>
 }
@@ -64,7 +58,7 @@ interface CascaderColumn<
   FieldPropsParameters extends any[] = any[],
   ProFieldPropsParameters extends any[] = any[],
 > extends ProBaseFieldColumn<Values, ProFieldPropsParameters> {
-  valueType?: `${InternalValueTypeEnum.CASCADER}`
+  field?: `${BuiltinFieldEnum.CASCADER}`
   fieldSlots?: UnwrapSlots<ProCascaderSlots>
   fieldProps?: MaybeFunction<NonNullable<ProCascaderProps['fieldProps']>, FieldPropsParameters>
 }
@@ -74,7 +68,7 @@ interface CheckboxGroupColumn<
   FieldPropsParameters extends any[] = any[],
   ProFieldPropsParameters extends any[] = any[],
 > extends ProBaseFieldColumn<Values, ProFieldPropsParameters> {
-  valueType?: `${InternalValueTypeEnum.CHECKBOX_GROUP}`
+  field?: `${BuiltinFieldEnum.CHECKBOX_GROUP}`
   fieldSlots?: UnwrapSlots<ProCheckboxGroupSlots>
   fieldProps?: MaybeFunction<NonNullable<ProCheckboxGroupProps['fieldProps']>, FieldPropsParameters>
 }
@@ -84,7 +78,7 @@ interface ColorPickerColumn<
   FieldPropsParameters extends any[] = any[],
   ProFieldPropsParameters extends any[] = any[],
 > extends ProBaseFieldColumn<Values, ProFieldPropsParameters> {
-  valueType?: `${InternalValueTypeEnum.COLOR_PICKER}`
+  field?: `${BuiltinFieldEnum.COLOR_PICKER}`
   fieldSlots?: UnwrapSlots<ProColorPickerSlots>
   fieldProps?: MaybeFunction<NonNullable<ProColorPickerProps['fieldProps']>, FieldPropsParameters>
 }
@@ -94,7 +88,7 @@ interface DigitColumn<
   FieldPropsParameters extends any[] = any[],
   ProFieldPropsParameters extends any[] = any[],
 > extends ProBaseFieldColumn<Values, ProFieldPropsParameters> {
-  valueType?: `${InternalValueTypeEnum.DIGIT}`
+  field?: `${BuiltinFieldEnum.DIGIT}`
   fieldSlots?: UnwrapSlots<ProDigitSlots>
   fieldProps?: MaybeFunction<NonNullable<ProDigitProps['fieldProps']>, FieldPropsParameters>
 }
@@ -104,7 +98,7 @@ interface DynamicTagsColumn<
   FieldPropsParameters extends any[] = any[],
   ProFieldPropsParameters extends any[] = any[],
 > extends ProBaseFieldColumn<Values, ProFieldPropsParameters> {
-  valueType?: `${InternalValueTypeEnum.DYNAMIC_TAGS}`
+  field?: `${BuiltinFieldEnum.DYNAMIC_TAGS}`
   fieldSlots?: UnwrapSlots<ProDynamicTagsSlots>
   fieldProps?: MaybeFunction<NonNullable<ProDynamicTagsProps['fieldProps']>, FieldPropsParameters>
 }
@@ -114,10 +108,10 @@ interface InputColumn<
   FieldPropsParameters extends any[] = any[],
   ProFieldPropsParameters extends any[] = any[],
 > extends ProBaseFieldColumn<Values, ProFieldPropsParameters> {
-  valueType?:
-    | `${InternalValueTypeEnum.INPUT}`
-    | `${InternalValueTypeEnum.PASSWORD}`
-    | `${InternalValueTypeEnum.TEXTAREA}`
+  field?:
+    | `${BuiltinFieldEnum.INPUT}`
+    | `${BuiltinFieldEnum.PASSWORD}`
+    | `${BuiltinFieldEnum.TEXTAREA}`
   fieldSlots?: UnwrapSlots<ProInputSlots>
   fieldProps?: MaybeFunction<NonNullable<ProInputProps['fieldProps']>, FieldPropsParameters>
 }
@@ -127,7 +121,7 @@ interface MentionColumn<
   FieldPropsParameters extends any[] = any[],
   ProFieldPropsParameters extends any[] = any[],
 > extends ProBaseFieldColumn<Values, ProFieldPropsParameters> {
-  valueType?: `${InternalValueTypeEnum.MENTION}`
+  field?: `${BuiltinFieldEnum.MENTION}`
   fieldSlots?: UnwrapSlots<ProMentionSlots>
   fieldProps?: MaybeFunction<NonNullable<ProMentionProps['fieldProps']>, FieldPropsParameters>
 }
@@ -137,7 +131,7 @@ interface RadioGroupColumn<
   FieldPropsParameters extends any[] = any[],
   ProFieldPropsParameters extends any[] = any[],
 > extends ProBaseFieldColumn<Values, ProFieldPropsParameters> {
-  valueType?: `${InternalValueTypeEnum.RADIO_GROUP}`
+  field?: `${BuiltinFieldEnum.RADIO_GROUP}`
   fieldSlots?: UnwrapSlots<ProRadioGroupSlots>
   fieldProps?: MaybeFunction<NonNullable<ProRadioGroupProps['fieldProps']>, FieldPropsParameters>
 }
@@ -147,7 +141,7 @@ interface RateColumn<
   FieldPropsParameters extends any[] = any[],
   ProFieldPropsParameters extends any[] = any[],
 > extends ProBaseFieldColumn<Values, ProFieldPropsParameters> {
-  valueType?: `${InternalValueTypeEnum.RATE}`
+  field?: `${BuiltinFieldEnum.RATE}`
   fieldSlots?: UnwrapSlots<ProRateSlots>
   fieldProps?: MaybeFunction<NonNullable<ProRateProps['fieldProps']>, FieldPropsParameters>
 }
@@ -157,7 +151,7 @@ interface SelectColumn<
   FieldPropsParameters extends any[] = any[],
   ProFieldPropsParameters extends any[] = any[],
 > extends ProBaseFieldColumn<Values, ProFieldPropsParameters> {
-  valueType?: `${InternalValueTypeEnum.SELECT}`
+  field?: `${BuiltinFieldEnum.SELECT}`
   fieldSlots?: UnwrapSlots<ProSelectSlots>
   fieldProps?: MaybeFunction<NonNullable<ProSelectProps['fieldProps']>, FieldPropsParameters>
 }
@@ -167,7 +161,7 @@ interface SliderColumn<
   FieldPropsParameters extends any[] = any[],
   ProFieldPropsParameters extends any[] = any[],
 > extends ProBaseFieldColumn<Values, ProFieldPropsParameters> {
-  valueType?: `${InternalValueTypeEnum.SLIDER}`
+  field?: `${BuiltinFieldEnum.SLIDER}`
   fieldSlots?: UnwrapSlots<ProSliderSlots>
   fieldProps?: MaybeFunction<NonNullable<ProSliderProps['fieldProps']>, FieldPropsParameters>
 }
@@ -177,7 +171,7 @@ interface SwitchColumn<
   FieldPropsParameters extends any[] = any[],
   ProFieldPropsParameters extends any[] = any[],
 > extends ProBaseFieldColumn<Values, ProFieldPropsParameters> {
-  valueType?: `${InternalValueTypeEnum.SWITCH}`
+  field?: `${BuiltinFieldEnum.SWITCH}`
   fieldSlots?: UnwrapSlots<ProSwitchSlots>
   fieldProps?: MaybeFunction<NonNullable<ProSwitchProps['fieldProps']>, FieldPropsParameters>
 }
@@ -187,7 +181,7 @@ interface TimePickerColumn<
   FieldPropsParameters extends any[] = any[],
   ProFieldPropsParameters extends any[] = any[],
 > extends ProBaseFieldColumn<Values, ProFieldPropsParameters> {
-  valueType?: `${InternalValueTypeEnum.TIME}`
+  field?: `${BuiltinFieldEnum.TIME}`
   fieldSlots?: UnwrapSlots<ProTimePickerSlots>
   fieldProps?: MaybeFunction<NonNullable<ProTimePickerProps['fieldProps']>, FieldPropsParameters>
 }
@@ -197,7 +191,7 @@ interface TransferColumn<
   FieldPropsParameters extends any[] = any[],
   ProFieldPropsParameters extends any[] = any[],
 > extends ProBaseFieldColumn<Values, ProFieldPropsParameters> {
-  valueType?: `${InternalValueTypeEnum.TRANSFER}`
+  field?: `${BuiltinFieldEnum.TRANSFER}`
   fieldSlots?: UnwrapSlots<ProTransferSlots>
   fieldProps?: MaybeFunction<NonNullable<ProTransferProps['fieldProps']>, FieldPropsParameters>
 }
@@ -207,7 +201,7 @@ interface UploadColumn<
   FieldPropsParameters extends any[] = any[],
   ProFieldPropsParameters extends any[] = any[],
 > extends ProBaseFieldColumn<Values, ProFieldPropsParameters> {
-  valueType?: `${InternalValueTypeEnum.UPLOAD}`
+  field?: `${BuiltinFieldEnum.UPLOAD}`
   fieldSlots?: UnwrapSlots<ProUploadSlots>
   fieldProps?: MaybeFunction<NonNullable<ProUploadProps['fieldProps']>, FieldPropsParameters>
 }
@@ -217,18 +211,18 @@ interface DatePickerColumn<
   FieldPropsParameters extends any[] = any[],
   ProFieldPropsParameters extends any[] = any[],
 > extends ProBaseFieldColumn<Values, ProFieldPropsParameters> {
-  valueType?:
-    | `${InternalValueTypeEnum.DATE}`
-    | `${InternalValueTypeEnum.DATE_TIME}`
-    | `${InternalValueTypeEnum.DATE_WEEK}`
-    | `${InternalValueTypeEnum.DATE_YEAR}`
-    | `${InternalValueTypeEnum.DATE_MONTH}`
-    | `${InternalValueTypeEnum.DATE_RANGE}`
-    | `${InternalValueTypeEnum.DATE_QUARTER}`
-    | `${InternalValueTypeEnum.DATE_TIME_RANGE}`
-    | `${InternalValueTypeEnum.DATE_YEAR_RANGE}`
-    | `${InternalValueTypeEnum.DATE_MONTH_RANGE}`
-    | `${InternalValueTypeEnum.DATE_QUARTER_RANGE}`
+  field?:
+    | `${BuiltinFieldEnum.DATE}`
+    | `${BuiltinFieldEnum.DATE_TIME}`
+    | `${BuiltinFieldEnum.DATE_WEEK}`
+    | `${BuiltinFieldEnum.DATE_YEAR}`
+    | `${BuiltinFieldEnum.DATE_MONTH}`
+    | `${BuiltinFieldEnum.DATE_RANGE}`
+    | `${BuiltinFieldEnum.DATE_QUARTER}`
+    | `${BuiltinFieldEnum.DATE_TIME_RANGE}`
+    | `${BuiltinFieldEnum.DATE_YEAR_RANGE}`
+    | `${BuiltinFieldEnum.DATE_MONTH_RANGE}`
+    | `${BuiltinFieldEnum.DATE_QUARTER_RANGE}`
   fieldSlots?: UnwrapSlots<ProDatePickerSlots>
   fieldProps?: MaybeFunction<NonNullable<ProDatePickerProps['fieldProps']>, FieldPropsParameters>
 }
@@ -238,16 +232,16 @@ interface TreeSelectColumn<
   FieldPropsParameters extends any[] = any[],
   ProFieldPropsParameters extends any[] = any[],
 > extends ProBaseFieldColumn<Values, ProFieldPropsParameters> {
-  valueType?: `${InternalValueTypeEnum.TREE_SELECT}`
+  field?: `${BuiltinFieldEnum.TREE_SELECT}`
   fieldSlots?: UnwrapSlots<ProTreeSelectSlots>
   fieldProps?: MaybeFunction<NonNullable<ProTreeSelectProps['fieldProps']>, FieldPropsParameters>
 }
 
 /**
  * 通用字段解释
- *  valueType: 要根据哪个组件类型渲染值
- *  fieldProps: 透传给 valueType 组件的 props
- *  fieldSlots: 透传给 valueType 组件的 slots
+ *  field: 渲染哪个字段组件
+ *  fieldProps: 透传给字段组件的 props
+ *  fieldSlots: 透传给字段组件的 slots
  *  proFieldProps: 透传给 ProField 组件的 props (ProField 是一个中间层组件，管理值以及控制渲染，处理完后下发给 FormItem 以及表单项组件)
  */
 export type ProFieldColumn<
@@ -276,6 +270,4 @@ export type ProFieldColumn<
   | Merge<AutoCompleteColumn<Values, FunctionalFieldPropsParameters, FunctionalProFieldPropsParameters>, ExtraProps>
   | Merge<CheckboxGroupColumn<Values, FunctionalFieldPropsParameters, FunctionalProFieldPropsParameters>, ExtraProps>
 
-export type ProFieldColumnValueType = InternalFieldValueType
-
-export type { Merge } from 'type-fest'
+export type ProFieldColumnType = BuiltinFieldType

@@ -1,7 +1,7 @@
 <markdown>
 # 动态属性
 
-有些时候,你的数据可能是动态获取的,如果是动态的 [通用属性](field#通用的属性),需要写在 `proFieldProps` 中,如果是动态的 `fieldProps`,
+有些时候，你的数据可能是动态获取的，如果是动态的[通用属性](field#通用的属性)，需要写在 `proFieldProps` 中，如果是动态的 `fieldProps`，
 你可以写成一个函数
 </markdown>
 
@@ -25,7 +25,7 @@ export default defineComponent({
     const citys = ref<any[]>([])
     const title = ref('动态通用属性')
 
-    const form = createProSearchForm<Info>({
+    const form = createProSearchForm<Partial<Info>>({
       onReset: console.log,
       onSubmit: console.log,
     })
@@ -34,7 +34,7 @@ export default defineComponent({
       {
         title: '动态数据',
         path: 'city',
-        valueType: 'select',
+        field: 'select',
         fieldProps() {
           return {
             options: citys.value,
@@ -67,7 +67,7 @@ export default defineComponent({
       {
         title: '创建时间',
         path: 'createTime',
-        valueType: 'date',
+        field: 'date',
       },
       {
         title: '应用状态',
@@ -76,12 +76,12 @@ export default defineComponent({
       {
         title: '响应日期',
         path: 'responseDate',
-        valueType: 'date-time',
+        field: 'date-time',
       },
       {
         title: '结束日期',
         path: 'endTime',
-        valueType: 'date',
+        field: 'date',
       },
     ]
 

@@ -1,16 +1,20 @@
 import type { PropType } from 'vue'
 import type { ProEditDataTableBaseColumn } from '../types'
 import { isFunction } from 'lodash-es'
-import { computed, defineComponent, toRef } from 'vue'
-import { resolveComponentByValueType } from '../../_utils/resolveComponentByValueType'
-import { useInjectProEditDataTableInst } from '../context'
-import { useProvidePath } from './composables/useProvidePath'
+import { computed, defineComponent, inject } from 'vue'
+import { resolveComponentByField } from '../../_utils/resolveComponentByField'
+import { editDataTableInjectionKey, useInjectProEditDataTableInst } from '../context'
+import { useResolvePath } from './composables/useResolvePath'
 
 export default defineComponent({
   name: 'EditDataTableCell',
   props: {
     row: {
       type: Object,
+      required: true,
+    },
+    rowKey: {
+      type: [String, Number],
       required: true,
     },
     column: {
@@ -22,14 +26,15 @@ export default defineComponent({
       required: true,
     },
     columnKey: [String, Number],
+    childrenKey: {
+      type: String,
+      required: true,
+    },
   } as const,
   setup(props) {
-    useProvidePath(toRef(
-      props,
-      'rowIndex',
-    ))
-
+    const { path } = useResolvePath(props)
     const action = useInjectProEditDataTableInst()!
+    const { editableKeys } = inject(editDataTableInjectionKey)!
 
     const proFieldProps = computed(() => {
       const { row, column, rowIndex } = props
@@ -37,14 +42,15 @@ export default defineComponent({
       return isFunction(proFieldProps) ? proFieldProps(row, rowIndex) : (proFieldProps ?? {})
     })
 
-    const fieldProps = computed(() => {
+    // 这里类型复杂会导致构建类型声明文件失败，先用 Record<string, any> 解决
+    const fieldProps = computed<Record<string, any>>(() => {
       const { row, column, rowIndex } = props
       const { fieldProps } = column
       return isFunction(fieldProps) ? fieldProps(row, rowIndex) : (fieldProps ?? {})
     })
 
     const rowEditable = computed(() => {
-      return action.getEditable(props.rowIndex)
+      return editableKeys.value.has(props.rowKey)
     })
 
     const cellEditable = computed(() => {
@@ -52,6 +58,7 @@ export default defineComponent({
     })
 
     return {
+      path,
       action,
       fieldProps,
       rowEditable,
@@ -65,7 +72,6 @@ export default defineComponent({
       row,
       column,
       rowIndex,
-      columnKey,
     } = this.$props
 
     return column.render
@@ -73,12 +79,12 @@ export default defineComponent({
           ...this.action,
           editable: this.rowEditable,
         })
-      : resolveComponentByValueType(column.valueType ?? 'input', {
+      : resolveComponentByField(column.field ?? 'input', {
           fieldProps: this.fieldProps,
           fieldSlots: column.fieldSlots,
           proFieldProps: {
             ...this.proFieldProps,
-            path: columnKey,
+            path: this.path,
             readonly: !this.cellEditable,
           },
         })

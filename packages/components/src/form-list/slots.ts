@@ -1,4 +1,3 @@
-import type { DeepReadonly } from 'vue'
 import type { ProFieldSharedSlots } from '../form/components'
 import type { ProFormListInst } from './inst'
 import type { ActionRender, ContainerRender, ItemRender } from './props'
@@ -18,13 +17,9 @@ export interface ProFormListSlots extends Omit<ProFieldSharedSlots<any>, 'input'
      */
     action: ProFormListInst
     /**
-     * 当前行信息,它是只读的
+     * 当前行信息
      */
-    row: DeepReadonly<Record<string, any>>
-    /**
-     * 当前行的路径
-     */
-    rowPath: string
+    row: any
   }
   /**
    * 自定义渲染每一行的结构，主要就是将 action 放在别的地方

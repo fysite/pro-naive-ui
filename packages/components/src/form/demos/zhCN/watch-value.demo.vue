@@ -1,7 +1,7 @@
 <markdown>
 # 监听值改变
 
-所有的表单项都支持 `onChange` 事件，它只会在值发生变化后调用，如果想要统一监听，使用 `onValueChange`<br />
+所有的表单项都支持 `on-change` 事件，它只会在值手动发生变化后调用，如果想要统一监听，使用 `createProForm` 的 `onValueChange` 属性<br />
 
 <n-alert type="warning" title="注意" :bordered="false">
   他们只会在手动交互时才会触发

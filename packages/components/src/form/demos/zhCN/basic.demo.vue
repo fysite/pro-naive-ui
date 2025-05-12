@@ -1,10 +1,10 @@
 <markdown>
 # 基本使用
 
-表单项的 `placeholder` 根据 `title` 生成，请查看 [在现有国际化基础上调整](config-provider#edit-i18n.vue) <br />
-默认的 `empty-text` 为 `'-'`，想要改变它，请查看 [空内容调整](config-provider#empty.vue)<br />
-如果你想表单必填，填写 `required` 为 `true` 即可，内部会自动处理不同的 `type`<br />
+默认的 `empty-text` 为 `'-'`，自定义请查看[空内容调整](config-provider#empty.vue)<br />
+表单项的 `placeholder` 根据 `title` 生成，自定义请查看[在现有国际化基础上调整](config-provider#edit-i18n.vue) <br />
 如果按钮被 `pro-form` 包裹，使用 `attr-type` 为 `submit` 提交表单， `attr-type` 为 `reset` 重置表单<br />
+表单必填，填写 `required` 为 `true` 后内部会自动处理不同的 `type`，必填信息自定义请查看[在现有国际化基础上调整](config-provider#edit-i18n.vue)<br />
 </markdown>
 
 <script lang="ts">
@@ -16,8 +16,8 @@ export default defineComponent({
     return {
       readonly: ref(false),
       form: createProForm<{
-        username: string
-        password: string
+        username?: string
+        password?: string
       }>({
         onReset: console.log,
         onSubmit: console.log,

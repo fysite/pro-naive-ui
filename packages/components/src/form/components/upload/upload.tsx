@@ -1,12 +1,10 @@
 import type { SlotsType } from 'vue'
 import type { ProUploadProps } from './props'
 import type { ProUploadSlots } from './slots'
-import { isArray, isString } from 'lodash-es'
-import { uid } from 'pro-composables'
 import { defineComponent } from 'vue'
-import { useOverrideProps, usePostValue } from '../../../composables'
+import { useOverrideProps } from '../../../composables'
 import { ProField } from '../field'
-import { InternalValueTypeEnum } from '../field/enums'
+import { useMergePlaceholder } from '../field/composables/useMergePlaceholder'
 import Upload from './components/upload'
 import { provideUploadInstStore } from './inst'
 import { proUploadProps } from './props'
@@ -21,40 +19,19 @@ export default defineComponent({
       exposed,
     } = provideUploadInstStore()
 
+    const placeholder = useMergePlaceholder(
+      name,
+      props,
+    )
+
     const overridedProps = useOverrideProps<ProUploadProps>(
       name,
       props,
     )
 
-    const postValue = usePostValue(overridedProps, {
-      transform: (value) => {
-        /**
-         * 自动生成 id
-         * 支持文件 url 组成的 fileList 回显
-         */
-        if (!isArray(value)) {
-          value = [value].filter(Boolean)
-        }
-        return value.map((file: any) => {
-          if (isString(file)) {
-            return {
-              id: uid(),
-              url: file,
-              name: file,
-              status: 'finished',
-            }
-          }
-          return {
-            id: uid(),
-            ...file,
-          }
-        })
-      },
-    })
-
     expose(exposed)
     return {
-      postValue,
+      placeholder,
       overridedProps,
     }
   },
@@ -63,8 +40,7 @@ export default defineComponent({
       <ProField
         {...this.overridedProps}
         valueModelName="fileList"
-        postValue={this.postValue}
-        valueType={InternalValueTypeEnum.UPLOAD}
+        placeholder={this.placeholder}
       >
         {{
           ...this.$slots,

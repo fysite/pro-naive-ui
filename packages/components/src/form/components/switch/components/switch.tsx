@@ -1,7 +1,7 @@
 import type { SlotsType, VNodeChild } from 'vue'
 import type { ProSwitchSlots } from '../slots'
 import { NSwitch, switchProps } from 'naive-ui'
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 import { useLocale } from '../../../../locales'
 import { useFieldUtils } from '../../field'
 
@@ -10,7 +10,7 @@ export default defineComponent({
   props: switchProps,
   slots: Object as SlotsType<ProSwitchSlots>,
   inheritAttrs: false,
-  setup() {
+  setup(props) {
     const {
       value,
       readonly,
@@ -20,15 +20,22 @@ export default defineComponent({
       getMessage,
     } = useLocale('ProSwitch')
 
+    const nSwitchProps = computed(() => {
+      return {
+        ...props,
+        value: props.value ?? false,
+      }
+    })
+
     return {
       value,
       readonly,
       getMessage,
+      nSwitchProps,
     }
   },
   render() {
     let dom: VNodeChild
-
     if (this.readonly) {
       dom = this.value
         ? this.$slots.checked?.() ?? this.getMessage('checked')
@@ -37,19 +44,18 @@ export default defineComponent({
     else {
       dom = (
         <NSwitch
-          {...this.$props}
           {...this.$attrs}
+          {...this.nSwitchProps}
           v-slots={this.$slots}
         >
         </NSwitch>
       )
     }
-
     return this.$slots.input
       ? this.$slots.input({
           inputDom: dom,
           readonly: this.readonly,
-          inputProps: this.$props,
+          inputProps: this.nSwitchProps,
         })
       : dom
   },

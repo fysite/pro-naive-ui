@@ -53,10 +53,11 @@ export default defineComponent({
     })
 
     const nTransferProps = computed<TransferProps>(() => {
-      const { placeholder, ...rest } = props
+      const { value, placeholder, ...rest } = props
       const [s, t] = placeholder ?? []
       return {
         ...rest,
+        value: value ?? null,
         options: normalizedOptions.value,
         sourceFilterPlaceholder: s as string,
         targetFilterPlaceholder: t as string,
@@ -80,7 +81,6 @@ export default defineComponent({
   },
   render() {
     let dom: VNodeChild
-
     if (this.readonly) {
       dom = this.empty
         ? this.emptyDom
@@ -96,7 +96,6 @@ export default defineComponent({
         </NTransfer>
       )
     }
-
     return this.$slots.input
       ? this.$slots.input({
           inputDom: dom,

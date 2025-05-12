@@ -9,8 +9,8 @@ import { createProForm, useInjectProForm } from 'pro-naive-ui'
 import { defineComponent } from 'vue'
 
 interface Info {
-  name: string
-  disableInput: boolean
+  name?: string
+  disableInput?: boolean
 }
 
 const Comp1 = defineComponent({
@@ -45,7 +45,7 @@ export default defineComponent({
     Comp2,
   },
   setup() {
-    const form = createProForm<Info>()
+    const form = createProForm()
 
     return {
       form,

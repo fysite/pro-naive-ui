@@ -1,7 +1,7 @@
 import type { SlotsType, VNodeChild } from 'vue'
 import type { ProDigitSlots } from '../slots'
 import { inputNumberProps, NFlex, NInputNumber } from 'naive-ui'
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 import { useFieldUtils } from '../../field'
 import { useInjectDigitInstStore } from '../inst'
 
@@ -10,7 +10,7 @@ export default defineComponent({
   props: inputNumberProps,
   slots: Object as SlotsType<ProDigitSlots>,
   inheritAttrs: false,
-  setup() {
+  setup(props) {
     const {
       instRef,
       registerInst,
@@ -23,6 +23,13 @@ export default defineComponent({
       emptyDom,
     } = useFieldUtils()
 
+    const nInputNumberProps = computed(() => {
+      return {
+        ...props,
+        value: props.value ?? null,
+      }
+    })
+
     registerInst({
       blur: () => instRef.value?.blur(),
       focus: () => instRef.value?.focus(),
@@ -34,11 +41,11 @@ export default defineComponent({
       instRef,
       readonly,
       emptyDom,
+      nInputNumberProps,
     }
   },
   render() {
     let dom: VNodeChild
-
     if (this.readonly) {
       dom = this.empty
         ? this.emptyDom
@@ -54,19 +61,18 @@ export default defineComponent({
       dom = (
         <NInputNumber
           ref="instRef"
-          {...this.$props}
           {...this.$attrs}
+          {...this.nInputNumberProps}
           v-slots={this.$slots}
         >
         </NInputNumber>
       )
     }
-
     return this.$slots.input
       ? this.$slots.input({
           inputDom: dom,
           readonly: this.readonly,
-          inputProps: this.$props,
+          inputProps: this.nInputNumberProps,
         })
       : dom
   },

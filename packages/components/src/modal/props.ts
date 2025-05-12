@@ -7,7 +7,7 @@ export const proModalExtendProps = {
    * 弹窗是否可拖拽
    */
   draggable: {
-    type: [Boolean, Object] as PropType<false | ProModalDraggableOptions>,
+    type: [Boolean, Object] as PropType<boolean | ProModalDraggableOptions>,
     default: undefined,
   },
 } as const

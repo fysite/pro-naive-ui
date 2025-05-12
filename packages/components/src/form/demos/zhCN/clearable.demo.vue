@@ -1,17 +1,29 @@
 <markdown>
 # 表单可清空
 
-将 `pro-form-clearable-provider` 组件包裹在顶层即可，它是通过 `pro-config-provider` 组件的 `prop-overrides` 实现
+我们开发了一个组件 `pro-form-clearable-provider` 来完成这个功能，请包裹在需要被清空的表单项组件上即可，它是通过 `pro-config-provider` 组件的 [prop-overrides](config-provider#prop-overrides.vue) 实现
 </markdown>
 
 <script lang="ts">
 import { createProForm } from 'pro-naive-ui'
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 
 export default defineComponent({
   setup() {
+    const form = createProForm()
+
     return {
-      form: createProForm(),
+      form,
+      autoCompleteOptions: computed(() => {
+        const value = form.values.value['auto-complete']
+        return ['@gmail.com', '@163.com', '@qq.com'].map((suffix) => {
+          const prefix = (value ?? '').split('@')[0]
+          return {
+            label: prefix + suffix,
+            value: prefix + suffix,
+          }
+        })
+      }),
     }
   },
 })
@@ -140,15 +152,7 @@ export default defineComponent({
             title="auto-complete"
             path="auto-complete"
             :field-props="{
-              options: (value:string | null) => {
-                return ['@gmail.com', '@163.com', '@qq.com'].map((suffix) => {
-                  const prefix = (value ?? '').split('@')[0]
-                  return {
-                    label: prefix + suffix,
-                    value: prefix + suffix,
-                  }
-                })
-              },
+              options: autoCompleteOptions,
             }"
           />
         </n-gi>

@@ -4,7 +4,7 @@
 我们提供了 `prop-overrides` 选项,你可以对本组件库中的所有组件 props 覆盖为新的值
 
 <n-alert type="warning" title="注意" :bordered="false">
-  覆盖规则是浅合并的,优先级遵循就近优先原则
+  覆盖规则是浅合并的，优先级遵循就近优先原则
 </n-alert>
 </markdown>
 
