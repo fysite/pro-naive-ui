@@ -13,19 +13,24 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    rowIndex: {
+      type: Number,
+      required: true,
+    },
+    parentRowIndex: {
+      type: Number,
+      required: true,
+    },
     rowKey: {
       type: [String, Number],
-      required: true,
     },
     column: {
       type: Object as PropType<ProEditDataTableBaseColumn>,
       required: true,
     },
-    rowIndex: {
-      type: Number,
-      required: true,
+    columnKey: {
+      type: [String, Number],
     },
-    columnKey: [String, Number],
     childrenKey: {
       type: String,
       required: true,
@@ -50,7 +55,7 @@ export default defineComponent({
     })
 
     const rowEditable = computed(() => {
-      return editableKeys.value.has(props.rowKey)
+      return editableKeys.value.has(props.rowKey!)
     })
 
     const cellEditable = computed(() => {

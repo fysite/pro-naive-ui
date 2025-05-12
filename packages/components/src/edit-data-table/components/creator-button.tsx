@@ -1,10 +1,12 @@
 import type { ProButtonProps } from '../../button'
 import type { RecordCreatorProps } from '../types'
 import { PlusOutlined } from '@vicons/antd'
+import { isNil } from 'lodash-es'
 import { NIcon } from 'naive-ui'
 import { useInjectField } from 'pro-composables'
 import { computed, defineComponent, inject, ref } from 'vue'
 import { useNaiveClsPrefix } from '../../_internal/useClsPrefix'
+import { warnOnce } from '../../_utils/warn'
 import { ProButton } from '../../button'
 import { resolveRowKey } from '../../data-table/utils/resolveRowKey'
 import { useInjectProForm } from '../../form'
@@ -70,7 +72,7 @@ export default defineComponent({
     async function add() {
       const { rowKey, actionGuard } = props
       const insertIndex = list.value.length
-      const { record } = recordCreatorProps.value
+      const { record, parentRowKey } = recordCreatorProps.value
       const { beforeAddRow, afterAddRow } = actionGuard ?? {}
 
       if (beforeAddRow) {
@@ -83,7 +85,6 @@ export default defineComponent({
             ...editableKeys.value,
             resolveRowKey(row, rowKey),
           ].filter(Boolean))
-
           if (afterAddRow) {
             afterAddRow({ total: list.value.length, index: -1, insertIndex })
           }
@@ -95,12 +96,26 @@ export default defineComponent({
       }
       else {
         const row = record?.() ?? {}
-        insert(insertIndex, row)
+        if (!isNil(parentRowKey)) {
+          const parentRow = list.value.find((item) => {
+            return resolveRowKey(item, rowKey) === parentRowKey
+          })
+          if (!parentRow) {
+            warnOnce(
+              'EditDataTable',
+              `The parentRowKey does not exist in the list, please check the parentRowKey value.`,
+            )
+            return
+          }
+          parentRow.children.push(row)
+        }
+        else {
+          insert(insertIndex, row)
+        }
         editableKeys.value = new Set([
           ...editableKeys.value,
           resolveRowKey(row, rowKey),
         ].filter(Boolean))
-
         if (afterAddRow) {
           afterAddRow({ total: list.value.length, index: -1, insertIndex })
         }

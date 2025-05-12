@@ -1,11 +1,12 @@
 import { isNil } from 'lodash-es'
 import { provideFieldIndex } from 'pro-composables'
 import { computed } from 'vue'
-import { LEVELINDEX, PARENT } from '../const'
+import { PARENT } from '../const'
 
 interface UseProvidePathOptions {
   rowIndex: number
   childrenKey: string
+  parentRowIndex: number
   row: Record<string, any>
   columnKey?: string | number
 }
@@ -13,6 +14,7 @@ export function useResolvePath(options: UseProvidePathOptions) {
   const path = computed(() => {
     const {
       row,
+      rowIndex,
       columnKey,
       childrenKey,
     } = options
@@ -22,12 +24,16 @@ export function useResolvePath(options: UseProvidePathOptions) {
     }
     if (row[PARENT]) {
       // 树形表格
-      return `${childrenKey}[${row[LEVELINDEX]}].${columnKey}`
+      return `${childrenKey}[${rowIndex}].${columnKey}`
     }
     return `${columnKey}`
   })
 
-  provideFieldIndex(computed(() => options.rowIndex))
+  const currentIndex = computed(() => {
+    return options.parentRowIndex
+  })
+
+  provideFieldIndex(currentIndex)
 
   return {
     path,
