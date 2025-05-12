@@ -1,23 +1,22 @@
 import type { PropType } from 'vue'
 import type { ProEditDataTableBaseColumn } from '../types'
 import { isFunction } from 'lodash-es'
+import { provideFieldIndex } from 'pro-composables'
 import { computed, defineComponent, inject } from 'vue'
 import { resolveComponentByField } from '../../_utils/resolveComponentByField'
 import { editDataTableInjectionKey, useInjectProEditDataTableInst } from '../context'
-import { useResolvePath } from './composables/useResolvePath'
 
 export default defineComponent({
   name: 'EditDataTableCell',
   props: {
+    path: {
+      type: String,
+    },
     row: {
       type: Object,
       required: true,
     },
     rowIndex: {
-      type: Number,
-      required: true,
-    },
-    parentRowIndex: {
       type: Number,
       required: true,
     },
@@ -28,16 +27,8 @@ export default defineComponent({
       type: Object as PropType<ProEditDataTableBaseColumn>,
       required: true,
     },
-    columnKey: {
-      type: [String, Number],
-    },
-    childrenKey: {
-      type: String,
-      required: true,
-    },
   } as const,
   setup(props) {
-    const { path } = useResolvePath(props)
     const action = useInjectProEditDataTableInst()!
     const { editableKeys } = inject(editDataTableInjectionKey)!
 
@@ -62,8 +53,13 @@ export default defineComponent({
       return rowEditable.value && proFieldProps.value.readonly !== true
     })
 
+    const currentIndex = computed(() => {
+      return props.rowIndex
+    })
+
+    provideFieldIndex(currentIndex)
+
     return {
-      path,
       action,
       fieldProps,
       rowEditable,
@@ -89,7 +85,7 @@ export default defineComponent({
           fieldSlots: column.fieldSlots,
           proFieldProps: {
             ...this.proFieldProps,
-            path: this.path,
+            path: this.$props.path,
             readonly: !this.cellEditable,
           },
         })

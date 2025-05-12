@@ -1,11 +1,13 @@
+import type { RowKey } from 'naive-ui/es/data-table/src/interface'
 import type { ProButtonProps } from '../../button'
 import type { RecordCreatorProps } from '../types'
 import { PlusOutlined } from '@vicons/antd'
-import { isNil } from 'lodash-es'
+import { isArray, isFunction, isNil } from 'lodash-es'
 import { NIcon } from 'naive-ui'
 import { useInjectField } from 'pro-composables'
 import { computed, defineComponent, inject, ref } from 'vue'
 import { useNaiveClsPrefix } from '../../_internal/useClsPrefix'
+import { findTree } from '../../_utils/tree'
 import { warnOnce } from '../../_utils/warn'
 import { ProButton } from '../../button'
 import { resolveRowKey } from '../../data-table/utils/resolveRowKey'
@@ -19,6 +21,7 @@ export default defineComponent({
   props: {
     rowKey: internalEditDataTableProps.rowKey,
     actionGuard: internalEditDataTableProps.actionGuard,
+    childrenKey: internalEditDataTableProps.childrenKey,
     recordCreatorProps: internalEditDataTableProps.recordCreatorProps,
   },
   setup(props) {
@@ -69,18 +72,40 @@ export default defineComponent({
       }
     })
 
+    function insertByParentRowKey(parentRowKey: RowKey | (() => RowKey), row: Record<string, any>) {
+      const childrenKey = props.childrenKey ?? 'children'
+      parentRowKey = isFunction(parentRowKey) ? parentRowKey() : parentRowKey
+      const parentRow = findTree(list.value, (item) => {
+        return resolveRowKey(item, props.rowKey) === parentRowKey
+      }, childrenKey)
+      if (!parentRow) {
+        warnOnce(
+          'pro-edit-data-table',
+          `The parentRowKey does not exist in the list, please check the parentRowKey value.`,
+        )
+        return
+      }
+      if (isArray(parentRow[childrenKey])) {
+        parentRow[childrenKey].push(row)
+      }
+      else {
+        parentRow[childrenKey] = [row]
+      }
+    }
+
     async function add() {
       const { rowKey, actionGuard } = props
       const insertIndex = list.value.length
       const { record, parentRowKey } = recordCreatorProps.value
       const { beforeAddRow, afterAddRow } = actionGuard ?? {}
-
       if (beforeAddRow) {
         loading.value = true
         const success = await beforeAddRow({ total: list.value.length, index: -1, insertIndex })
         if (success) {
           const row = record?.() ?? {}
-          insert(insertIndex, row)
+          isNil(parentRowKey)
+            ? insert(insertIndex, row)
+            : insertByParentRowKey(parentRowKey, row)
           editableKeys.value = new Set([
             ...editableKeys.value,
             resolveRowKey(row, rowKey),
@@ -96,22 +121,9 @@ export default defineComponent({
       }
       else {
         const row = record?.() ?? {}
-        if (!isNil(parentRowKey)) {
-          const parentRow = list.value.find((item) => {
-            return resolveRowKey(item, rowKey) === parentRowKey
-          })
-          if (!parentRow) {
-            warnOnce(
-              'EditDataTable',
-              `The parentRowKey does not exist in the list, please check the parentRowKey value.`,
-            )
-            return
-          }
-          parentRow.children.push(row)
-        }
-        else {
-          insert(insertIndex, row)
-        }
+        isNil(parentRowKey)
+          ? insert(insertIndex, row)
+          : insertByParentRowKey(parentRowKey, row)
         editableKeys.value = new Set([
           ...editableKeys.value,
           resolveRowKey(row, rowKey),
