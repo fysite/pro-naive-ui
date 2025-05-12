@@ -137,7 +137,7 @@ export default defineComponent({
     <div class="flex flex-col">
       <n-button
         @click="data.push({
-          id: 2222,
+          id: 21,
           now: Date.now(),
           no: '',
           title: 'Champagne',
@@ -160,7 +160,7 @@ export default defineComponent({
         :columns="columns"
         :record-creator-props="{
           record: () => ({ id: Date.now() }),
-          parentRowKey: 2222,
+          parentRowKey: 22,
         }"
         row-key="id"
       />
