@@ -9,7 +9,7 @@ import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   setup() {
-    const data = [
+    const data = ref([
       // { id: 1, now: Date.now(), no: '', title: 'Wonderwall', length: '4:18' },
       {
         id: 2,
@@ -38,7 +38,7 @@ export default defineComponent({
       // { id: 4, now: Date.now(), no: '', title: 'Wonderwall', length: '4:18' },
       // { id: 5, now: Date.now(), no: '', title: 'Don\'t Look', length: '4:48' },
       // { id: 6, now: Date.now(), no: '', title: 'Champagne', length: '7:27' },
-    ]
+    ])
 
     const editableKeys = ref([1, 2, 3, 4, 5, 6, 21, 22])
 
@@ -58,67 +58,67 @@ export default defineComponent({
       {
         title: '时间',
         path: 'now',
-        valueType: 'date-time',
+        field: 'date-time',
         width: 200,
       },
-      {
-        title: 'Title',
-        path: 'title',
-        valueType: 'input',
-        proFieldProps: {
-          required: true,
-        },
-      },
-      {
-        title: 'Length',
-        path: 'length',
-        valueType: 'input',
-        width: 200,
-      },
-      {
-        title: '操作',
-        width: 120,
-        fixed: 'right',
-        render(row, rowIndex, action) {
-          console.log(action)
-          return '1'
-        },
-        // render(row, index, {
-        //   remove,
-        //   editable,
-        // } = {}) {
-        //   console.log(index)
-        //   const buttonDoms = editable
-        //     ? [
-        //         <NButton
-        //           text={true}
-        //           type="primary"
-        //           onClick={() => {
-        //             editableKeys.value = editableKeys.value.filter(key => key !== row.id)
-        //           }}
-        //         >
-        //           保存
-        //         </NButton>,
-        //       ]
-        //     : [
-        //         <NButton
-        //           text={true}
-        //           type="primary"
-        //           onClick={() => editableKeys.value.push(row.id)}
-        //         >
-        //           编辑
-        //         </NButton>,
-        //         <NButton
-        //           text={true}
-        //           type="error"
-        //           onClick={() => remove(index)}
-        //         >
-        //           删除
-        //         </NButton>,
-        //       ]
-        //   return <NFlex>{buttonDoms}</NFlex>
-        // },
-      },
+      // {
+      //   title: 'Title',
+      //   path: 'title',
+      //   field: 'input',
+      //   proFieldProps: {
+      //     required: true,
+      //   },
+      // },
+      // {
+      //   title: 'Length',
+      //   path: 'length',
+      //   field: 'input',
+      //   width: 200,
+      // },
+      // {
+      //   title: '操作',
+      //   width: 120,
+      //   fixed: 'right',
+      //   render(row, rowIndex, action) {
+      //     console.log(action)
+      //     return '1'
+      //   },
+      // render(row, index, {
+      //   remove,
+      //   editable,
+      // } = {}) {
+      //   console.log(index)
+      //   const buttonDoms = editable
+      //     ? [
+      //         <NButton
+      //           text={true}
+      //           type="primary"
+      //           onClick={() => {
+      //             editableKeys.value = editableKeys.value.filter(key => key !== row.id)
+      //           }}
+      //         >
+      //           保存
+      //         </NButton>,
+      //       ]
+      //     : [
+      //         <NButton
+      //           text={true}
+      //           type="primary"
+      //           onClick={() => editableKeys.value.push(row.id)}
+      //         >
+      //           编辑
+      //         </NButton>,
+      //         <NButton
+      //           text={true}
+      //           type="error"
+      //           onClick={() => remove(index)}
+      //         >
+      //           删除
+      //         </NButton>,
+      //       ]
+      //   return <NFlex>{buttonDoms}</NFlex>
+      // },
+      // },
     ]
 
     return {
@@ -135,6 +135,20 @@ export default defineComponent({
 <template>
   <pro-form :form="form" label-placement="left">
     <div class="flex flex-col">
+      <n-button
+        @click="data.push({
+          id: 2222,
+          now: Date.now(),
+          no: '',
+          title: 'Champagne',
+          length: '7:27',
+          children: [
+
+          ],
+        })"
+      >
+        添加
+      </n-button>
       <pro-input
         title="名称"
         path="name"
@@ -146,6 +160,7 @@ export default defineComponent({
         :columns="columns"
         :record-creator-props="{
           record: () => ({ id: Date.now() }),
+          parentRowKey: 2222,
         }"
         row-key="id"
       />
