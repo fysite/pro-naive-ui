@@ -7,10 +7,11 @@ import { HolderOutlined, InfoCircleOutlined } from '@vicons/antd'
 import { toValue } from '@vueuse/core'
 import { get, isFunction } from 'lodash-es'
 import { NButton, NIcon } from 'naive-ui'
-import { computed, isVNode } from 'vue'
+import { computed, isVNode, unref } from 'vue'
 import ProTooltip from '../../_internal/components/pro-tooltip'
 import { isEmptyValue } from '../../_utils/isEmptyValue'
 import { ensureValidVNode } from '../../_utils/resolveSlot'
+import { useInjectGlobalConfig } from '../../config-provider'
 import { useLocale } from '../../locales'
 
 export const sortColumnKey = '__SORT_COLUMN__'
@@ -29,6 +30,10 @@ export function useColumnRenderer(options: CreateColumnRendererOptions) {
   const {
     getMessage,
   } = useLocale('ProDataTable')
+
+  const {
+    mergedEmpty,
+  } = useInjectGlobalConfig()
 
   const hasFixedLeftColumn = computed(() => {
     const columns = props.value.columns ?? []
@@ -171,13 +176,13 @@ export function useColumnRenderer(options: CreateColumnRendererOptions) {
         if (render) {
           const children = render(row, rowIndex)
           if (isEmptyValue(children) || (isVNode(children) && !ensureValidVNode([children]))) {
-            return toValue(props.value.columnEmptyText)
+            return toValue(unref(mergedEmpty).table)
           }
           return children
         }
         const value = get(row, columnKey)
         if (isEmptyValue(value)) {
-          return toValue(props.value.columnEmptyText)
+          return toValue(unref(mergedEmpty).table)
         }
         return value
       },
