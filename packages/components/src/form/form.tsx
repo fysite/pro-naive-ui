@@ -22,7 +22,7 @@ export default defineComponent({
     if (!form && __DEV__) {
       form = createProForm()
       warnOnce(
-        'ProForm',
+        'pro-form',
         'You are using ProForm without form prop. Please use form prop to pass the form instance.',
       )
     }
