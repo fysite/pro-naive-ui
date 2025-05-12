@@ -52,8 +52,6 @@ export default defineComponent({
     } = useFieldUtils()
 
     const {
-      get,
-      set,
       pop,
       push,
       move,
@@ -98,8 +96,6 @@ export default defineComponent({
       clearFilter,
       clearFilters,
       // #endregion
-      get,
-      set,
       pop,
       push,
       move,

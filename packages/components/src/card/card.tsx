@@ -164,7 +164,6 @@ export default defineComponent({
                     class={[{
                       [`${mergedClsPrefix}-card-header__extra--trigger`]: this.triggerAreas.includes('arrow'),
                     }]}
-                    // @ts-expect-error
                     onClick={() => this.triggerExpand('arrow')}
                   >
                     {children}

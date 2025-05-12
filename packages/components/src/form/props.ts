@@ -1,4 +1,4 @@
-import type { ExtractPublicPropTypes, PropType, VNodeChild } from 'vue'
+import type { ExtractPublicPropTypes, PropType } from 'vue'
 import type { CreateProFormReturn } from './composables/createProForm'
 import { formProps } from 'naive-ui'
 import { keysOf } from '../_utils/keysOf'

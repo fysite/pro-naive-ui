@@ -23,10 +23,10 @@ export default defineComponent({
       emptyDom,
     } = useFieldUtils()
 
-    const nAutoCompleteProps = computed(() =>{
+    const nAutoCompleteProps = computed(() => {
       return {
         ...props,
-        value:props.value ?? ''
+        value: props.value ?? '',
       }
     })
 
@@ -40,7 +40,7 @@ export default defineComponent({
       instRef,
       readonly,
       emptyDom,
-      nAutoCompleteProps
+      nAutoCompleteProps,
     }
   },
   render() {

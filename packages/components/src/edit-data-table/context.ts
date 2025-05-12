@@ -5,7 +5,7 @@ import { inject, provide } from 'vue'
 import { createInjectionKey } from '../composables/createInjectionKey'
 
 export const editDataTableInjectionKey = createInjectionKey<{
-  editableKeys: WritableComputedRef<Set<RowKey>, Set<RowKey>>
+  editableKeys: WritableComputedRef<Set<RowKey>>
 }>('edit-data-table')
 
 export const proEditDataTableInstInjectionKey = createInjectionKey<ProEditDataTableInst>('pro-edit-data-table')
