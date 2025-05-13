@@ -16,6 +16,8 @@ export {
 export * from './slots'
 
 export type {
+  ActionGuard as ProEditDataTableActionGuard,
   ProEditDataTableColumn,
   ProEditDataTableColumns,
+  RecordCreatorProps as ProEditDataTableRecordCreatorProps,
 } from './types'

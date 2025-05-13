@@ -1,17 +1,18 @@
 <markdown>
-# 基本展示
-</markdown>
+  # 有子列的表格增加
+  </markdown>
 
 <script lang="tsx">
 import type { ProEditDataTableColumns } from 'pro-naive-ui'
 import { createProForm } from 'pro-naive-ui'
-import { defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 
 interface DataSourceType {
   id: string
   title?: string
   now?: number
   rate?: number
+  children?: DataSourceType[]
 }
 
 export default defineComponent({
@@ -24,23 +25,39 @@ export default defineComponent({
             id: '1',
             now: Date.now(),
             rate: 4,
-            title: '任务一',
-          },
-          {
-            id: '2',
-            now: Date.now(),
-            rate: 3,
-            title: '任务二',
-          },
-          {
-            id: '3',
-            now: Date.now(),
-            rate: 5,
-            title: '任务三',
+            title: '父级标题',
+            children: [
+              {
+                id: '1-1',
+                now: Date.now(),
+                rate: 3,
+                title: '子标题1',
+              },
+              {
+                id: '1-2',
+                now: Date.now(),
+                rate: 5,
+                title: '子标题2',
+              },
+            ],
           },
         ],
       },
       onSubmit: console.log,
+    })
+
+    const rowItemToRowInfoMap = computed(() => {
+      const map = new Map<string, { row: DataSourceType, parent: DataSourceType | null }>()
+      const traverse = (data: DataSourceType[], parent: DataSourceType | null = null) => {
+        data.forEach((item) => {
+          map.set(item.id, { row: item, parent })
+          if (item.children) {
+            traverse(item.children, item)
+          }
+        })
+      }
+      traverse(form.values.value.list)
+      return map
     })
 
     function cancelEditable(id: string) {
@@ -48,6 +65,10 @@ export default defineComponent({
     }
 
     const columns: ProEditDataTableColumns<DataSourceType> = [
+      {
+        title: '',
+        render: () => null,
+      },
       {
         title: 'Title',
         path: 'title',
@@ -78,7 +99,9 @@ export default defineComponent({
                     <n-button
                       text={true}
                       type="primary"
-                      onClick={() => cancelEditable(row.id)}
+                      onClick={() => {
+                        cancelEditable(row.id)
+                      }}
                     >
                       保存
                     </n-button>
@@ -95,8 +118,17 @@ export default defineComponent({
                       text={true}
                       type="error"
                       onClick={() => {
-                        remove(rowIndex)
                         cancelEditable(row.id)
+                        const { parent } = rowItemToRowInfoMap.value.get(row.id)!
+                        if (!parent) {
+                          remove(rowIndex)
+                        }
+                        else {
+                          const index = (parent.children ?? []).findIndex(item => item.id === row.id)
+                          if (~index) {
+                            parent.children!.splice(index, 1)
+                          }
+                        }
                       }}
                     >
                       删除
@@ -118,25 +150,18 @@ export default defineComponent({
 </script>
 
 <template>
-  <pro-form :form="form" label-placement="left">
+  <pro-form :form="form">
     <div class="flex flex-col">
-      <pro-config-provider
-        :prop-overrides="{
-          ProFormItem: {
-            showFeedback: false,
-          },
+      <pro-edit-data-table
+        v-model:editable-keys="editableKeys"
+        path="list"
+        :columns="columns"
+        :record-creator-props="{
+          record: () => ({ id: Date.now() }),
+          parentRowKey: '1',
         }"
-      >
-        <pro-edit-data-table
-          v-model:editable-keys="editableKeys"
-          path="list"
-          :columns="columns"
-          :record-creator-props="{
-            record: () => ({ id: Date.now() }),
-          }"
-          row-key="id"
-        />
-      </pro-config-provider>
+        row-key="id"
+      />
     </div>
     <n-button type="primary" attr-type="submit">
       提交
