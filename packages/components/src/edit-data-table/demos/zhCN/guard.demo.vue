@@ -1,19 +1,24 @@
 <markdown>
-  # 双击行编辑
+  # 拦截器
   </markdown>
 
 <script lang="tsx">
-import type { ProEditDataTableColumns } from 'pro-naive-ui'
+import type { ProEditDataTableActionGuard, ProEditDataTableColumns } from 'pro-naive-ui'
 import { useMessage } from 'naive-ui'
 import { createProForm } from 'pro-naive-ui'
 import { defineComponent, ref } from 'vue'
 
 interface DataSourceType {
   id: string
+  title?: string
   now?: number
   rate?: number
-  title?: string
-  children?: DataSourceType[]
+}
+
+function delay(time: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, time)
+  })
 }
 
 export default defineComponent({
@@ -48,18 +53,10 @@ export default defineComponent({
 
     const columns: ProEditDataTableColumns<DataSourceType> = [
       {
-        title: () => {
-          return [
-            'Title',
-            <span class="c-red">*</span>,
-          ]
-        },
+        title: 'Title',
         path: 'title',
         field: 'input',
         width: 200,
-        proFieldProps: {
-          required: true,
-        },
       },
       {
         title: '时间',
@@ -74,29 +71,25 @@ export default defineComponent({
       },
     ]
 
-    const rowProps = (row: DataSourceType) => {
-      return {
-        style: 'cursor: pointer;',
-        ondblclick: () => {
-          if (!editableKeys.value.length) {
-            editableKeys.value = [row.id]
-            return
-          }
-          form.validate()!.then(() => {
-            editableKeys.value = [row.id]
-            message.success('保存成功')
-          }).catch(() => {
-            message.error('校验失败')
-          })
-        },
-      }
+    const actionGuard: ProEditDataTableActionGuard = {
+      beforeAddRow: async (opt) => {
+        await delay(500)
+        if (opt.total >= 5) {
+          message.warning('最多只能添加 5 行')
+          return false
+        }
+        return true
+      },
+      afterAddRow: ({ index, insertIndex, total }) => {
+        console.log(`✅ 成功添加一行。原始位置：${index}，插入位置：${insertIndex}，总行数：${total}`)
+      },
     }
 
     return {
       form,
       columns,
-      rowProps,
       editableKeys,
+      actionGuard,
     }
   },
 })
@@ -112,12 +105,7 @@ export default defineComponent({
         :record-creator-props="{
           record: () => ({ id: Date.now() }),
         }"
-        :row-props="rowProps"
-        :action-guard="{
-          afterAddRow: ({ insertIndex }) => {
-            editableKeys = [form.values.value.list[insertIndex].id]
-          },
-        }"
+        :action-guard="actionGuard"
         row-key="id"
       />
     </div>

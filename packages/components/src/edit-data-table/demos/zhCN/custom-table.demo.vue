@@ -1,25 +1,23 @@
 <markdown>
-  # 双击行编辑
+  # 自定义可编辑表格
   </markdown>
 
 <script lang="tsx">
 import type { ProEditDataTableColumns } from 'pro-naive-ui'
-import { useMessage } from 'naive-ui'
-import { createProForm } from 'pro-naive-ui'
+import { createProForm, ProInput } from 'pro-naive-ui'
 import { defineComponent, ref } from 'vue'
 
 interface DataSourceType {
   id: string
+  title?: string
   now?: number
   rate?: number
-  title?: string
-  children?: DataSourceType[]
 }
 
 export default defineComponent({
   setup() {
-    const message = useMessage()
     const editableKeys = ref<string[]>([])
+
     const form = createProForm({
       initialValues: {
         list: [
@@ -46,19 +44,16 @@ export default defineComponent({
       onSubmit: console.log,
     })
 
+    function cancelEditable(id: string) {
+      editableKeys.value = editableKeys.value.filter(key => key !== id)
+    }
+
     const columns: ProEditDataTableColumns<DataSourceType> = [
       {
-        title: () => {
-          return [
-            'Title',
-            <span class="c-red">*</span>,
-          ]
-        },
-        path: 'title',
-        field: 'input',
+        title: 'Title',
         width: 200,
-        proFieldProps: {
-          required: true,
+        render: (_, __, { editable }) => {
+          return <ProInput path="title" readonly={!editable} />
         },
       },
       {
@@ -72,30 +67,52 @@ export default defineComponent({
         path: 'rate',
         field: 'rate',
       },
-    ]
-
-    const rowProps = (row: DataSourceType) => {
-      return {
-        style: 'cursor: pointer;',
-        ondblclick: () => {
-          if (!editableKeys.value.length) {
-            editableKeys.value = [row.id]
-            return
-          }
-          form.validate()!.then(() => {
-            editableKeys.value = [row.id]
-            message.success('保存成功')
-          }).catch(() => {
-            message.error('校验失败')
-          })
+      {
+        title: '操作',
+        width: 120,
+        fixed: 'right',
+        render: (row, rowIndex, action) => {
+          const { remove, editable } = action
+          return (
+            <n-flex>
+              {editable
+                ? (
+                    <n-button
+                      text={true}
+                      type="primary"
+                      onClick={() => cancelEditable(row.id)}
+                    >
+                      保存
+                    </n-button>
+                  )
+                : [
+                    <n-button
+                      text={true}
+                      type="primary"
+                      onClick={() => editableKeys.value.push(row.id)}
+                    >
+                      编辑
+                    </n-button>,
+                    <n-button
+                      text={true}
+                      type="error"
+                      onClick={() => {
+                        remove(rowIndex)
+                        cancelEditable(row.id)
+                      }}
+                    >
+                      删除
+                    </n-button>,
+                  ]}
+            </n-flex>
+          )
         },
-      }
-    }
+      },
+    ]
 
     return {
       form,
       columns,
-      rowProps,
       editableKeys,
     }
   },
@@ -111,12 +128,6 @@ export default defineComponent({
         :columns="columns"
         :record-creator-props="{
           record: () => ({ id: Date.now() }),
-        }"
-        :row-props="rowProps"
-        :action-guard="{
-          afterAddRow: ({ insertIndex }) => {
-            editableKeys = [form.values.value.list[insertIndex].id]
-          },
         }"
         row-key="id"
       />
