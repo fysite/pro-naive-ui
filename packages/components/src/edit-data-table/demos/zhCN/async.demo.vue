@@ -1,8 +1,7 @@
 <markdown>
-  # 异步获取数据
-
-  你可以使用 [useRequest](use-request) 异步获取数据
-  </markdown>
+# 异步获取数据
+你可以使用 [useRequest](use-request) 异步获取数据
+</markdown>
 
 <script lang="tsx">
 import type { ProEditDataTableColumns } from 'pro-naive-ui'

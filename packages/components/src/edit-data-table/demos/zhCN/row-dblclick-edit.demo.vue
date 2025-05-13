@@ -1,6 +1,6 @@
 <markdown>
-  # 双击行编辑
-  </markdown>
+# 双击行编辑
+</markdown>
 
 <script lang="tsx">
 import type { ProEditDataTableColumns } from 'pro-naive-ui'

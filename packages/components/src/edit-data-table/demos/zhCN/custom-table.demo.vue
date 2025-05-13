@@ -1,6 +1,6 @@
 <markdown>
-  # 自定义可编辑表格
-  </markdown>
+# 自定义可编辑表格
+</markdown>
 
 <script lang="tsx">
 import type { ProEditDataTableColumns } from 'pro-naive-ui'

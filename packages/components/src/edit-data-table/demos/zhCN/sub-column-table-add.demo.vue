@@ -1,6 +1,6 @@
 <markdown>
-  # 有子列的表格增加
-  </markdown>
+# 有子列的表格增加
+</markdown>
 
 <script lang="tsx">
 import type { ProEditDataTableColumns } from 'pro-naive-ui'
