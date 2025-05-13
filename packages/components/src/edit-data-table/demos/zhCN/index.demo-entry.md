@@ -2,7 +2,7 @@
 <!--single-column-->
 可编辑表格 `ProEditDataTable` 与 `ProDataTable` 的功能基本相同，为了更方便的集成在表单中，数据源被 `ProForm` 接管
 
-`NEXT_VERSION` 版本开始提供该组件
+`2.1.0` 版本开始提供该组件
 ## 演示
 
 ```demo
