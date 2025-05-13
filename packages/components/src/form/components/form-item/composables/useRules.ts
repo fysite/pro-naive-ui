@@ -1,4 +1,5 @@
 import type { FormItemRule } from 'naive-ui'
+import type { ComputedRef } from 'vue'
 import type { ProFormItemProps } from '../props'
 import { get, isArray, toString } from 'lodash-es'
 import { useInjectField } from 'pro-composables'
@@ -8,7 +9,7 @@ import { useLocale } from '../../../../locales'
 import { useInjectProFormConfig } from '../../../context'
 import { fieldExtraKey } from '../../field/field-extra-info'
 
-export function useRules(props: ProFormItemProps) {
+export function useRules(props: ComputedRef<ProFormItemProps>) {
   const {
     getMessage,
   } = useLocale('ProForm')
@@ -26,13 +27,13 @@ export function useRules(props: ProFormItemProps) {
 
   function requiredMessage() {
     const localeRequiredMessage = getMessage('validateMessages.required')
-    const { title, label } = props
+    const { title, label } = props.value
     return localeRequiredMessage(toString(title ?? label))
   }
 
   const mergedRules = computed<FormItemRule[]>(() => {
     const formRules = rules.value
-    const { rule = [], path, required } = props
+    const { rule = [], path, required } = props.value
     const normalizedFormItemRules = isArray(rule) ? [...rule] : [rule]
 
     if (formRules !== undefined && path !== undefined) {

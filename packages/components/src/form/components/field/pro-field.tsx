@@ -2,6 +2,7 @@ import type { SlotsType } from 'vue'
 import type { ProFormItemProps } from '../form-item'
 import type { ProFieldSlots } from './slots'
 import { computed, defineComponent } from 'vue'
+import { omitUndef } from '../../../_utils/omitUndef'
 import { ProFormItem } from '../form-item'
 import { createField } from './composables/createField'
 import { useMergeOptions } from './composables/useMergeOptions'
@@ -44,8 +45,7 @@ export default defineComponent({
     })
 
     const proFormItemProps = computed<ProFormItemProps>(() => {
-      return {
-        ...attrs,
+      const formItemProps: ProFormItemProps = {
         size: props.size,
         rule: props.rule,
         first: props.first,
@@ -71,6 +71,10 @@ export default defineComponent({
         validationStatus: props.validationStatus,
         requireMarkPlacement: props.requireMarkPlacement,
         builtinThemeOverrides: props.builtinThemeOverrides,
+      }
+      return {
+        ...attrs,
+        ...omitUndef(formItemProps),
       }
     })
 
