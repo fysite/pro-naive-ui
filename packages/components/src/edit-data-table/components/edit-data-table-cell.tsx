@@ -1,38 +1,34 @@
 import type { PropType } from 'vue'
 import type { ProEditDataTableBaseColumn } from '../types'
 import { isFunction } from 'lodash-es'
+import { provideFieldIndex } from 'pro-composables'
 import { computed, defineComponent, inject } from 'vue'
 import { resolveComponentByField } from '../../_utils/resolveComponentByField'
 import { editDataTableInjectionKey, useInjectProEditDataTableInst } from '../context'
-import { useResolvePath } from './composables/useResolvePath'
 
 export default defineComponent({
   name: 'EditDataTableCell',
   props: {
+    path: {
+      type: String,
+    },
     row: {
       type: Object,
-      required: true,
-    },
-    rowKey: {
-      type: [String, Number],
-      required: true,
-    },
-    column: {
-      type: Object as PropType<ProEditDataTableBaseColumn>,
       required: true,
     },
     rowIndex: {
       type: Number,
       required: true,
     },
-    columnKey: [String, Number],
-    childrenKey: {
-      type: String,
+    rowKey: {
+      type: [String, Number],
+    },
+    column: {
+      type: Object as PropType<ProEditDataTableBaseColumn>,
       required: true,
     },
   } as const,
   setup(props) {
-    const { path } = useResolvePath(props)
     const action = useInjectProEditDataTableInst()!
     const { editableKeys } = inject(editDataTableInjectionKey)!
 
@@ -50,15 +46,20 @@ export default defineComponent({
     })
 
     const rowEditable = computed(() => {
-      return editableKeys.value.has(props.rowKey)
+      return editableKeys.value.has(props.rowKey!)
     })
 
     const cellEditable = computed(() => {
       return rowEditable.value && proFieldProps.value.readonly !== true
     })
 
+    const currentIndex = computed(() => {
+      return props.rowIndex
+    })
+
+    provideFieldIndex(currentIndex)
+
     return {
-      path,
       action,
       fieldProps,
       rowEditable,
@@ -84,7 +85,7 @@ export default defineComponent({
           fieldSlots: column.fieldSlots,
           proFieldProps: {
             ...this.proFieldProps,
-            path: this.path,
+            path: this.$props.path,
             readonly: !this.cellEditable,
           },
         })

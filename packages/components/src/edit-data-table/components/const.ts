@@ -1,2 +1,2 @@
 export const PARENT = '__parent__'
-export const LEVELINDEX = '__levelIndex__'
+export const INDEX = '__index__'

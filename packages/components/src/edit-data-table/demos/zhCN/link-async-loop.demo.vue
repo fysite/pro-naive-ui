@@ -1,5 +1,5 @@
 <markdown>
-# 基本展示
+# 联动-异步循环
 </markdown>
 
 <script lang="tsx">
@@ -14,9 +14,14 @@ interface DataSourceType {
   rate?: number
 }
 
+function delay(time: number) {
+  return new Promise(resolve => setTimeout(resolve, time))
+}
+
 export default defineComponent({
   setup() {
     const editableKeys = ref<string[]>([])
+
     const form = createProForm({
       initialValues: {
         list: [
@@ -43,6 +48,18 @@ export default defineComponent({
       onSubmit: console.log,
     })
 
+    async function fetchUpdateNowAndRate(row: DataSourceType) {
+      await delay(500)
+      row.now = Date.now() - 24 * 60 * 60 * 1000
+      row.rate = Math.floor(Math.random() * 5) + 1
+    }
+
+    async function fetchUpdateTitleAndRate(index: number) {
+      await delay(500)
+      form.values.value.list[index].title = `任务${Math.floor(Math.random() * 100)}`
+      form.values.value.list[index].rate = Math.floor(Math.random() * 5) + 1
+    }
+
     function cancelEditable(id: string) {
       editableKeys.value = editableKeys.value.filter(key => key !== id)
     }
@@ -53,12 +70,29 @@ export default defineComponent({
         path: 'title',
         field: 'input',
         width: 200,
+        proFieldProps: (row) => {
+          return {
+            required: true,
+            onChange: () => {
+              fetchUpdateNowAndRate(row)
+            },
+          }
+        },
+
       },
       {
         title: '时间',
         path: 'now',
         field: 'date-time',
         width: 200,
+        proFieldProps: (_, rowIndex) => {
+          return {
+            required: true,
+            onChange: () => {
+              fetchUpdateTitleAndRate(rowIndex)
+            },
+          }
+        },
       },
       {
         title: '评分',
@@ -118,25 +152,17 @@ export default defineComponent({
 </script>
 
 <template>
-  <pro-form :form="form" label-placement="left">
+  <pro-form :form="form">
     <div class="flex flex-col">
-      <pro-config-provider
-        :prop-overrides="{
-          ProFormItem: {
-            showFeedback: false,
-          },
+      <pro-edit-data-table
+        v-model:editable-keys="editableKeys"
+        path="list"
+        :columns="columns"
+        :record-creator-props="{
+          record: () => ({ id: Date.now() }),
         }"
-      >
-        <pro-edit-data-table
-          v-model:editable-keys="editableKeys"
-          path="list"
-          :columns="columns"
-          :record-creator-props="{
-            record: () => ({ id: Date.now() }),
-          }"
-          row-key="id"
-        />
-      </pro-config-provider>
+        row-key="id"
+      />
     </div>
     <n-button type="primary" attr-type="submit">
       提交

@@ -1,10 +1,10 @@
 <markdown>
-# 基本展示
+# 自定义可编辑表格
 </markdown>
 
 <script lang="tsx">
 import type { ProEditDataTableColumns } from 'pro-naive-ui'
-import { createProForm } from 'pro-naive-ui'
+import { createProForm, ProInput } from 'pro-naive-ui'
 import { defineComponent, ref } from 'vue'
 
 interface DataSourceType {
@@ -17,6 +17,7 @@ interface DataSourceType {
 export default defineComponent({
   setup() {
     const editableKeys = ref<string[]>([])
+
     const form = createProForm({
       initialValues: {
         list: [
@@ -50,9 +51,10 @@ export default defineComponent({
     const columns: ProEditDataTableColumns<DataSourceType> = [
       {
         title: 'Title',
-        path: 'title',
-        field: 'input',
         width: 200,
+        render: (_, __, { editable }) => {
+          return <ProInput path="title" readonly={!editable} />
+        },
       },
       {
         title: '时间',
@@ -118,25 +120,17 @@ export default defineComponent({
 </script>
 
 <template>
-  <pro-form :form="form" label-placement="left">
+  <pro-form :form="form">
     <div class="flex flex-col">
-      <pro-config-provider
-        :prop-overrides="{
-          ProFormItem: {
-            showFeedback: false,
-          },
+      <pro-edit-data-table
+        v-model:editable-keys="editableKeys"
+        path="list"
+        :columns="columns"
+        :record-creator-props="{
+          record: () => ({ id: Date.now() }),
         }"
-      >
-        <pro-edit-data-table
-          v-model:editable-keys="editableKeys"
-          path="list"
-          :columns="columns"
-          :record-creator-props="{
-            record: () => ({ id: Date.now() }),
-          }"
-          row-key="id"
-        />
-      </pro-config-provider>
+        row-key="id"
+      />
     </div>
     <n-button type="primary" attr-type="submit">
       提交

@@ -129,6 +129,7 @@ export default defineComponent({
                 <CreatorButton
                   rowKey={this.$props.rowKey}
                   actionGuard={this.$props.actionGuard}
+                  childrenKey={this.$props.childrenKey}
                   recordCreatorProps={this.$props.recordCreatorProps}
                 />
               ),

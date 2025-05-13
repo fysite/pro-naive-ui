@@ -7,10 +7,9 @@ import { HolderOutlined, InfoCircleOutlined } from '@vicons/antd'
 import { toValue } from '@vueuse/core'
 import { get, isFunction } from 'lodash-es'
 import { NButton, NIcon } from 'naive-ui'
-import { computed, isVNode, unref } from 'vue'
+import { computed, unref } from 'vue'
 import ProTooltip from '../../_internal/components/pro-tooltip'
 import { isEmptyValue } from '../../_utils/isEmptyValue'
-import { ensureValidVNode } from '../../_utils/resolveSlot'
 import { useInjectGlobalConfig } from '../../config-provider'
 import { useLocale } from '../../locales'
 
@@ -174,11 +173,7 @@ export function useColumnRenderer(options: CreateColumnRendererOptions) {
       title: renderTooltipTitle(title, tooltip),
       render(row, rowIndex) {
         if (render) {
-          const children = render(row, rowIndex)
-          if (isEmptyValue(children) || (isVNode(children) && !ensureValidVNode([children]))) {
-            return toValue(unref(mergedEmpty).table)
-          }
-          return children
+          return render(row, rowIndex)
         }
         const value = get(row, columnKey)
         if (isEmptyValue(value)) {

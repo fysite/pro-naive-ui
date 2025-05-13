@@ -65,14 +65,15 @@ interface ValidateError {
 ```
 
 
-| 名称           | 类型                                                                  | 默认值 | 说明                                                             | 版本 |
-| -------------- | --------------------------------------------------------------------- | ------ | ---------------------------------------------------------------- | ---- |
-| initialValues  | `object`                                                              | `{}`   | 表单初始值，表单重置时会参考初始值                               |      |  |
-| omitNil        | `boolean`                                                             | `true` | 提交或读取 `fieldsValue` 时是否忽略 `null` 和 `undefined` 的数据 |      |  |
-| onReset        | `() => void`                                                          | `-`    | 数据重置后的回调                                                 |      |  |
-| onSubmit       | `(values: any, warnings: ValidateError[][]) => void \| Promise<void>` | `-`    | 表单数据提交的回调                                               |      |  |
-| onSubmitFailed | `(errors: ValidateError[][]) => void`                                 | `-`    | 提交失败后回调                                                   |      |  |
-| onValueChange  | `(opt:{ value: any; path: string }) => void`                          | `-`    | 任何一项值发生变化后的回调(手动交互才会触发)                     |      |  |
+| 名称            | 类型                                                                  | 默认值 | 说明                                                             | 版本         |
+| --------------- | --------------------------------------------------------------------- | ------ | ---------------------------------------------------------------- | ------------ |
+| initialValues   | `object`                                                              | `{}`   | 表单初始值，表单重置时会参考初始值                               |              |  |
+| omitNil         | `boolean`                                                             | `true` | 提交或读取 `fieldsValue` 时是否忽略 `null` 和 `undefined` 的数据 |              |  |
+| omitEmptyString | `boolean`                                                             | `true` | 提交或读取 `fieldsValue` 时是否忽略空字符串的数据                | 2.1.0 |  |
+| onReset         | `() => void`                                                          | `-`    | 数据重置后的回调                                                 |              |  |
+| onSubmit        | `(values: any, warnings: ValidateError[][]) => void \| Promise<void>` | `-`    | 表单数据提交的回调                                               |              |  |
+| onSubmitFailed  | `(errors: ValidateError[][]) => void`                                 | `-`    | 提交失败后回调                                                   |              |  |
+| onValueChange   | `(opt:{ value: any; path: string }) => void`                          | `-`    | 任何一项值发生变化后的回调(手动交互才会触发)                     |              |  |
 
 ### createProForm Returned
 下面列举的参数是调用 `createProForm` 函数返回的，引用到的类型声明介绍如下

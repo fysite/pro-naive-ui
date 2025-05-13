@@ -4,7 +4,7 @@
 
 Pro Naive UI 通过使用 `pro-config-provider` 调整语言，默认情况下所有组件均为英语。
 
-了解更多关于 `pro-config-provider` 的信息，参见 [全局化配置](../components/config-provider)。
+了解更多关于 `pro-config-provider` 的信息，参见[全局化配置](../components/config-provider)。
 
 ## 配置
 
@@ -36,4 +36,4 @@ Pro Naive UI 通过使用 `pro-config-provider` 调整语言，默认情况下�
 
 ## 在现有国际化基础上调整
 
-参考 [在现有国际化基础上调整](../components/config-provider#edit-i18n.vue)
+参考[在现有国际化基础上调整](../components/config-provider#edit-i18n.vue)

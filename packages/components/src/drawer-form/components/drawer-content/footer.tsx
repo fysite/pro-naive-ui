@@ -31,7 +31,7 @@ export default defineComponent({
     const form = useInjectProDrawerForm()
     if (!form) {
       warnOnce(
-        'drawer-content',
+        'pro-drawer-content',
         '`pro-drawer-content` must be placed inside `pro-drawer-form`.',
       )
     }

@@ -1,5 +1,6 @@
 import type { FormItemInst, FormItemProps } from 'naive-ui'
 import type { SlotsType } from 'vue'
+import type { ProFormItemProps } from './props'
 import type { ProFormItemSlots } from './slots'
 import { QuestionCircleOutlined } from '@vicons/antd'
 import { NFormItem, NIcon } from 'naive-ui'
@@ -8,6 +9,7 @@ import { computed, defineComponent, Fragment, ref, useAttrs } from 'vue'
 import ProTooltip from '../../../_internal/components/pro-tooltip'
 import { useNaiveClsPrefix } from '../../../_internal/useClsPrefix'
 import { useMountStyle } from '../../../_internal/useMountStyle'
+import { useOverrideProps } from '../../../composables'
 import { useFieldUtils } from '../field/composables/useFieldUtils'
 import { fieldExtraKey } from '../field/field-extra-info'
 import TrackValidationResult from './components/track-validation-result'
@@ -15,15 +17,20 @@ import { useRules } from './composables/useRules'
 import { proFormItemProps } from './props'
 import style from './styles/index.cssr'
 
+const name = 'ProFormItem'
 export default defineComponent({
-  name: 'ProFormItem',
+  name,
   inheritAttrs: false,
   props: proFormItemProps,
   slots: Object as SlotsType<ProFormItemSlots>,
   setup(props) {
     const attrs = useAttrs()
-    const rules = useRules(props)
+    const overridedProps = useOverrideProps<ProFormItemProps>(
+      name,
+      props,
+    )
     const field = useInjectField()
+    const rules = useRules(overridedProps)
     const nFormItemInst = ref<FormItemInst>()
     const mergedClsPrefix = useNaiveClsPrefix()
 
@@ -34,7 +41,7 @@ export default defineComponent({
         tooltip,
         required,
         ...rest
-      } = props
+      } = overridedProps.value
       return {
         ...attrs,
         ...rest,

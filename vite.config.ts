@@ -64,10 +64,10 @@ export default defineConfig(({ mode }) => {
           manualChunks: {
             'vue': ['vue'],
             'naive-ui': ['naive-ui'],
+            'lodash-es': ['lodash-es'],
             'vue-router': ['vue-router'],
-            'vicons': [
-              '@vicons/ionicons5',
-            ],
+            'vicons': ['@vicons/ionicons5'],
+            'highlight.js': ['highlight.js'],
           },
         },
       },

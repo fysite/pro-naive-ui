@@ -1,7 +1,7 @@
 {
   "name": "pro-naive-ui",
   "type": "module",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "packageManager": "pnpm@9.0.6",
   "description": "基于 naive-ui 二次封装，让中后台开发更简单",
   "author": "zhengchangfu",
@@ -74,7 +74,7 @@
     "css-render": "^0.15.14",
     "date-fns": "^3.6.0",
     "lodash-es": "^4.17.21",
-    "pro-composables": "^3.2.0",
+    "pro-composables": "^3.3.0",
     "sortablejs": "^1.15.6",
     "type-fest": "^4.26.1",
     "vooks": "0.2.12"

@@ -1,14 +1,25 @@
 # CHANGELOG
 
-## 1.0.2
+## 2.1.0
+
+### Features
+
+- 新增 `pro-edit-data-table` 组件
+- `createProForm` 选项增加 `omitEmptyString` 参数
 
 ### Fixes
 
-- 修复 Vue3.3 以下版本 toValue 报错问题
-- 修复 `pro-naive-ui-resolver` 无类型声明文件问题
+- 修复 `pro-data-table` 自定义 `render` 空值时错误显示问题
+- 修复 `pro-config-provider` 的 `prop-overrides` 覆盖 `pro-form-item` 组件 `props` 时无效问题
 
-## 1.0.1
+## 2.0.0
 
 ### Features
 
 - 发布正式版本
+
+## 1.x
+
+- 不稳定版本，不要在生产环境中使用
+
+

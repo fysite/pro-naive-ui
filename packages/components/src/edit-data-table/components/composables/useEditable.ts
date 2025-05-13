@@ -16,7 +16,6 @@ export function useEditable(props: InternalEditDataTableProps) {
         onUpdateEditableKeys,
         'onUpdate:editableKeys': _onUpdateEditableKeys,
       } = props
-
       if (onUpdateEditableKeys) {
         call(onUpdateEditableKeys, Array.from(keys))
       }
