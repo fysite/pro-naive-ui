@@ -50,6 +50,7 @@ export default defineComponent({
     } = useNDataTableInst()
 
     const {
+      isDragging,
       dragHandleId,
     } = useDraggableSort(overridedProps)
 
@@ -125,6 +126,7 @@ export default defineComponent({
     }
     expose(exposed)
     return {
+      isDragging,
       nDataTableInst,
       nDataTableProps,
       nTableCardProps,
@@ -137,6 +139,7 @@ export default defineComponent({
       <div class={[
         `${mergedClsPrefix}-pro-data-table`,
         {
+          [`${mergedClsPrefix}-pro-data-table--tr-dragging`]: this.isDragging,
           [`${mergedClsPrefix}-pro-data-table--flex-height`]: this.flexHeight,
         },
       ]}

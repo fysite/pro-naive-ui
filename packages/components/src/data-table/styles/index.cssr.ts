@@ -1,6 +1,9 @@
 import { cB, cE, cM } from 'naive-ui'
 
 export default cB('pro-data-table', [
+  cM('tr-dragging', `
+    cursor: grab;
+  `),
   cM('flex-height', `
     display: flex;
     flex-direction: column;
