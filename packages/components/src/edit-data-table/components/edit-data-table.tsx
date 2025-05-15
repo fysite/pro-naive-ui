@@ -67,6 +67,7 @@ export default defineComponent({
     const proDataTableProps = computed<ProDataTableProps>(() => {
       return {
         ...keep(props, proDataTablePropKeys),
+        ...keep(props.fieldProps ?? {}, proDataTablePropKeys),
         data: list.value,
         ref: proDataTableInst,
         columns: columns.value,

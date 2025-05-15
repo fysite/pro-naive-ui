@@ -1,11 +1,18 @@
 # CHANGELOG
 
+## 2.1.2
+
+### Fixes
+
+- 修复 `pro-edit-data-table` 透传属性给 `pro-data-table` 失效问题
+
 ## 2.1.1
 
 ### Fixes
 
 - 优化 `pro-data-table` 拖拽行时的样式
 - 修复 `pro-data-table` 拖拽在生产环境时不生效问题
+- 
 
 ## 2.1.0
 
