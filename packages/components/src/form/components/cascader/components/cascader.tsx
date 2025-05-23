@@ -1,3 +1,4 @@
+import type { CascaderOption } from 'naive-ui'
 import type { SlotsType, VNodeChild } from 'vue'
 import type { ProCascaderSlots } from '../slots'
 import { get, isArray } from 'lodash-es'
@@ -40,26 +41,82 @@ export default defineComponent({
         labelField = 'label',
         valueField = 'value',
         childrenField = 'children',
+        showPath = true,
+        separator = ' / ',
       } = props as any
 
       const labels: VNodeChild[] = []
       const selectedValue = isArray(value.value) ? value.value : [value.value]
-      eachTree(
-        options as any[],
-        (item) => {
-          const value = get(item, valueField)
-          if (selectedValue.includes(value)) {
-            let label = get(item, labelField) as VNodeChild
-            if (renderLabel) {
-              label = renderLabel(item as any, true)
+
+      if (showPath) {
+        // 查找完整路径
+        const findPathForValue = (value: any) => {
+          const path: VNodeChild[] = []
+
+          const findPath = (options: CascaderOption[], parentPath: VNodeChild[] = []) => {
+            for (const option of options) {
+              const optionValue = get(option, valueField)
+              let optionLabel = get(option, labelField) as VNodeChild
+              if (renderLabel) {
+                optionLabel = renderLabel(option as any, true)
+              }
+
+              const currentPath = [...parentPath, optionLabel]
+
+              if (optionValue === value) {
+                path.push(...currentPath)
+                return true
+              }
+
+              const children = get(option, childrenField) as CascaderOption[] | undefined
+              if (children && children.length > 0) {
+                if (findPath(children, currentPath)) {
+                  return true
+                }
+              }
             }
-            if (label) {
-              labels.push(<span>{label}</span>)
-            }
+            return false
           }
-        },
-        childrenField,
-      )
+
+          findPath(options as CascaderOption[])
+          return path
+        }
+
+        // 为每个选中的值找到路径并添加到labels中
+        for (const val of selectedValue) {
+          const path = findPathForValue(val)
+          if (path.length > 0) {
+            labels.push(
+              <span>
+                {path.map((item, index) => [
+                  index > 0 ? separator : null,
+                  <span>{item}</span>,
+                ])}
+              </span>,
+            )
+          }
+        }
+      }
+      else {
+        // 原来的逻辑：仅显示选中节点的标签
+        eachTree(
+          options as CascaderOption[],
+          (item) => {
+            const value = get(item, valueField)
+            if (selectedValue.includes(value)) {
+              let label = get(item, labelField) as VNodeChild
+              if (renderLabel) {
+                label = renderLabel(item as any, true)
+              }
+              if (label) {
+                labels.push(<span>{label}</span>)
+              }
+            }
+          },
+          childrenField,
+        )
+      }
+
       return labels
     })
 
@@ -69,6 +126,7 @@ export default defineComponent({
       getCheckedData: () => instRef.value?.getCheckedData() as any,
       getIndeterminateData: () => instRef.value?.getIndeterminateData() as any,
     })
+
     return {
       empty,
       value,
