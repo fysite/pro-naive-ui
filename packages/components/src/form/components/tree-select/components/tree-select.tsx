@@ -1,4 +1,4 @@
-import type { TreeSelectInst } from 'naive-ui'
+import type { TreeSelectInst, TreeSelectOption } from 'naive-ui'
 import type { SlotsType, VNodeChild } from 'vue'
 import type { ProTreeSelectSlots } from '../slots'
 import { get, isArray, noop } from 'lodash-es'
@@ -36,29 +36,76 @@ export default defineComponent({
         keyField = 'key',
         labelField = 'label',
         childrenField = 'children',
+        showPath = false,
+        separator = ' / ',
       } = props as any
 
       const labels: VNodeChild[] = []
       const selectedValue = isArray(value.value) ? value.value : [value.value]
-      eachTree(
-        options as any[],
-        (item) => {
-          const value = get(item, keyField)
-          if (selectedValue.includes(value)) {
-            let label = get(item, labelField) as VNodeChild
-            if (renderTag) {
-              label = renderTag({ option: item as any, handleClose: noop })
+
+      if (showPath) {
+        // 查找完整路径
+        const findPathForValue = (val: any) => {
+          const path: VNodeChild[] = []
+          const findPath = (opts: TreeSelectOption[], parentPath: VNodeChild[] = []) => {
+            for (const option of opts) {
+              const optionValue = get(option, keyField)
+              let optionLabel = get(option, labelField) as VNodeChild
+              if (renderTag) {
+                optionLabel = renderTag({ option: option as any, handleClose: noop })
+              }
+              if (renderLabel) {
+                optionLabel = renderLabel({ option, checked: true, selected: true })
+              }
+              const currentPath = [...parentPath, optionLabel]
+              if (optionValue === val) {
+                path.push(...currentPath)
+                return true
+              }
+              const children = get(option, childrenField) as TreeSelectOption[] | undefined
+              if (children && children.length > 0) {
+                if (findPath(children, currentPath)) {
+                  return true
+                }
+              }
             }
-            if (renderLabel) {
-              label = renderLabel({ option: item, checked: true, selected: true })
-            }
-            if (label) {
-              labels.push(<span>{label}</span>)
-            }
+            return false
           }
-        },
-        childrenField,
-      )
+          findPath(options as TreeSelectOption[])
+          return path
+        }
+        for (const val of selectedValue) {
+          const path = findPathForValue(val)
+          if (path.length > 0) {
+            labels.push(
+              <span>
+                {path.map((item, index) => [index > 0 ? separator : null, <span>{item}</span>])}
+              </span>,
+            )
+          }
+        }
+      }
+      else {
+        eachTree(
+          options as TreeSelectOption[],
+          (item) => {
+            const value = get(item, keyField)
+            if (selectedValue.includes(value)) {
+              let label = get(item, labelField) as VNodeChild
+              if (renderTag) {
+                label = renderTag({ option: item as any, handleClose: noop })
+              }
+              if (renderLabel) {
+                label = renderLabel({ option: item, checked: true, selected: true })
+              }
+              if (label) {
+                labels.push(<span>{label}</span>)
+              }
+            }
+          },
+          childrenField,
+        )
+      }
       return labels
     })
 
