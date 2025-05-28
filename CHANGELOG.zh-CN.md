@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.1.5
+
+### Fixes
+
+- 修复 `pro-data-table` 的拖拽功能在数据源异步获取场景下失效问题
+
 ## 2.1.4
 
 ### Fixes
