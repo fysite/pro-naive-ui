@@ -62,6 +62,13 @@ export function useRules(props: ComputedRef<ProFormItemProps>) {
            */
           return {
             ...rule,
+            /**
+             * 统一设置必填的提示信息
+             */
+            message: requiredMessage,
+            /**
+             * 统一设置必填的校验方法
+             */
             validator: requiredValidator,
           }
         }
@@ -73,10 +80,6 @@ export function useRules(props: ComputedRef<ProFormItemProps>) {
          * 统一设置表单校验时机
          */
           trigger: unref(validationTrigger),
-          /**
-           * 统一设置必填的提示信息
-           */
-          message: requiredMessage,
           ...rule,
           /**
            * 给每个 rule 增加 key，方便 validate 方法校验
