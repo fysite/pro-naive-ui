@@ -4,7 +4,7 @@ import type { ProDataTableProps } from '../props'
 import { isNil } from 'lodash-es'
 import { uid } from 'pro-composables'
 import Sortable from 'sortablejs'
-import { computed, getCurrentInstance, onUnmounted, ref, watchPostEffect } from 'vue'
+import { computed, getCurrentInstance, onBeforeUnmount, ref, watchPostEffect } from 'vue'
 import { useNaiveClsPrefix } from '../../_internal/useClsPrefix'
 import { warn } from '../../_utils/warn'
 
@@ -21,6 +21,10 @@ export function useDraggableSort(props: ComputedRef<ProDataTableProps>) {
     }
     const root = currentInstance?.vnode.el
     return root?.querySelector(`.${clsPrefix.value}-data-table-tbody`) as HTMLElement
+  })
+
+  const canDraggable = computed(() => {
+    return !!props.value.dragSortOptions
   })
 
   const mergedSortableOptions = computed<SortableOptions>(() => {
@@ -41,9 +45,12 @@ export function useDraggableSort(props: ComputedRef<ProDataTableProps>) {
 
   let sortable: Sortable
   watchPostEffect(() => {
+    if (!canDraggable.value) {
+      return
+    }
     const dom = nDataTableTBody.value
-    sortable && sortable.destroy()
     if (dom) {
+      sortable && sortable.destroy()
       sortable = Sortable.create(dom, {
         ...mergedSortableOptions.value,
         onStart: (event) => {
@@ -76,8 +83,12 @@ export function useDraggableSort(props: ComputedRef<ProDataTableProps>) {
     }
   })
 
-  onUnmounted(() => {
-    sortable && sortable.destroy()
+  onBeforeUnmount(() => {
+    const dom = nDataTableTBody.value
+    if (dom && sortable) {
+      sortable.destroy()
+    }
+    sortable = null as any
   })
 
   return {
