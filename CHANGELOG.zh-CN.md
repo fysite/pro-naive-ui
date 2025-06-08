@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2.1.6
+
+### Fixes
+
+- 修复 `pro-form` 自定义验证时的错误信息无效问题，关闭 [#94](https://github.com/Zheng-Changfu/pro-naive-ui/issues/94)
+- 修复 `pro-data-table` 拖拽卸载时因为找不到 dom 导致的报错问题
+- 优化 `pro-data-table` 未配置 `drag-sort-options` 时不做拖拽逻辑绑定
+
 ## 2.1.5
 
 ### Fixes
