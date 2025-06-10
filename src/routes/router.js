@@ -6,7 +6,7 @@ export const loadingBarApiRef = {}
 
 export default function createDemoRouter(app, routes) {
   const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHistory('/pro-naive-ui/'),
     routes,
   })
 
