@@ -1,12 +1,12 @@
 import { nextTick } from 'vue'
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
 import { useLocaleName } from '../store'
 
 export const loadingBarApiRef = {}
 
 export default function createDemoRouter(app, routes) {
   const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHashHistory(),
     routes,
   })
 
