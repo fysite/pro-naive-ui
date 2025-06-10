@@ -6,7 +6,7 @@ export const loadingBarApiRef = {}
 
 export default function createDemoRouter(app, routes) {
   const router = createRouter({
-    history: createWebHashHistory(),
+    history: createWebHistory(),
     routes,
   })
 
