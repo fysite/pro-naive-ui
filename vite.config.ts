@@ -21,6 +21,7 @@ export default defineConfig(({ mode }) => {
       '__DEV__': nodeEnv !== 'production',
       'process.env.NODE_ENV': nodeEnv !== 'production',
     },
+    base:'/pro-naive-ui/',
     plugins: [
       UnoCSS(),
       ...vitePluginDemo(),
