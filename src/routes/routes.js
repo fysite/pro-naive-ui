@@ -99,24 +99,24 @@ export const zhComponentRoutes = [
 export const routes = [
   {
     name: 'home',
-    path: ':lang/:theme',
+    path: '/:lang/:theme',
     component: () => import('../pages/home/index.vue'),
   },
   {
     name: 'zhDocs',
-    path: 'zh-CN/:theme/docs',
+    path: '/zh-CN/:theme/docs',
     component: () => import('../pages/Layout.vue'),
     children: zhDocRoutes,
   },
   {
     name: 'zhComponents',
-    path: 'zh-CN/:theme/components',
+    path: '/zh-CN/:theme/components',
     component: () => import('../pages/Layout.vue'),
     children: zhComponentRoutes,
   },
   {
     name: 'not-found',
-    path: ':pathMatch(.*)*',
+    path: '/:pathMatch(.*)*',
     redirect: {
       name: 'home',
       params: {
